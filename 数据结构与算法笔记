@@ -451,3 +451,14 @@ class Solution(object):
             if quick==slow:
                 return True
         return False
+
+求二叉树的深度
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        if not root :
+            return 0
+        return max(self.maxDepth(root.left),self.maxDepth(root.right))+1
