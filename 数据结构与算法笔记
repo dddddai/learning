@@ -429,3 +429,25 @@ def reverse_linkedlist2(head):
         newhead = cur   # 更新 新链表的表头
         cur = tmp
     return newhead
+
+
+
+判断链表是否有环
+class Solution(object):
+    def hasCycle(self, head):
+        """
+        :type head: ListNode
+        :rtype: bool
+        """
+        quick=head
+        slow=head
+        if not head:
+            return False
+        while True:
+            if not (quick and quick.next):
+                return False
+            quick=quick.next.next
+            slow=slow.next
+            if quick==slow:
+                return True
+        return False
