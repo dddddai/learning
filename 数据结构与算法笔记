@@ -14,9 +14,12 @@ python去除字符串中间空格的方法
 
 a = ''.join(a.split())
 
-python的set和其他语言类似, 是一个无序不重复元素集, 基本功能包括关系测试和消除重复元素. 集合对象还支持union(联合), intersection(交), difference(差)和sysmmetric difference(对称差集)等数学运算.
+python的set和其他语言类似, 是一个无序不重复元素集, 基本功能包括关系测试和消除重复元素. 
+集合对象还支持union(联合), intersection(交), difference(差)和sysmmetric difference(对称差集)
+等数学运算.
  
-sets 支持 x in set, len(set),和 for x in set。作为一个无序的集合，sets不记录元素位置或者插入点。因此，sets不支持 indexing, slicing, 或其它类序列（sequence-like）的操作。
+sets 支持 x in set, len(set),和 for x in set。作为一个无序的集合，sets不记录元素位置或者插入点。
+因此，sets不支持 indexing, slicing, 或其它类序列（sequence-like）的操作。
  
 
  
@@ -38,7 +41,8 @@ set(['a', 'p', 's', 'h', 'm'])
 >>> x - y # 差集
 set(['p', 's'])
  
-记得以前个网友提问怎么去除海量列表里重复元素，用hash来解决也行，只不过感觉在性能上不是很高，用set解决还是很不错的，示例如下：
+记得以前个网友提问怎么去除海量列表里重复元素，用hash来解决也行，只不过感觉在性能上不是很高，
+用set解决还是很不错的，示例如下：
  
 >>> a = [11,22,33,44,11,22]
 >>> b = set(a)
@@ -50,7 +54,8 @@ set([33, 11, 44, 22])
 
 -------------------------------------------------
 高阶函数的用法
-result=sorted(result.iteritems(), key=lambda x: x[0])   这里第一个参数是一个可迭代对象，第二个参数是比较的值，默认升序。这里result是一个字典，按字典的键值排序
+result=sorted(result.iteritems(), key=lambda x: x[0])   这里第一个参数是一个可迭代对象，
+第二个参数是比较的值，默认升序。这里result是一个字典，按字典的键值排序
 
 
 >>> map(lambda x:x *2, [1,2,3])
@@ -88,8 +93,30 @@ def str2int(s):
         return {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}[s]
 return reduce(fn, map(char2num, s))
 
+zip:
+#长度不等时，取长度的最小的
+
+x = [1, 2, 3]
+y = ['a', 'b', 'c', 'd']
+xy = zip(x, y)
+print xy
+
+#结果是：
+[(1, 'a'), (2, 'b'), (3, 'c')]
 
 
+
+x = [[1,2,3],
+     [4,5,6],
+     [7,8,9]]
+y = zip(*x)
+print y
+
+#结果是：
+[(1, 4, 7), (2, 5, 8), (3, 6, 9)]
+
+#转置就是：
+map(list, y) 
 -----------------------------------------------------------------------
 
 整数转换为任意进制字符串
@@ -362,9 +389,13 @@ class Solution(object):
         return s1==s1[::-1]
 
 用最少的硬币找零
-假设你是一个自动售货机制造商的程序员。你的公司希望通过给每个交易最少硬币来简化工作。假设客户放入 1 美元的钞票并购买 37 美分的商品。你可以用来找零的最小数量的硬币是多少？答案是六个硬币：两个 25 美分，一个 10美分 和 三个一美分
+假设你是一个自动售货机制造商的程序员。你的公司希望通过给每个交易最少硬币来简化工作。
+假设客户放入 1 美元的钞票并购买 37 美分的商品。你可以用来找零的最小数量的硬币是多少？
+答案是六个硬币：两个 25 美分，一个 10美分 和 三个一美分
 
-用一个动态规划算法来解决我们的找零问题。 dpMakeChange 有三个参数：一个有效硬币值的列表，我们要求的找零额，以及一个包含每个值所需最小硬币数量的列表。 当函数完成时，minCoins 将包含从 0 到找零值的所有值的解。
+用一个动态规划算法来解决我们的找零问题。 dpMakeChange 有三个参数：一个有效硬币值的列表，
+我们要求的找零额，以及一个包含每个值所需最小硬币数量的列表。 当函数完成时，
+minCoins 将包含从 0 到找零值的所有值的解。
 
 def dpMakeChange(coinValueList,change):
    minCoins={}    minCoins用来记录每个cents的最小所需硬币数
@@ -462,3 +493,51 @@ class Solution(object):
         if not root :
             return 0
         return max(self.maxDepth(root.left),self.maxDepth(root.right))+1
+        
+        
+对称二叉树
+给定一个二叉树，检查它是否是镜像对称的。
+class Solution(object):
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        if not root:
+            return True
+        def isSame(p1,p2):
+            if not p1 and not p2:
+                return True
+            if (p1 and p2) and p1.val==p2.val:
+                return isSame(p1.left,p2.right) and isSame(p1.right,p2.left)
+            return False
+        return isSame(root.left,root.right)
+        
+
+验证二叉搜索树
+给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+
+假设一个二叉搜索树具有如下特征：
+
+节点的左子树只包含小于当前节点的数。
+节点的右子树只包含大于当前节点的数。
+所有左子树和右子树自身必须也是二叉搜索树。
+隔层也要满足！！！
+
+class Solution(object):
+    def isValidBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        def testValid(root,minimum,maximum):
+            if not root:
+                return True
+            if minimum<root.val<maximum:
+                return testValid(root.left,minimum,root.val) 
+                and testValid(root.right,root.val,maximum)
+            return False
+        return testValid(root,-2**32,2**32-1)
+ 妙啊！！
+ 
+ 
