@@ -26,6 +26,8 @@ def getEntrophy(s):
     return -(t*numpy.log2(t)).sum()
 
 
+
+
 def getCondEntropy(s1,s2):              条件熵
     t={}
     for i in range(len(s1)):
@@ -134,7 +136,8 @@ testing.loc[testing["Embarked"] == "Q", "Embarked"] = 2
 
 
 from sklearn.preprocessing import Normalizer            特征正规化
-print Normalizer(norm='l1').fit_transform([[1,3,4,13,2,321,3]])       注意要两个中括号，norm为l1或l2表示两种正规化
+print Normalizer(norm='l1').fit_transform([[1,3,4,13,2,321,3]])       注意要两个中括号，
+norm为l1或l2表示两种正规化
 print Normalizer(norm='l2').fit_transform([[1,1,3,-1,2]])
 
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis   LDA降维
@@ -148,13 +151,16 @@ print t.predict([[0.8,1]])             用t来预测它的分类
 
 
 from sklearn.model_selection import  train_test_split   切分训练集和测试集
-X_train,X_test, y_train, y_test =cross_validation.train_test_split(train_data,train_target,test_size=0.3, random_state=0)
+X_train,X_test, y_train, y_test =cross_validation.train_test_split(train_data,train_target,
+test_size=0.3, random_state=0)
 
 def modelling(feature,label):
     fv=feature.values
     lv=label
-    x_tt,x_val,y_tt,y_val=train_test_split(fv,lv,test_size=0.2)                  训练、验证、测试集分成6：2：2，第一步先分出验证集
-    x_train,x_test,y_train,y_test=train_test_split(x_tt,y_tt,test_size=0.25)                 第二布再来分训练和测试
+    x_tt,x_val,y_tt,y_val=train_test_split(fv,lv,test_size=0.2)                 
+    训练、验证、测试集分成6：2：2，第一步先分出验证集
+    x_train,x_test,y_train,y_test=train_test_split(x_tt,y_tt,test_size=0.25)                 
+    第二布再来分训练和测试
     print len(x_train),len(x_val),len(x_test)
 
 
@@ -195,14 +201,16 @@ joblib.load('knn_clf')            调用模型
 
 朴素贝叶斯                用到的特征必须是离散的，否则模型效果很差
 
-from sklearn.naive_bayes import GaussianNB,BernoulliNB             二值（比如0、1）用伯努利，高斯假设特征是高斯分布的
+from sklearn.naive_bayes import GaussianNB,BernoulliNB            
+二值（比如0、1）用伯努利，高斯假设特征是高斯分布的
 用法和knn一样
 
 决策树
 
 from sklearn.tree import DecisionTreeClassifier
 用法也一样
-dtc=DecisionTreeClassifier(criterion='entropy' or 'gini')            用信息增益的决策树，如不填这个参数则默认用基尼系数的决策树
+dtc=DecisionTreeClassifier(criterion='entropy' or 'gini')            
+用信息增益的决策树，如不填这个参数则默认用基尼系数的决策树
 
 SVM  支持向量机
 
@@ -241,7 +249,8 @@ from sklearn.metrics import mean_squared_error        用这个来衡量回归�
 
 df=pandas.read_csv('bank-data.csv')
 model=LinearRegression()
-model.fit(df['age'].values.reshape(-1,1),df['income'].values.reshape(-1,1))                  都一定要reshape成一列
+model.fit(df['age'].values.reshape(-1,1),df['income'].values.reshape(-1,1))                  
+都一定要reshape成一列
 y_pred=model.predict(df['age'].values.reshape(-1,1))
 print model.coef_                         回归方程的参数
 print mean_squared_error(y_pred,df['income'].values.reshape(-1,1))      
@@ -259,12 +268,16 @@ from keras.models import Sequential     容器
 from keras.layers.core import Dense,Activation    神经网络层、激活函数
 from keras.optimizers import SGD    随机梯度下降算法
 mdl=Sequential()
-mdl.add(Dense(50,input_dim=len(feature_value.iloc[0])))     先建立一个稠密层，表示它的输入层，50是下一个隐含层的神经元个数，input_dim是输入数据的维度
+mdl.add(Dense(50,input_dim=len(feature_value.iloc[0])))     先建立一个稠密层，
+表示它的输入层，50是下一个隐含层的神经元个数，input_dim是输入数据的维度
 mdl.add(Activation('sigmoid'))   加入sigmoid激活函数
 mdl.add(Dense(2))       加入隐含层，下一层输出2维
 mdl.add(Activation('softmax'))     归一化
 sgd=SGD(lr=0.01)   优化器,lr是学习率
-mdl.compile(loss='mean_squared_error',optimizer=sgd或者'adam'等等)     编译，指定loss函数，即损失函数，optimizer是优化器，填入刚才的sgd或者其它
+mdl.compile(loss='mean_squared_error',optimizer=sgd或者'adam'等等)     编译，指定loss函数，
+即损失函数，optimizer是优化器，填入刚才的sgd或者其它
+
+
 mdl.fit(x_tr,[[0,1]if i==0 else [1,0]  for i in y_tr],nb_epoch=1000,batch_size=2000)
 注意y_tr必须传入onehot编码后的值，nb_epoch指的是迭代次数，batch_size是每次随机选取的数量
 y_pred=mdl.predict_classes(x_t)
@@ -299,7 +312,8 @@ random_data=numpy.random.rand(samples,2),None
 f=plt.figure()    先建一个figure
 colors='bgrcmyk'       一个字符表示一种颜色
 data=[circles,moons,blobs,random_data]
-models=[('None',None),('KMeans',KMeans(n_clusters=3)) ,('DBSCAN',DBSCAN(min_samples=5,eps=0.1)) ,('Agglomerative',AgglomerativeClustering(n_clusters=3,linkage='ward')]   
+models=[('None',None),('KMeans',KMeans(n_clusters=3)) ,('DBSCAN',DBSCAN(min_samples=5,eps=0.1))
+,('Agglomerative',AgglomerativeClustering(n_clusters=3,linkage='ward')]   
 先不用模型，画出最初始的图，然后与Kmeans画出的图对比
 n_clusters为分类的种数，这里把所有点分成3类
 min_samples是核心点在半径内拥有的最小点数
@@ -336,7 +350,9 @@ skewed_features=skewness.index
 for feature in skewed_features:
     all_data['feature']=boxcox1p(all_data['feature'],0.15)
 
-如果数据有离群点，对数据进行均差和方差的标准化效果不好，这种情况可以使用robust_scale和RobustScaler，它们有对数据中心化和数据的缩放鲁棒性更强的参数
+如果数据有离群点，对数据进行均差和方差的标准化效果不好，
+这种情况可以使用robust_scale和RobustScaler，
+它们有对数据中心化和数据的缩放鲁棒性更强的参数
 
 Title_0                -0.567364
 Sex_male               -0.543351
@@ -406,8 +422,8 @@ array([[  0.,   1.,   2.,   0.,   0.,   0.],
 
 models=[('LinearSVC',LinearSVC(C=31)),('BernoulliNB',BernoulliNB(fit_prior=True)),
         ('KNN',KNeighborsClassifier(n_neighbors=9)),('SVC',SVC(kernel='rbf',C=11)),
-        ('Xgboost',XGBClassifier(learning_rate=0.0001,colsample_bytree=0.8,reg_lambda=1,n_estimators=100,
-                                   subsample=0.8,max_depth=3)),
+        ('Xgboost',XGBClassifier(learning_rate=0.0001,
+	colsample_bytree=0.8,reg_lambda=1,n_estimators=100,subsample=0.8,max_depth=3)),
         ('Adaboost',AdaBoostClassifier(n_estimators=30,learning_rate=0.1)),
         ('RandomForest',RandomForestClassifier(n_estimators=13,max_depth=6,criterion='entropy')),
         ('Logestic',LogisticRegression(solver='liblinear'))]
@@ -420,7 +436,8 @@ prices_pred=numpy.exp((lasso.predict(test)*0.3+enet.predict(test)*0.4
 
 
 
-rmse=numpy.sqrt(-cross_val_score(model,train.values,y_tr,scoring="neg_mean_squared_error",cv=n_folds))
+rmse=numpy.sqrt(-cross_val_score(model,train.values,y_tr,scoring="neg_mean_squared_error",
+cv=n_folds))
 
 
 from sklearn.cross_validation import cross_val_score # K折交叉验证模块
@@ -452,3 +469,23 @@ plt.plot(k_range, k_scores)
 plt.xlabel('Value of K for KNN')
 plt.ylabel('Cross-Validated MSE')
 plt.show()
+
+
+激活函数
+
+Rectified Linear Unit(ReLU) - 用于隐层神经元输出
+Sigmoid - 用于隐层神经元输出
+Softmax - 用于多分类神经网络输出
+Linear - 用于回归神经网络输出（或二分类问题）
+
+
+
+CNN
+输入-卷积*x-池-卷积*x-池-Flatten-Dense-Dense-输出
+最好连续添加Conv + relu图层
+
+
+比如对于一个有 2000 个训练样本的数据集。将 2000 个样本分成大小为 500 的 batch，
+那么完成一个 epoch 需要 4 个 iteration。
+
+
