@@ -589,3 +589,34 @@ class Solution(object):
         for i in nums:
             last, now = now, max(i+last, now)
         return now
+
+
+统计所有小于非负整数 n 的质数的数量
+
+class Solution(object):
+    def countPrimes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n<3:
+            return 0
+        prime=[1]*n
+        prime[0]=prime[1]=0
+        for i in range(2,int(n**0.5)+1):
+            if prime[i]:
+                prime[i*i::i]=[0]*len(prime[i*i::i])
+        return sum(prime)
+        
+给定一个整数，写一个函数来判断它是否是 3 的幂次方
+
+class Solution(object):
+    def isPowerOfThree(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        if n<1:
+            return False
+        return not 3**19%n      3**19是int范围内最大的3的幂
+        
