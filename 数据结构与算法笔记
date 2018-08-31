@@ -620,3 +620,6 @@ class Solution(object):
             return False
         return not 3**19%n      3**19是int范围内最大的3的幂
         
+字典的key按照value排序：
+dict={'a':2,'b':4,'c':1,'d':0}
+print sorted(dict,key=dict.__getitem__)
