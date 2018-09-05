@@ -623,3 +623,47 @@ class Solution(object):
 字典的key按照value排序：
 dict={'a':2,'b':4,'c':1,'d':0}
 print sorted(dict,key=dict.__getitem__)
+
+中序遍历二叉树
+
+class Solution(object):
+    def inorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        result=[]
+        if root is None:
+            return []
+        result.extend(self.inorderTraversal(root.left))
+        result.append(root.val)
+        result.extend(self.inorderTraversal(root.right))
+        return result
+        
+        
+        
+编写一个程序，找到两个单链表相交的起始节点。
+
+ 
+
+例如，下面的两个链表：
+
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+
+
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        p1 = headA
+        p2 = headB
+        while(p1 != p2):
+            p1=headB if p1 is None else p1.next
+            p2=headA if p2 is None else p2.next
+        return p1
