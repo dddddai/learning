@@ -697,3 +697,14 @@ class Solution:
         return is_same(pRoot1,pRoot2) or self.HasSubtree(pRoot1.left,pRoot2)\
                or self.HasSubtree(pRoot1.right,pRoot2)
            
+           
+操作给定的二叉树，将其变换为源二叉树的镜像。
+
+class Solution:
+    # 返回镜像树的根节点
+    def Mirror(self, root):
+        # write code here
+        if root is None:
+            return
+        root.left,root.right=self.Mirror(root.right),self.Mirror(root.left)
+        return root
