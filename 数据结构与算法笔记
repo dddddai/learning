@@ -768,3 +768,29 @@ class Solution:
 
 return中使用and表示如果and左边为true则返回and右边，否则返回and左边
 zip(*matrix)[::-1]为逆时针旋转后的矩阵
+
+
+桶排序
+
+def bucket_sort(lst):
+    buckets = [0] * ((max(lst) - min(lst))+1)
+    for i in range(len(lst)):
+        buckets[lst[i]-min(lst)] += 1
+    res=[]
+    for i in range(len(buckets)):
+        if buckets[i] != 0:
+            res += [i+min(lst)]*buckets[i]
+    return res
+
+冒泡排序
+
+def bubble_sort(lists):
+	"""冒泡排序"""
+	count = len(lists)
+	for i in range(0, count):
+		for j in range(0, count - i - 1):
+			if lists[j] > lists[j + 1]:
+				lists[j], lists[j + 1] = lists[j + 1], lists[j]
+	return lists
+
+ 
