@@ -794,3 +794,8 @@ def bubble_sort(lists):
 	return lists
 
  
+交换a,b
+
+a=a^b
+b=a^b
+a=a^b
