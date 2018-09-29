@@ -799,3 +799,27 @@ def bubble_sort(lists):
 a=a^b
 b=a^b
 a=a^b
+
+
+两个排序数组的中位数
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        size1,size2=len(nums1),len(nums2)
+        if size1>size2:
+            return self.findMedianSortedArrays(nums2,nums1)
+        l1=l2=r1=r2=0
+        low,high=0,size1*2
+        while low<=high:
+            c1=(low+high)//2
+            c2=size1+size2-c1
+            l1=-2**32 if c1==0 else nums1[(c1-1)//2]
+            r1=2**32-1 if c1==size1*2 else nums1[c1//2]
+            l2=-2**32 if c2==0 else nums2[(c2-1)//2]
+            r2=2**32-1 if c2==size2*2 else nums2[c2//2]
+            if l1>r2:
+                high=c1-1
+            elif l2>r1:
+                low=c1+1
+            else:
+                break
+        return (max(l1,l2)+min(r1,r2))/2.
