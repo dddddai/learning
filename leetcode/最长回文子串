@@ -1,0 +1,12 @@
+class Solution(object):
+    def longestPalindrome(self, s):
+        l=0
+        start=0
+        for i in xrange(len(s)):
+            if i-l>=1 and s[i-l-1:i+1]==s[i-l-1:i+1][::-1]:
+                start=i-l-1
+                l+=2
+            elif s[i-l:i+1]==s[i-l:i+1][::-1]:
+                start=i-l
+                l+=1
+        return s[start:start+l]
