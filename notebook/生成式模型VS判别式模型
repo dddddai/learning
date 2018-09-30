@@ -28,3 +28,26 @@ P(y|x)={P(x,y)}/{P(x)}
 
 最后，两者的联系是：由生成式模型可以得到判别式模型，但由判别式模型不能得到生成式模型。
 
+常见的：
+
+生成式模型
+
+判别式分析
+朴素贝叶斯
+K近邻(KNN)
+混合高斯模型
+隐马尔科夫模型(HMM)
+贝叶斯网络
+Sigmoid Belief Networks
+马尔科夫随机场(Markov Random Fields)
+深度信念网络(DBN)
+
+判别式模型
+
+线性回归(Linear Regression)
+逻辑斯蒂回归(Logistic Regression)
+神经网络(NN)
+支持向量机(SVM)
+高斯过程(Gaussian Process)
+条件随机场(CRF)
+CART(Classification and Regression Tree)
