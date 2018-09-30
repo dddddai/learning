@@ -1,0 +1,34 @@
+class Solution(object):
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        def count_nodes(root):
+            if root is None:
+                return 0
+            return count_nodes(root.left)+count_nodes(root.right)+1
+        left_count=count_nodes(root.left)
+        if left_count==k-1:
+            return root.val
+        if left_count>k-1:
+            return self.kthSmallest(root.left,k)
+        return self.kthSmallest(root.right,k-1-left_count)
+# class Solution:
+#     def kthSmallest(self, root, k):
+#         """
+#         :type root: TreeNode
+#         :type k: int
+#         :rtype: int
+#         """
+#         def inorder(root,alist,k):
+#             if root:
+#                 inorder(root.left,alist,k)
+#                 if len(alist)==k:
+#                     return
+#                 alist.append(root.val)
+#                 inorder(root.right,alist,k)
+#         result = []
+#         inorder(root,result,k)
+#         return result[-1]
