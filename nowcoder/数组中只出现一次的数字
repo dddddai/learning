@@ -10,12 +10,12 @@ class Solution:
         tmp=0
         for i in array:
             tmp^=i
-        idx=a=b=0
+        first1=a=b=0
         while (tmp&1)==0:
             tmp>>=1
-            idx+=1
+            first1+=1
         for i in array:
-            if (i>>idx)&1:
+            if (i>>first1)&1:
                 a^=i
             else:
                 b^=i
