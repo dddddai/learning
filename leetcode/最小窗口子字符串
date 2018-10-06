@@ -1,0 +1,38 @@
+给定一个字符串 S 和一个字符串 T，请在 S 中找出包含 T 所有字母的最小子串。
+
+示例：
+
+输入: S = "ADOBECODEBANC", T = "ABC"
+输出: "BANC"
+
+
+class Solution(object):
+    def minWindow(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        size=len(s)
+        count=len(t)
+        start=l=0
+        min_size=size+1
+        times={}
+        for c in t:
+            times[c]=times.get(c,0)+1
+        for r in range(size):
+            if s[r] in times:
+                times[s[r]]-=1
+                if times[s[r]]>=0:
+                    count-=1
+            if count==0:
+                while True:
+                    if s[l] in times:
+                        if times[s[l]]<0:
+                            times[s[l]]+=1
+                        else:
+                            break
+                    l+=1
+                if r-l+1<min_size:  
+                    start,min_size=l,r-l+1
+        return s[start:start+min_size] if min_size<size+1 else ''
