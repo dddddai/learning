@@ -15,14 +15,13 @@ class Solution(object):
         :rtype: int
         """
         result=nums[0]
-        times=1
-        size=len(nums)
-        for i in range(1,size):
-            if result==nums[i]:
+        times=0
+        for n in nums:
+            if result==n:
                 times+=1
             else:
                 times-=1
                 if times==0:
-                    result=nums[i]
+                    result=n
                     times=1
         return result
