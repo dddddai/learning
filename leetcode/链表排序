@@ -1,0 +1,34 @@
+在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序。
+
+示例 1:
+
+输入: 4->2->1->3
+输出: 1->2->3->4
+
+
+class Solution(object):
+    def merge(self,p1,p2):
+        if p1 is None:
+            return p2
+        if p2 is None:
+            return p1
+        if p1.val<=p2.val:
+            p1.next=self.merge(p1.next,p2)
+            return p1
+        p2.next=self.merge(p1,p2.next)
+        return p2
+    
+    def sortList(self, head):
+        """
+        :type head: ListNode
+        :rtype: ListNode
+        """
+        if not (head and head.next):
+            return head
+        cut=quick=slow=head
+        while quick and quick.next:
+            quick=quick.next.next
+            cut=slow
+            slow=slow.next
+        cut.next=None
+        return self.merge(self.sortList(head),self.sortList(slow))
