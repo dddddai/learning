@@ -1,20 +1,19 @@
-class Solution(object):
-    def kthSmallest(self, root, k):
-        """
-        :type root: TreeNode
-        :type k: int
-        :rtype: int
-        """
-        def count_nodes(root):
-            if root is None:
-                return 0
-            return count_nodes(root.left)+count_nodes(root.right)+1
-        left_count=count_nodes(root.left)
-        if left_count==k-1:
-            return root.val
-        if left_count>k-1:
-            return self.kthSmallest(root.left,k)
-        return self.kthSmallest(root.right,k-1-left_count)
+class Solution:
+    # 返回对应节点TreeNode
+    count=0
+    def KthNode(self, pRoot, k):
+        # write code here
+        if pRoot is None:
+            return
+        result=self.KthNode(pRoot.left,k)
+        if result: 
+            return result
+        self.count+=1
+        if self.count==k: 
+            return pRoot
+        result=self.KthNode(pRoot.right,k)
+        return result
+
 # class Solution:
 #     def kthSmallest(self, root, k):
 #         """
