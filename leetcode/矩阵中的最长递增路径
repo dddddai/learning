@@ -1,0 +1,52 @@
+示例 1:
+
+输入: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+输出: 4 
+解释: 最长递增路径为 [1, 2, 6, 9]。
+示例 2:
+
+输入: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+输出: 4 
+解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。
+
+
+class Solution(object):
+    steps=[[0,1],[0,-1],[1,0],[-1,0]]
+    def longestIncreasingPath(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: int
+        """
+        def func(g,i,j,m,n):
+            if self.visited[i][j]:
+                return self.visited[i][j]
+
+            tmp=1
+            for s in self.steps:
+                x=i+s[0]
+                y=j+s[1]
+                if not(0<=x<m and 0<=y<n) or g[i][j]>=g[x][y]:
+                    continue
+                tmp=max(tmp,1+func(g,x,y,m,n))
+            self.visited[i][j]=tmp
+            return tmp
+        
+        if not matrix or not matrix[0]:
+            return 0
+        m,n=len(matrix),len(matrix[0])
+        self.visited=[[0 for i in range(n)] for j in range(m)]
+        result=1
+        for i in range(m):
+            for j in range(n):
+                result=max(result,func(matrix,i,j,m,n))
+        return result
