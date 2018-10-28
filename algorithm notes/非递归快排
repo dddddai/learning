@@ -9,16 +9,16 @@ while循环，终止条件为两个栈为空（排序完成）
 
 def quickSort(nums):
     #初始化两个栈
-    startStack = [0,]
-    endStack = [len(nums)-1,]
+    startStack = [0]
+    endStack = [len(nums)-1]
 
     #进入循环，两个栈均为空时，排序结束
-    while startStack and endStack:
+    while startStack:
         #得到本次循环的start 和 end
         start = startStack.pop()
         end = endStack.pop()
         #判断子数组是否有序
-        if start>end:
+        if start>=end:
             continue
         i = start 
         j = end
