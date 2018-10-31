@@ -1,0 +1,28 @@
+给定一组非负整数，重新排列它们的顺序使之组成一个最大的整数。
+
+示例 1:
+
+输入: [10,2]
+输出: 210
+示例 2:
+
+输入: [3,30,34,5,9]
+输出: 9534330
+说明: 输出结果可能非常大，所以你需要返回一个字符串而不是整数。
+
+如果字符串数组中相邻两位如a,b，都有a+b>b+a，那么按照这个比较逻辑排序得到的数组，
+从头到尾相连得到的字符串一定是最大的（可用反证法证明），
+通过自定义的compare函数以及sort函数排序，然后把字符串数组中的字符串相连
+
+
+class Solution(object):
+    def largestNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: str
+        """
+        if not nums:
+            return ''
+        nums=map(str,nums)
+        nums.sort(cmp=lambda x,y:cmp(y+x,x+y))
+        return '0' if nums[0]=='0' else ''.join(nums)
