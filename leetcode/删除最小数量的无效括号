@@ -1,0 +1,45 @@
+删除最小数量的无效括号，使得输入的字符串有效，返回所有可能的结果。
+
+说明: 输入可能包含了除 ( 和 ) 以外的字符。
+
+示例 1:
+
+输入: "()())()"
+输出: ["()()()", "(())()"]
+示例 2:
+
+输入: "(a)())()"
+输出: ["(a)()()", "(a())()"]
+示例 3:
+
+输入: ")("
+输出: [""]
+
+class Solution(object):
+    def removeInvalidParentheses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        self.result=[]
+        def func(s,key,last):
+            cnt=0
+            for i in range(len(s)):
+                if s[i] in {'(',')'}:
+                    if s[i]==key:
+                        cnt+=1
+                    else:
+                        cnt-=1
+                if cnt<=0:
+                    continue
+                for j in range(last,i+1):
+                    if s[j]==key and (j==last or s[j-1]!=key):
+                        func(s[:j]+s[j+1:],key,j)
+                return
+            s=s[::-1]
+            if key==')':
+                return func(s,'(',0)
+            self.result.append(s)
+            
+        func(s,')',0)
+        return self.result
