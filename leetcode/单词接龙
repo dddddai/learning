@@ -22,7 +22,7 @@ class Solution(object):
         d=set(wordList)
         if beginWord in d:
             d.remove(beginWord)
-        if endWord not in wordList:
+        if endWord not in d:
             return 0
         length={beginWord:1}
         path=[beginWord]
