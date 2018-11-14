@@ -34,7 +34,7 @@ class Solution(object):
         for i, row in enumerate(board):
             for j, c in enumerate(row):
                 if c != '.':
-                    if (-1,j,c) in seen or (i,c,-1) in seen or (i//3,j//3,c) in seen:
+                    if (-1,j,c) in seen or (i,-1,c) in seen or (i//3,j//3,c) in seen:
                         return False
-                    seen.update([(-1,j,c),(i,c,-1),(i//3,j//3,c)])
+                    seen.update([(-1,j,c),(i,-1,c),(i//3,j//3,c)])
         return True
