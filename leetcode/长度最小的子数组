@@ -27,5 +27,6 @@ class Solution(object):
                 l+=1
             if cur_sum>=s:   
                 result=min(result,r-l)
+            elif r==size:
+                break
         return result if result<=size else 0
-                
