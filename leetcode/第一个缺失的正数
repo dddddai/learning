@@ -19,12 +19,11 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        l=1
         n=len(nums)
         i=0
         while i<n:
             idx=nums[i]-1
-            if nums[i]<=0 or nums[i]==i+1 or idx>=n or nums[idx]==nums[i]:
+            if not(0<=idx<n) or nums[i]==i+1 or nums[idx]==nums[i]:
                 i+=1
                 continue
             nums[idx],nums[i]=nums[i],nums[idx]
