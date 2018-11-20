@@ -9,6 +9,9 @@
 输出: 0
 解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。
 
+
+python:
+
 class Solution(object):
     def maxProduct(self, nums):
         """
@@ -22,3 +25,21 @@ class Solution(object):
             neg_max=min(n,min(n*tp,n*tn))
             result=max(result,pos_max)
         return result
+
+
+java:
+
+class Solution {
+    public int maxProduct(int[] nums) {
+        int result,negMax,posMax;
+        result=negMax=posMax=nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            int tp=posMax,tn=negMax;
+            posMax=Math.max(nums[i],Math.max(nums[i]*tp,nums[i]*tn));
+            negMax=Math.min(nums[i],Math.min(nums[i]*tp,nums[i]*tn));
+            result=result>posMax?result:posMax;
+        }
+        return result;
+    }
+}
