@@ -16,8 +16,7 @@ class Solution(object):
             if level<len(nodes):
                 nodes[level].append(node.val)
             else:
-                nodes.append([])
-                nodes[level].append(node.val)
+                nodes.append([node.val])
             if node.left:
                 dq.append((node.left,level+1))
             if node.right:
