@@ -25,3 +25,23 @@ class Solution(object):
                     result=n
                     times=1
         return result
+
+
+java:
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        int times=0,result=nums[0];
+        for(int n:nums)
+        {
+            if(n==result)
+                times++;
+            else if(--times==0)
+            {
+                result=n;
+                times=1;
+            }
+        }
+        return result;
+    }
+}
