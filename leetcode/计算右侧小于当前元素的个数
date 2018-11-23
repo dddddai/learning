@@ -20,22 +20,42 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[int]
         """
-        length=len(nums)
-        size=0
+        size=len(nums)
         tmp=[]
-        result=[-1]*length
-        for i in range(length-1,-1,-1):
-            l,r=0,size-1
+        result=[-1]*size
+        for i in range(size-1,-1,-1):
+            l,r=0,len(tmp)-1
             while l<=r:
-                mid=(l+r)//2
+                mid=(l+r)>>1
                 if tmp[mid]<nums[i]:
                     l=mid+1
-                elif nums[i]<tmp[mid]:
+                else:
                     r=mid-1
-                else:   
-                    r-=1    #因为是计算小于的个数，所以要保证移动到最左边
             result[i]=l
             tmp.insert(l,nums[i])
-            size+=1
         return result
         
+
+java:
+
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        Integer[] result=new Integer[nums.length];
+        List<Integer> tmp=new ArrayList<>();
+        for(int i=nums.length-1;i>=0;i--)
+        {
+            int l=0,r=tmp.size()-1;
+            while(l<=r)
+            {
+                int mid=(l+r)>>1;
+                if(tmp.get(mid)<nums[i])
+                    l=mid+1;
+                else
+                    r=mid-1;
+            }
+            tmp.add(l,nums[i]);
+            result[i]=l;
+        }
+        return Arrays.asList(result);
+    }
+}
