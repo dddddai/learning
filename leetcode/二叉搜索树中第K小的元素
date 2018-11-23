@@ -35,3 +35,20 @@ class Solution(object):
 #         result = []
 #         inorder(root,result,k)
 #         return result[-1]
+
+
+java:
+
+class Solution {
+    private int cnt=0;
+    public int kthSmallest(TreeNode root, int k) {
+        if(root==null)
+            return Integer.MAX_VALUE;
+        int result=kthSmallest(root.left,k);
+        if(result!=Integer.MAX_VALUE)
+            return result;
+        if(++cnt==k)
+            return root.val;
+        return kthSmallest(root.right,k);
+    }
+}
