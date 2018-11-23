@@ -1,18 +1,21 @@
-class Solution:
-    # 返回对应节点TreeNode
-    count=0
-    def KthNode(self, pRoot, k):
-        # write code here
-        if pRoot is None:
-            return
-        result=self.KthNode(pRoot.left,k)
-        if result: 
+class Solution(object):
+    cnt=0
+    int_max=2**32-1
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        if root is None:
+            return self.int_max
+        result=self.kthSmallest(root.left,k)
+        if result!=self.int_max:
             return result
-        self.count+=1
-        if self.count==k: 
-            return pRoot
-        result=self.KthNode(pRoot.right,k)
-        return result
+        self.cnt+=1
+        if self.cnt==k:
+            return root.val
+        return self.kthSmallest(root.right,k)
 
 # class Solution:
 #     def kthSmallest(self, root, k):
@@ -28,6 +31,7 @@ class Solution:
 #                     return
 #                 alist.append(root.val)
 #                 inorder(root.right,alist,k)
+                
 #         result = []
 #         inorder(root,result,k)
 #         return result[-1]
