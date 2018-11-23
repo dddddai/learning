@@ -1,0 +1,30 @@
+    public void quickSort(int[] arr,int start,int end)
+    {
+        if(start>=end)
+            return;
+        int mid=(start+end)>>1;
+        int md_value=Math.max(Math.min(arr[start],arr[mid]),
+                     Math.min(Math.max(arr[start],arr[mid]),arr[end]));
+        //三数取中避免最坏情况
+        if(md_value!=arr[start])
+        {
+            int idx=(arr[end]==md_value)?end:mid;
+            int tmp=arr[idx];
+            arr[idx]=arr[start];
+            arr[start]=tmp;
+        }
+        
+        int pivot=arr[start],l=start,r=end;
+        while(l<r)
+        {
+            while(l<r && arr[r]>=pivot)
+                r--;
+            arr[l]=arr[r];
+            while(l<r && arr[l]<pivot)
+                l++;
+            arr[r]=arr[l];
+        }
+        arr[l]=pivot;
+        quickSort(arr,start,l-1);
+        quickSort(arr,l+1,end);
+    }
