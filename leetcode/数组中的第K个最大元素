@@ -10,6 +10,7 @@
 输入: [3,2,3,1,2,4,5,5,6] 和 k = 4
 输出: 4
 
+1.维护一个大小为k的最小堆
 
 class Solution(object):
     def findKthLargest(self, nums, k):
@@ -41,30 +42,42 @@ class Solution(object):
         return nums[0]
         
 
-解法2：
+2.用类似快排的思想，平均时间复杂度是O(n)
 
-        self.n=len(nums)
-        def search(arr,start,end,k):
-            if start>=end:
-                return arr[start]
-            i,j,mid=start,end,(start+end)//2
+class Solution(object):
+    def median3(self,a,b,c):
+        return max(min(a,b),min(max(a,b),c))
+    
+    def search(self,arr,start,end,k):
+        if start>=end:
+            return arr[start]
+        i,j,mid=start,end,(start+end)>>1
             
-            #注意要用三数取中法，避免最坏情况
-            if arr[i]<arr[mid]<arr[j] or arr[j]<arr[mid]<arr[i]:
-                arr[mid],arr[j]=arr[j],arr[mid]
-            elif arr[mid]<arr[i]<arr[j] or arr[j]<arr[i]<arr[mid]:
-                arr[i],arr[j]=arr[j],arr[i]
+        md_value=self.median3(arr[i],arr[j],arr[mid])
+        if md_value!=arr[j]:
+            if md_value==arr[i]:
+                arr[j],arr[i]=arr[i],arr[j]
+            else:
+                arr[j],arr[mid]=arr[mid],arr[j]
                 
-            while i<j:
-                if arr[i]>=arr[j]:
-                    arr[i],arr[j-1],arr[j]=arr[j-1],arr[j],arr[i]
-                    j-=1
-                else:
-                    i+=1
-            if self.n-i==k:
-                return arr[i]
-            elif self.n-i>k:
-                return search(arr,i+1,end,k)
-            return search(arr,start,i-1,k)
-        
-        return search(nums,0,self.n-1,k)
+        while i<j:
+            if arr[i]>=arr[j]:
+                arr[i],arr[j-1],arr[j]=arr[j-1],arr[j],arr[i]
+                j-=1
+            else:
+                i+=1
+                
+        if self.n-i==k:
+            return arr[i]
+        elif self.n-i>k:
+            return self.search(arr,i+1,end,k)
+        return self.search(arr,start,i-1,k)
+    
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        self.n=len(nums)
+        return self.search(nums,0,self.n-1,k)
