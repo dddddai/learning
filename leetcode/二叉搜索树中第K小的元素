@@ -40,7 +40,7 @@ class Solution(object):
 java:
 
 class Solution {
-    private int cnt=0;
+    int cnt=0;
     public int kthSmallest(TreeNode root, int k) {
         if(root==null)
             return Integer.MAX_VALUE;
