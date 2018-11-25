@@ -1,0 +1,16 @@
+二： String类的讨论
+
+String a = "abc";
+String b = "abc";
+System.out.println(a == b);//true
+输出true
+说明：==在进行复合数据类型比较时，比较的是内存中的存放地址。因此a与b引用同一个String对象。
+
+String b = "abc";
+String c = new String("abc");
+System.out.println(c == b);//false
+System.out.println(c.equals(b));//true
+输出：
+false
+true
+说明：b,c分别引用了两个对象。显然，两者内容是相同的，因此equal返回true。第一个例子也一样。
