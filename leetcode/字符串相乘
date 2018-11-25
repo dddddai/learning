@@ -1,0 +1,54 @@
+模拟笔算乘法
+
+python:
+
+class Solution(object):
+    def multiply(self, num1, num2):
+        """
+        :type num1: str
+        :type num2: str
+        :rtype: str
+        """
+        if num1=='0' or num2=='0':
+            return '0'
+        len1,len2=len(num1),len(num2)
+        result=['0' for _ in xrange(len1+len2)]
+        for i in xrange(len1-1,-1,-1):
+            carry=0
+            for j in xrange(len2-1,-1,-1):
+                product=carry+int(num1[i])*int(num2[j])+int(result[i+j+1])
+                carry=product/10
+                result[i+j+1]=str(product%10)
+                
+            result[i+j]=str(carry)
+            
+        return ''.join(result).lstrip('0')
+
+
+
+java:
+
+class Solution {
+    public String multiply(String num1, String num2) {
+        if("0".equals(num1) || "0".equals(num2))
+            return "0";
+        int len1=num1.length(),len2=num2.length(),i,j,carry;
+        int[] result=new int[len1+len2];
+        for(i=len1-1;i>=0;--i)
+        {
+            carry=0;
+            for(j=len2-1;j>=0;--j)
+            {
+                int product=carry+(num1.charAt(i)-'0')*(num2.charAt(j)-'0')+result[i+j+1];
+                result[i+j+1]=product%10;
+                carry=product/10;
+            }
+            result[i+j+1]=carry;
+        }
+        i=(result[0]==0)?1:0;
+        StringBuilder s=new StringBuilder();
+        while(i<result.length)
+            s.append(result[i++]);
+        return s.toString();
+    }
+}
