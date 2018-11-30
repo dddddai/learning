@@ -1,0 +1,17 @@
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1=new HashSet<>();
+        Set<Integer> candidates=new HashSet<>();
+        for(int n:nums1)
+            set1.add(n);
+        for(int n:nums2)
+            if(set1.contains(n))
+                candidates.add(n);
+        int[] result=new int[candidates.size()];
+        int i=0;
+        Iterator<Integer> it=candidates.iterator();
+        while(it.hasNext())
+            result[i++]=it.next();
+        return result;
+    }
+}
