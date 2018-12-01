@@ -1,0 +1,30 @@
+实现 int sqrt(int x) 函数。
+
+计算并返回 x 的平方根，其中 x 是非负整数。
+
+由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+
+
+用牛顿迭代法
+https://176.122.157.73:3457/zh-hans/%E7%89%9B%E9%A1%BF%E6%B3%95
+
+class Solution(object):
+    def mySqrt(self, x):
+        """
+        :type x: int
+        :rtype: int
+        """
+        result=long(x)
+        while result*result>x:
+            result=(result+x/result)>>1
+        return result
+        
+        
+class Solution {
+    public int mySqrt(int x) {
+        long result=x;
+        while(result*result>x)
+            result=(result+x/result)>>1;
+        return (int)result;
+    }
+}     
