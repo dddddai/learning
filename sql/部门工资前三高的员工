@@ -30,8 +30,12 @@ Department 表包含公司所有部门的信息。
 | Sales      | Sam      | 60000  |
 +------------+----------+--------+
 
-select d.name Department,e.name Employee,e.salary Salary
-from employee e join department d
-on e.departmentid=d.id
-where 3>(select count(distinct s1.salary) from employee s1
-        where e.salary<s1.salary and e.departmentid=s1.departmentid)
+SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary
+FROM employee e
+	JOIN department d ON e.departmentid = d.id
+WHERE 3 > (
+	SELECT COUNT(DISTINCT s1.salary)
+	FROM employee s1
+	WHERE e.salary < s1.salary
+		AND e.departmentid = s1.departmentid
+)
