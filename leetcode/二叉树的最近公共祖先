@@ -20,12 +20,23 @@ class Solution(object):
         :type q: TreeNode
         :rtype: TreeNode
         """
-        if root is None:
-            return
-        if root==p or root==q:
+        if root == p or root == q or root is None:
             return root
-        left,right=self.lowestCommonAncestor(root.left,p,q)\
-                   ,self.lowestCommonAncestor(root.right,p,q)
+        left, right = self.lowestCommonAncestor(
+            root.left, p, q), self.lowestCommonAncestor(root.right, p, q)
         if left and right:
             return root
         return left or right
+
+
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null || root==p || root==q)
+            return root;
+        TreeNode left=lowestCommonAncestor(root.left,p,q);
+        TreeNode right=lowestCommonAncestor(root.right,p,q);
+        if(left!=null && right!=null)
+            return root;
+        return left==null?right:left;
+    }
+}
