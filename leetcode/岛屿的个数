@@ -49,3 +49,35 @@ class Solution(object):
                     dfs(grid,i,j,m,n)
                     count+=1
         return count
+
+
+
+class Solution {
+    public void func(char[][] matrix,int i,int j,int m,int n)
+    {
+        if(i>=0 && i<m && j>=0 && j<n && matrix[i][j]=='1')
+        {
+            matrix[i][j]='0';
+            func(matrix,i+1,j,m,n);
+            func(matrix,i-1,j,m,n);
+            func(matrix,i,j+1,m,n);
+            func(matrix,i,j-1,m,n);
+        }
+    }
+    
+    public int numIslands(char[][] grid) {
+        if(grid.length==0||grid[0].length==0)
+            return 0;
+        int m=grid.length;
+        int n=grid[0].length,cnt=0;
+        
+        for(int i=0;i<m;++i)
+            for(int j=0;j<n;++j)
+                if(grid[i][j]=='1')
+                {
+                    func(grid,i,j,m,n);
+                    ++cnt;
+                }
+        return cnt;
+    }
+}
