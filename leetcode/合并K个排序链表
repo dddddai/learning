@@ -10,20 +10,9 @@
 
 
 class Solution(object):
-    def mergeKLists(self, lists):
-        """
-        :type lists: List[ListNode]
-        :rtype: ListNode
-        """
-        lists=filter(lambda x:x,lists)
-        if not lists:
-            return
-        size=len(lists)
-        int_max=2**32-1
-        
-        def perc_down(arr,start,end):
+    def perc_down(self,arr,start,end):
             root=start
-            while True:
+            while 1:
                 child=2*root+1
                 if child>end:
                     break
@@ -35,15 +24,27 @@ class Solution(object):
                 else:
                     break
                     
+    def mergeKLists(self, lists):
+        """
+        :type lists: List[ListNode]
+        :rtype: ListNode
+        """
+        lists=filter(lambda x:x,lists)
+        if not lists:
+            return
+        size=len(lists)
+        int_max=2**32-1
+
+                    
         for i in range((size-2)//2,-1,-1):
-            perc_down(lists,i,size-1)
+            self.perc_down(lists,i,size-1)
             
         head=p=ListNode(None)
         
-        while lists[0].val<int_max:
+        while lists[0].val!=int_max:
             p.next=ListNode(lists[0].val)
             p=p.next
             lists[0]=lists[0].next if lists[0].next else ListNode(int_max)
-            perc_down(lists,0,size-1)
+            self.perc_down(lists,0,size-1)
             
         return head.next
