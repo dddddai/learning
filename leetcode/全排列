@@ -11,9 +11,9 @@ class Solution(object):
         if len(nums)<=1:
             return [nums]
         result=[]
-        for i in xrange(len(nums)):
-            for p in self.permute(nums[:i]+nums[i+1:]):
-                result.append([nums[i]]+p)
+        for p in self.permute(nums[1:]):
+            for i in xrange(len(p)+1):
+                result.append(p[:i]+[nums[0]]+p[i:])
         return result
 
 
