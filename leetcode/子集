@@ -26,6 +26,26 @@ class Solution(object):
         :rtype: List[List[int]]
         """
         result=[[]]
-        for num in nums:
-            result.extend([i+[num] for i in result])
+        for n in nums:
+            result.extend([sub+[n] for sub in result])
         return result
+        
+        
+        
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result=new ArrayList<>();
+        result.add(new ArrayList<Integer>());
+        for(int n:nums)
+        {
+            int curSize=result.size();
+            for(int i=0;i<curSize;++i)
+            {
+                List<Integer> tmp=new ArrayList(result.get(i));
+                tmp.add(n);
+                result.add(tmp);
+            }
+        }
+        return result;
+    }
+}
