@@ -28,6 +28,35 @@ class Solution(object):
         return result
 
 
+
+
+class Solution(object):
+    def func(self,candidates,nums,used):
+        if len(candidates)==len(nums):
+            self.result.append(candidates[:])
+            return
+        for i in xrange(len(nums)):
+            if used[i] or (i and nums[i]==nums[i-1] and not used[i-1]):
+                continue
+            used[i]=True
+            candidates.append(nums[i])
+            self.func(candidates,nums,used)
+            used[i]=False
+            candidates.pop()
+            
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        if not nums:
+            return []
+        nums.sort()
+        self.result=[]
+        self.func([],nums,[False]*len(nums))
+        return self.result
+               
+        
 class Solution {
     List<List<Integer>> result=new ArrayList<>();
     
