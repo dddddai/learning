@@ -31,3 +31,28 @@ class Solution(object):
             if nums[i]!=i+1:
                 return i+1
         return n+1
+
+
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int size=nums.length;
+        int i=0;
+        while(i<size)
+        {
+            int idx=nums[i]-1;
+            if(idx<0 || idx>=size || nums[i]==i+1 || nums[idx]==nums[i])
+            {
+                ++i;
+                continue;
+            }
+            nums[i]^=nums[idx];
+            nums[idx]^=nums[i];
+            nums[i]^=nums[idx];
+        }
+        for(int j=0;j<size;++j)
+            if(nums[j]!=j+1)
+                return j+1;
+        return size+1;
+    }
+}
