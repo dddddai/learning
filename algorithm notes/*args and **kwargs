@@ -54,3 +54,17 @@ printinfo(1, a=2,b=3)
 输出: 
 1
 {'a': 2, 'b': 3}
+
+-----------------------------
+
+def func(*tup,**dic):
+    for i in tup:
+        print i,
+    print
+    print dic
+    
+func(1,2,3,a=3,c=2,b=4)
+
+输出:
+1 2 3
+{'a': 3, 'c': 2, 'b': 4}
