@@ -1,0 +1,57 @@
+import sys
+from PyQt5.QtWidgets import (QWidget, QToolTip,
+                             QPushButton, QApplication,QMessageBox)
+from PyQt5.QtGui import QFont,QIcon
+from PyQt5.QtCore import QCoreApplication
+
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+
+        self.setGeometry(300, 300, 300, 200)
+        self.setWindowTitle('dwq')
+        self.setWindowIcon(QIcon('web.png'))
+        QToolTip.setFont(QFont('SansSerif', 12))
+
+        self.setToolTip('This is a widget')
+        btn = QPushButton('myButton',self)
+        btn.resize(btn.sizeHint())
+        btn.move(100, 50)
+        btn.setToolTip('press to quit')
+        btn.clicked.connect(QCoreApplication.instance().quit)
+
+        self.show()
+
+    def closeEvent(self,event):
+    #一定要取名为closeEvent
+        reply=QMessageBox.question(self,'Message','Are you sure to quit?',
+                                   QMessageBox.Yes|QMessageBox.No,QMessageBox.No)
+        if reply==QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
+    
+    
+    
+如果关闭QWidget，就会产生一个QCloseEvent。改变控件的默认行为，就是替换掉默认的事件处理。
+
+reply = QMessageBox.question(self, 'Message',
+    "Are you sure to quit?", QMessageBox.Yes | 
+    QMessageBox.No, QMessageBox.No)
+我们创建了一个消息框，上面有俩按钮：Yes和No.第一个字符串显示在消息框的标题栏，第二个字符串显示在对话框，第三个参数是消息框的俩按钮，最后一个参数是默认按钮，这个按钮是默认选中的。返回值在变量reply里。
+
+if reply == QtGui.QMessageBox.Yes:
+    event.accept()
+else:
+    event.ignore()
+这里判断返回值，如果点击的是Yes按钮，我们就关闭组件和应用，否者就忽略关闭事件。
