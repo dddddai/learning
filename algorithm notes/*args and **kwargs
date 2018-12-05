@@ -1,0 +1,56 @@
+加了星号 * 的参数会以元组(tuple)的形式导入，存放所有未命名的变量参数。
+实例(Python 3.0+)
+#!/usr/bin/python3
+  
+# 可写函数说明
+def printinfo( arg1, *vartuple ):
+   "打印任何传入的参数"
+   print ("输出: ")
+   print (arg1)
+   print (vartuple)
+ 
+# 调用printinfo 函数
+printinfo( 70, 60, 50 )
+以上实例输出结果：
+输出: 
+70
+(60, 50)
+--------------------------------------------------
+# 可写函数说明
+def printinfo( arg1, *vartuple ):
+   "打印任何传入的参数"
+   print ("输出: ")
+   print (arg1)
+   for var in vartuple:
+      print (var)
+   return
+ 
+# 调用printinfo 函数
+printinfo( 10 )
+printinfo( 70, 60, 50 )
+以上实例输出结果：
+输出:
+10
+输出:
+70
+60
+50
+
+------------------------------------------------
+加了两个星号 ** 的参数会以字典的形式导入。
+实例(Python 3.0+)
+#!/usr/bin/python3
+  
+# 可写函数说明
+def printinfo( arg1, **vardict ):
+   "打印任何传入的参数"
+   print ("输出: ")
+   print (arg1)
+   print (vardict)
+ 
+# 调用printinfo 函数
+printinfo(1, a=2,b=3)
+以上实例输出结果：
+输出: 
+1
+{'a': 2, 'b': 3}
