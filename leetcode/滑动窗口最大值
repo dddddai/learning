@@ -52,8 +52,8 @@ class Solution {
         
         for(int i=0;i<nums.length;++i)
         {
-            while(dq.peek()!=null && dq.getLast()<nums[i])
-            //dq为空的时候一定要用peek，否则报错
+            while(!dq.isEmpty() && dq.getLast()<nums[i])
+            //不能是<=  否则会在下面的第一个if判断中丢失最大值
                 dq.removeLast();
             dq.offerLast(nums[i]);
             if(i>=k && nums[i-k]==dq.getFirst())
