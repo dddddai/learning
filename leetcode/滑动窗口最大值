@@ -38,3 +38,29 @@ class Solution(object):
             if i>=k-1:
                 result.append(dq[0])
         return result
+
+
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(nums.length==0)
+            return new int[0];
+        
+        Deque<Integer> dq=new LinkedList<Integer>();
+        int[] result=new int[nums.length-k+1];
+        int idx=0;
+        
+        for(int i=0;i<nums.length;++i)
+        {
+            while(dq.peek()!=null && dq.getLast()<nums[i])
+            //dq为空的时候一定要用peek，否则报错
+                dq.removeLast();
+            dq.offerLast(nums[i]);
+            if(i>=k && nums[i-k]==dq.getFirst())
+                dq.removeFirst();
+            if(i>=k-1)
+                result[idx++]=dq.getFirst();
+        }
+        return result;
+    }
+}
