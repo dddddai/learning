@@ -78,3 +78,46 @@ fileMenu.addAction(exitAction)
 
 menuBar()创建菜单栏。这里创建了一个菜单栏，
 并在上面添加了一个file菜单，并关联了点击退出应用的事件。    
+
+-------------------------------------------------
+创建子菜单：
+
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+from PyQt5.QtGui import QIcon
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        exitAction = QAction(QIcon('web.png'), 'Exit',self)
+        exitAction.triggered.connect(QApplication.quit)
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('click to exit')
+
+        self.statusBar()
+
+        menubar = self.menuBar()
+        file_menu = menubar.addMenu('File')
+        file_menu.addAction(exitAction)
+
+        impMenu=QMenu('Submenu',self)
+        impAct=QAction(QIcon('web.png'),'Exit2',self)
+        impAct.triggered.connect(QApplication.quit)
+        impMenu.addAction(impAct)
+
+        file_menu.addMenu(impMenu)
+
+        self.setGeometry(500, 500, 500, 500)
+        self.setWindowTitle('Ttile')
+        self.show()
+
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
