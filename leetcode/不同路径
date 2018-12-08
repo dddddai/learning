@@ -12,18 +12,51 @@
 2. 向右 -> 向下 -> 向右
 3. 向下 -> 向右 -> 向右
 
-class Solution:
+dp：
+
+class Solution(object):
     def uniquePaths(self, m, n):
         """
         :type m: int
         :type n: int
         :rtype: int
         """
-        matrix=[[0]*n]*m
-        for i in range(m):
-            for j in range(n):
-                if i*j==0:
-                    matrix[i][j]=1
-                else:
-                    matrix[i][j]=matrix[i][j-1]+matrix[i-1][j]
+        matrix=[[1 for i in xrange(n)] for j in xrange(m)]
+        for i in xrange(1,m):
+            for j in xrange(1,n):
+                matrix[i][j]=matrix[i][j-1]+matrix[i-1][j]
         return matrix[m-1][n-1]
+
+
+数学解法：
+
+class Solution(object):
+    def uniquePaths(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        #高中数学题，从m+n-2步中选m-1步
+        result=1
+        start=max(m,n)
+        for i in xrange(start,m+n-1):
+            result*=i
+            result//=i-start+1
+                
+        return result
+        
+        
+class Solution {
+    public int uniquePaths(int m, int n) {
+        long result=1;
+        //不用long会正溢出
+        int start=Math.max(m,n);
+        for(int i=start;i<=m+n-2;++i)
+        {
+            result*=i;
+            result/=(i-start+1);
+        }
+        return (int)result;
+    }
+}
