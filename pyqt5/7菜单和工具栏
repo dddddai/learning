@@ -121,3 +121,57 @@ if __name__ == '__main__':
     app=QApplication(sys.argv)
     exp=Example()
     sys.exit(app.exec_())
+
+---------------------------------------
+
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.statusBar().showMessage('Ready')
+        viewMenu=self.menuBar().addMenu('View')
+
+        viewStatAct=QAction('View statusbar',self,checkable=True)
+        viewStatAct.setChecked(True)
+        viewStatAct.setStatusTip('View statusbar')
+        viewStatAct.triggered.connect(self.toggleMenu)
+
+        viewMenu.addAction(viewStatAct)
+
+        self.setGeometry(500, 500, 500, 500)
+        self.setWindowTitle('Title')
+        self.show()
+
+    def toggleMenu(self,flag):
+        if flag:
+            self.statusBar().show()
+        else:
+            self.statusBar().hide()
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
+    
+    
+本例创建了一个行为菜单。这个行为／动作能切换状态栏显示或者隐藏。
+
+viewStatAct = QAction('View statusbar', self, checkable=True)
+用checkable选项创建一个能选中的菜单。
+
+viewStatAct.setChecked(True)
+默认设置为选中状态。
+
+def toggleMenu(self,flag):
+    if flag:
+        self.statusBar().show()
+    else:
+        self.statusBar().hide()
+依据选中状态切换状态栏的显示与否。     
