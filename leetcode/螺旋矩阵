@@ -17,3 +17,39 @@ class Solution(object):
         :rtype: List[int]
         """
         return matrix and list(matrix.pop(0))+self.spiralOrder(zip(*matrix)[::-1])
+
+
+
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        if(matrix.length==0)
+            return new ArrayList<>();
+        
+        List<Integer> result=new ArrayList<>();
+        int left=0,right=matrix[0].length-1,top=0,bottom=matrix.length-1;
+        int i;
+        while(true)
+        {
+            for(i=left;i<=right;++i)
+                result.add(matrix[top][i]);
+            if(++top>bottom)
+                break;
+            
+            for(i=top;i<=bottom;++i)
+                result.add(matrix[i][right]);
+            if(--right<left)
+                break;
+            
+            for(i=right;i>=left;--i)
+                result.add(matrix[bottom][i]);
+            if(--bottom<top)
+                break;
+            
+            for(i=bottom;i>=top;--i)
+                result.add(matrix[i][left]);
+            if(++left>right)
+                break;
+        }
+        return result;
+    }
+}
