@@ -28,6 +28,25 @@ class Solution(object):
         return matrix[m-1][n-1]
 
 
+实际上只需要一维数组就够了，能节省空间
+
+class Solution(object):
+    def uniquePaths(self, m, n):
+        """
+        :type m: int
+        :type n: int
+        :rtype: int
+        """
+        size=min(m,n)
+        dp=[1]*size
+        for i in xrange(1,m+n-size):
+            for j in xrange(1,size):
+                dp[j]+=dp[j-1]
+        
+        return dp[-1]
+
+
+
 数学解法：
 
 class Solution(object):
