@@ -175,3 +175,49 @@ def toggleMenu(self,flag):
     else:
         self.statusBar().hide()
 依据选中状态切换状态栏的显示与否。     
+
+
+--------------------------------------------
+右键菜单：
+
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setGeometry(500,500,500,500)
+        self.setWindowTitle('Title')
+        self.show()
+
+    def contextMenuEvent(self, QContextMenuEvent):
+        cmenu=QMenu(self)
+        newAct=cmenu.addAction('new')
+        openAct=cmenu.addAction('open')
+        quitAct=cmenu.addAction('quit')
+
+        act=cmenu.exec_(self.mapToGlobal(QContextMenuEvent.pos()))
+        if act==quitAct:
+            QApplication.quit()
+
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
+    
+    
+还是使用contextMenuEvent()方法实现这个菜单。
+
+action = cmenu.exec_(self.mapToGlobal(event.pos()))
+使用exec_()方法显示菜单。从鼠标右键事件对象中获得当前坐标。
+mapToGlobal()方法把当前组件的相对坐标转换为窗口（window）的绝对坐标。
+
+if action == quitAct:
+    qApp.quit()
+如果右键菜单里触发了事件，也就触发了推出事件，我们就关闭菜单。
