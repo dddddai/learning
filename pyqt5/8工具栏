@@ -1,0 +1,27 @@
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+from PyQt5.QtGui import QIcon
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        exitAct=QAction(QIcon('web.png'),'Exit',self)
+        exitAct.triggered.connect(QApplication.quit)
+        exitAct.setShortcut('Ctrl+Q')
+
+        self.toolBar=self.addToolBar('Exit')
+        self.toolBar.addAction(exitAct)
+
+        self.setGeometry(500,500,500,500)
+        self.setWindowTitle('Title')
+        self.show()
+
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
