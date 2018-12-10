@@ -37,10 +37,12 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        size=min(m,n)
-        dp=[1]*size
-        for i in xrange(1,m+n-size):
-            for j in xrange(1,size):
+        if m<n:
+            return self.uniquePaths(n,m)
+        
+        dp=[1]*n
+        for i in xrange(1,m):
+            for j in xrange(1,n):
                 dp[j]+=dp[j-1]
         
         return dp[-1]
