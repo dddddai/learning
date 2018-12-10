@@ -1,0 +1,75 @@
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+from PyQt5.QtGui import QIcon
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        exitAct=QAction(QIcon('web.png'),'Exit',self)
+        exitAct.triggered.connect(QApplication.quit)
+        exitAct.setShortcut('Ctrl+Q')
+
+        self.toolBar=self.addToolBar('Exit')
+        self.toolBar.addAction(exitAct)
+
+        self.setGeometry(500,500,500,500)
+        self.setWindowTitle('Title')
+        self.show()
+
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
+
+
+----------------------------------------
+把几个结合起来就成了主窗口
+
+import sys
+from PyQt5.QtWidgets import QMainWindow, QAction, QApplication,QMenu
+from PyQt5.QtGui import QIcon
+
+
+class Example(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        exitAct=QAction(QIcon('web.png'),'Exit',self)
+        exitAct.triggered.connect(QApplication.quit)
+        exitAct.setShortcut('Ctrl+Q')
+        exitAct.setStatusTip('Exit')
+
+        self.statusBar()
+
+        self.toolBar=self.addToolBar('Exit')
+        self.toolBar.addAction(exitAct)
+
+        fileMenu=self.menuBar().addMenu('File')
+        fileMenu.addAction(exitAct)
+
+        self.setGeometry(500,500,500,500)
+        self.setWindowTitle('My Window')
+        self.show()
+
+    def contextMenuEvent(self, QContextMenuEvent):
+        cmenu=QMenu(self)
+        newAct=cmenu.addAction('New')
+        pasteAct=cmenu.addAction('Paste')
+        copyAct=cmenu.addAction('Copy')
+        quitAct=cmenu.addAction('Quit')
+        action=cmenu.exec_(self.mapToGlobal(QContextMenuEvent.pos()))
+
+        if action==quitAct:
+            QApplication.quit()
+
+if __name__ == '__main__':
+    app=QApplication(sys.argv)
+    exp=Example()
+    sys.exit(app.exec_())
