@@ -8,10 +8,12 @@
 class Solution:
     def IsPopOrder(self, pushV, popV):
         # write code here
+        if len(pushV)!=len(popV):
+            return False
         stack=[]
         j=0
-        for i in xrange(len(pushV)):
-            stack.append(pushV[i])
+        for n in pushV:
+            stack.append(n)
             while j<len(popV) and stack[-1]==popV[j]:
                 stack.pop()
                 j+=1
@@ -22,6 +24,8 @@ import java.util.Stack;
 
 public class Solution {
     public boolean IsPopOrder(int [] pushA,int [] popA) {
+        if(pushA.length!=popA.length)
+            return false;
         Stack<Integer> stack=new Stack<>();
         for(int i=0,j=0;i<pushA.length;++i)
         {
