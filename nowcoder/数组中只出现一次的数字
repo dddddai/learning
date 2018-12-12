@@ -8,15 +8,40 @@ class Solution:
         if not array:
             return []
         tmp=0
-        for i in array:
-            tmp^=i
-        first1=a=b=0
+        for n in array:
+            tmp^=n
+        i=a=b=0
         while (tmp&1)==0:
             tmp>>=1
-            first1+=1
+            i+=1
         for i in array:
             if (i>>first1)&1:
                 a^=i
             else:
                 b^=i
         return [a,b]
+
+
+
+public class Solution {
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        if(array.length==0)
+            return;
+        int tmp=0;
+        for(int n:array)
+            tmp^=n;
+        int i=0;
+        while((tmp&1)==0)
+        {
+            tmp>>=1;
+            ++i;
+        }
+        for(int n:array)
+        {
+            if(((n>>i)&1)==0)
+                num1[0]^=n;
+            else
+                num2[0]^=n;
+        }
+    }
+}
