@@ -1,0 +1,35 @@
+class Solution:
+    def get_idx(self,arr,num):
+        l,r=0,len(arr)-1
+        while l<=r:
+            mid=(l+r)>>1
+            if num<arr[mid]:
+                r=mid-1
+            else:
+                l=mid+1
+        return l
+    
+    def GetNumberOfK(self, data, k):
+        # write code here
+        return self.get_idx(data,k+0.5)-self.get_idx(data,k-0.5)
+        
+        
+        
+public class Solution {
+    int getIdx(int[] arr,double num)
+    {
+        int l=0,r=arr.length-1;
+        while(l<=r)
+        {
+            int mid=(l+r)>>1;
+            if(num<arr[mid])
+                r=mid-1;
+            else
+                l=mid+1;
+        }
+        return l;
+    }
+    public int GetNumberOfK(int [] array , int k) {
+       return getIdx(array,k+0.5)-getIdx(array,k-0.5);
+    }
+}
