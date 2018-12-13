@@ -16,15 +16,9 @@
 输出: [""]
 
 class Solution(object):
-    def removeInvalidParentheses(self, s):
-        """
-        :type s: str
-        :rtype: List[str]
-        """
-        self.result=[]
-        def func(s,key,last):
+    def func(self,s,key,start):
             cnt=0
-            for i in range(len(s)):
+            for i in xrange(len(s)):
                 if s[i] in {'(',')'}:
                     if s[i]==key:
                         cnt+=1
@@ -32,14 +26,20 @@ class Solution(object):
                         cnt-=1
                 if cnt<=0:
                     continue
-                for j in range(last,i+1):
-                    if s[j]==key and (j==last or s[j-1]!=key):
-                        func(s[:j]+s[j+1:],key,j)
+                for j in xrange(start,i+1):
+                    if s[j]==key and (j==start or s[j-1]!=key):
+                        self.func(s[:j]+s[j+1:],key,j)
                 return
             s=s[::-1]
             if key==')':
-                return func(s,'(',0)
+                return self.func(s,'(',0)
             self.result.append(s)
             
-        func(s,')',0)
+    def removeInvalidParentheses(self, s):
+        """
+        :type s: str
+        :rtype: List[str]
+        """
+        self.result=[]
+        self.func(s,')',0)
         return self.result
