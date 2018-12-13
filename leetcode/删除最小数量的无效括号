@@ -51,14 +51,13 @@ class Solution(object):
         
         
 class Solution {
-    Set<Character> brackets=new HashSet<>();
     List<String> result=new ArrayList<>();
     
     void func(String s,char symbol,int last_i,int last_j)
     {
         for(int i=last_i,cnt=0;i<s.length();++i)
         {
-            if(brackets.contains(s.charAt(i)))
+            if(s.charAt(i)=='(' || s.charAt(i)==')')
             {
                 if(s.charAt(i)==symbol)
                     ++cnt;
@@ -79,9 +78,7 @@ class Solution {
             result.add(s);
     }
     public List<String> removeInvalidParentheses(String s) {
-        brackets.add('(');
-	    brackets.add(')');
         func(s,')',0,0);
         return result;
     }
-}        
+} 
