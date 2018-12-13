@@ -16,7 +16,7 @@ class Solution:
         
         
 public class Solution {
-    int getIdx(int[] arr,double num)
+    int getIdx(int[] arr,float num)
     {
         int l=0,r=arr.length-1;
         while(l<=r)
@@ -30,6 +30,6 @@ public class Solution {
         return l;
     }
     public int GetNumberOfK(int [] array , int k) {
-       return getIdx(array,k+0.5)-getIdx(array,k-0.5);
+       return getIdx(array,k+0.5f)-getIdx(array,k-0.5f);
     }
 }
