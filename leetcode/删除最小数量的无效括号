@@ -16,30 +16,72 @@
 输出: [""]
 
 class Solution(object):
-    def func(self,s,key,start):
-            cnt=0
-            for i in xrange(len(s)):
-                if s[i] in {'(',')'}:
-                    if s[i]==key:
-                        cnt+=1
-                    else:
-                        cnt-=1
-                if cnt<=0:
-                    continue
-                for j in xrange(start,i+1):
-                    if s[j]==key and (j==start or s[j-1]!=key):
-                        self.func(s[:j]+s[j+1:],key,j)
-                return
-            s=s[::-1]
-            if key==')':
-                return self.func(s,'(',0)
-            self.result.append(s)
-            
+    brackets = {'(', ')'}
+
+    def func(self, s, symbol, last_i, last_j):
+        cnt = 0
+        for i in xrange(last_i, len(s)):
+            if s[i] in self.brackets:
+                if s[i] == symbol:
+                    cnt += 1
+                else:
+                    cnt -= 1
+            if cnt <= 0:
+                continue
+            for j in xrange(last_j, i + 1):
+                if s[j] == symbol and (j == last_j or s[j - 1] != symbol):
+                    self.func(s[:j] + s[j + 1:], symbol, i, j)
+            return
+
+        s = s[::-1]
+        if symbol == ')':
+            return self.func(s, '(', 0, 0)
+        self.result.append(s)
+
     def removeInvalidParentheses(self, s):
         """
         :type s: str
         :rtype: List[str]
         """
-        self.result=[]
-        self.func(s,')',0)
+        self.result = []
+        self.func(s, ')', 0, 0)
         return self.result
+        
+        
+        
+        
+class Solution {
+    Set<Character> brackets=new HashSet<>();
+    List<String> result=new ArrayList<>();
+    
+    void func(String s,char symbol,int last_i,int last_j)
+    {
+        for(int i=last_i,cnt=0;i<s.length();++i)
+        {
+            if(brackets.contains(s.charAt(i)))
+            {
+                if(s.charAt(i)==symbol)
+                    ++cnt;
+                else
+                    --cnt;
+            }
+            if(cnt<=0)
+                continue;
+            for(int j=last_j;j<=i;++j)
+                if(s.charAt(j)==symbol && (j==last_j || s.charAt(j-1)!=symbol))
+                    func(s.substring(0,j)+s.substring(j+1),symbol,i,j);
+            return;
+        }
+        s=new StringBuilder(s).reverse().toString();
+        if(symbol==')')
+            func(s,'(',0,0);
+        else
+            result.add(s);
+    }
+    public List<String> removeInvalidParentheses(String s) {
+        brackets.add('(');
+	    brackets.add(')');
+        func(s,')',0,0);
+        return result;
+    }
+}        
