@@ -30,3 +30,33 @@ class Solution(object):
         while quick!=slow:
             quick,slow=nums[quick],nums[slow]
         return quick
+
+
+
+
+class Solution(object):
+    def findDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        for n in nums:
+            idx=n%len(nums)
+            if nums[idx]>len(nums):
+                return idx
+            nums[idx]+=len(nums)
+            
+            
+            
+class Solution {
+    public int findDuplicate(int[] nums) {
+        for(int n:nums)
+        {
+            int idx=n%nums.length;
+            if(nums[idx]>nums.length)
+                return idx;
+            nums[idx]+=nums.length;
+        }
+        throw new IllegalStateException("No Duplicate Number!");
+        }
+}           
