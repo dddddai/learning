@@ -48,18 +48,16 @@ class Solution {
         
         Deque<Integer> dq=new LinkedList<Integer>();
         int[] result=new int[nums.length-k+1];
-        int idx=0;
         
         for(int i=0;i<nums.length;++i)
         {
             while(!dq.isEmpty() && dq.getLast()<nums[i])
-            //不能是<=  否则会在下面的第一个if判断中丢失最大值
                 dq.removeLast();
             dq.offerLast(nums[i]);
             if(i>=k && nums[i-k]==dq.getFirst())
                 dq.removeFirst();
             if(i>=k-1)
-                result[idx++]=dq.getFirst();
+                result[i-k+1]=dq.getFirst();
         }
         return result;
     }
