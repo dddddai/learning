@@ -1,6 +1,6 @@
 给定一个没有重复数字的序列，返回其所有可能的全排列。
 
-
+1.
 class Solution(object):
      def permute(self, nums):
          """
@@ -17,7 +17,7 @@ class Solution(object):
                  result.append([nums[i]]+p)
          return result
          
-         
+2.         
 class Solution(object):
     def permute(self, nums):
         """
@@ -34,7 +34,29 @@ class Solution(object):
                 result.append(p[:i]+[nums[0]]+p[i:])
         return result
 
-
+3.
+class Solution(object):
+    def func(self,nums,start):
+        if start==len(nums)-1:
+            self.result.append(nums[:])
+            return
+        for i in xrange(start,len(nums)):
+            nums[start],nums[i]=nums[i],nums[start]
+            self.func(nums,start+1)
+            nums[start],nums[i]=nums[i],nums[start]
+        
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        # from itertools import permutations
+        # return list(permutations(nums))
+        self.result=[]
+        self.func(nums,0)
+        return self.result
+        
+        
 
 class Solution {
     List<List<Integer>> result=new ArrayList<>();
