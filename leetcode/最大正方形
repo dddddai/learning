@@ -50,9 +50,7 @@ class Solution(object):
                 max_len=1
                 
         if(m>n):
-            for j in xrange(n):
-                dp.append(int(matrix[0][j]))
-            
+            dp=map(int,matrix[0])
             for i in xrange(1,m):
                 tmp=[int(matrix[i][0])]
                 for j in xrange(1,n):
@@ -63,9 +61,7 @@ class Solution(object):
                         tmp.append(0)
                 dp=tmp
         else:
-            for i in xrange(m):
-                dp.append(int(matrix[i][0]))
-            
+            dp=map(lambda x:int(x[0]),matrix)
             for j in xrange(1,n):
                 tmp=[int(matrix[0][j])]
                 for i in xrange(1,m):
