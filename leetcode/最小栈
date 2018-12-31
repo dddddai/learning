@@ -12,7 +12,7 @@ class MinStack(object):
         initialize your data structure here.
         """
         self.stack=[]
-        self.minimum=sys.maxint
+        self.minimum=sys.maxsize
 
     def push(self, x):
         """
