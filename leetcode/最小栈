@@ -12,15 +12,13 @@ class MinStack(object):
         initialize your data structure here.
         """
         self.stack=[]
-        self.minimum=2**32-1
-    
+        self.minimum=sys.maxint
+
     def push(self, x):
         """
         :type x: int
         :rtype: void
         """
-        #在push前判断要push的值是否小于minimum
-        #如果小于则先让minimum入栈以保留之前的最小值，之后更新minimum
         if x<=self.minimum:
             self.stack.append(self.minimum)
             self.minimum=x
