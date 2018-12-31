@@ -33,18 +33,16 @@ class Solution(object):
         if not lists:
             return
         size=len(lists)
-        int_max=2**31-1
-
                     
         for i in range((size-2)>>1,-1,-1):
             self.perc_down(lists,i,size-1)
             
         head=p=ListNode(0)
         
-        while lists[0].val!=int_max:
+        while lists[0].val!=sys.maxint:
             p.next=ListNode(lists[0].val)
             p=p.next
-            lists[0]=lists[0].next if lists[0].next else ListNode(int_max)
+            lists[0]=lists[0].next if lists[0].next else ListNode(sys.maxint)
             self.perc_down(lists,0,size-1)
             
         return head.next
