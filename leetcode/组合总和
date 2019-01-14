@@ -30,14 +30,12 @@ class Solution(object):
     #start避免重复
     
     def func(self,candidates,start,target,arr):
-        if target<0:
-            return
         if target==0:
-            return arr
+            self.result.append(arr)
         for i in range(start,self.size):
-            tmp=self.func(candidates,i,target-candidates[i],arr+[candidates[i]])
-            if tmp:
-                self.result.append(tmp)
+            if candidates[i]>target:
+                continue
+            self.func(candidates,i,target-candidates[i],arr+[candidates[i]])
 
     
     def combinationSum(self, candidates, target):
@@ -50,3 +48,27 @@ class Solution(object):
         self.result=[]
         self.func(candidates,0,target,[])
         return self.result
+
+
+
+class Solution {
+    List<List<Integer>> result=new ArrayList<>();
+    
+    void func(int[] candidates,int target,int start,Stack<Integer> stack)
+    {
+        if(target==0)
+            result.add(new ArrayList<>(stack));
+        for(int i=start;i<candidates.length;++i)
+        {
+            if(candidates[i]>target)
+                continue;
+            stack.push(candidates[i]);
+            func(candidates,target-candidates[i],i,stack);
+            stack.pop();
+        }
+    }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        func(candidates,target,0,new Stack<>());
+        return result;
+    }
+}
