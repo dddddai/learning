@@ -36,23 +36,22 @@ class Solution(object):
 
 class Solution {
     public int firstMissingPositive(int[] nums) {
-        int size=nums.length;
         int i=0;
-        while(i<size)
+        while(i<nums.length)
         {
             int idx=nums[i]-1;
-            if(idx<0 || idx>=size || nums[i]==i+1 || nums[idx]==nums[i])
+            if(nums[i]==i+1 || idx<0 || idx>=nums.length || nums[idx]==nums[i])
             {
                 ++i;
                 continue;
             }
-            nums[i]^=nums[idx];
-            nums[idx]^=nums[i];
-            nums[i]^=nums[idx];
+            int tmp=nums[i];
+            nums[i]=nums[idx];
+            nums[idx]=tmp;
         }
-        for(int j=0;j<size;++j)
-            if(nums[j]!=j+1)
-                return j+1;
-        return size+1;
+        for(i=0;i<nums.length;++i)
+            if(nums[i]!=i+1)
+                return ++i;
+        return nums.length+1;
     }
 }
