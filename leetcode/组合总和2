@@ -28,18 +28,13 @@ candidates 中的每个数字在每个组合中只能使用一次。
 
 class Solution(object):
     def func(self,candidates,start,target,arr):
-        if target<0:
-            return
         if target==0:
-            return arr
-        for i in range(start,self.size):
-            #去重
-            if i!=start and candidates[i]==candidates[i-1]:
+            self.result.append(arr)
+        for i in range(start,len(candidates)):
+            if candidates[i]>target or (i!=start and candidates[i]==candidates[i-1]):
                 continue
-            tmp=self.func(candidates,i+1,target-candidates[i],arr+[candidates[i]])
-            if tmp:
-                self.result.append(tmp)
-                
+            self.func(candidates,i+1,target-candidates[i],arr+[candidates[i]])
+            
     def combinationSum2(self, candidates, target):
         """
         :type candidates: List[int]
@@ -47,8 +42,30 @@ class Solution(object):
         :rtype: List[List[int]]
         """
         candidates.sort()
-        #排序便于去重
-        self.size=len(candidates)
         self.result=[]
         self.func(candidates,0,target,[])
         return self.result
+
+
+class Solution {
+    List<List<Integer>> result=new ArrayList<>();
+    
+    void func(int[] candidates,int target,int start,Stack<Integer> stack)
+    {
+        if(target==0)
+            result.add(new ArrayList<>(stack));
+        for(int i=start;i<candidates.length;++i)
+        {
+            if(candidates[i]>target || (i!=start && candidates[i]==candidates[i-1]))
+                continue;
+            stack.push(candidates[i]);
+            func(candidates,target-candidates[i],i+1,stack);
+            stack.pop();        
+        }
+    }
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        func(candidates,target,0,new Stack<Integer>());
+        return result;
+    }
+}
