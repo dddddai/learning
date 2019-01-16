@@ -68,7 +68,7 @@ class Solution {
         }
     }
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        func(candidates,target,0,new Stack<>());
+        func(candidates,target,0,new Stack<Integer>());
         return result;
     }
 }
