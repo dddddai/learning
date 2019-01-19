@@ -30,6 +30,7 @@ class Solution(object):
     def func(self,candidates,start,target,arr):
         if target==0:
             self.result.append(arr)
+            return
         for i in range(start,len(candidates)):
             if candidates[i]>target or (i!=start and candidates[i]==candidates[i-1]):
                 continue
@@ -53,7 +54,10 @@ class Solution {
     void func(int[] candidates,int target,int start,Stack<Integer> stack)
     {
         if(target==0)
+        {
             result.add(new ArrayList<>(stack));
+            return;
+        }
         for(int i=start;i<candidates.length;++i)
         {
             if(candidates[i]>target || (i!=start && candidates[i]==candidates[i-1]))
