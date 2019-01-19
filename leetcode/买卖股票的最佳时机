@@ -27,3 +27,20 @@ class Solution(object):
             max_profit=max(max_profit,sum_profit)
             sum_profit=max(0,sum_profit)
         return max_profit
+
+
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        if(prices.length<=1)
+            return 0;
+        int profit=0,result=0;
+        for(int i=1;i<prices.length;++i)
+        {
+            profit+=prices[i]-prices[i-1];
+            result=Math.max(result,profit);
+            profit=Math.max(0,profit);
+        }
+        return result;
+    }
+}
