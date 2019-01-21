@@ -35,10 +35,6 @@ class Solution:
 
 
 
-
-
-
-
 数学方法：
 
 当长度为奇数时，若sum能够整除长度，则此长度必然对应一个序列
@@ -50,7 +46,7 @@ class Solution:
         if tsum<3:
             return []
         result=[]
-        for size in xrange(int((2*tsum)**0.5),1,-1):
+        for size in xrange(int((tsum<<1)**0.5),1,-1):
             if (size&1 and tsum%size==0) or tsum%size==0.5*size:
                 result.append(range(tsum//size-((size-1)>>1),tsum//size+(size>>1)+1))
         return result
