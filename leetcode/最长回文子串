@@ -13,19 +13,20 @@ class Solution(object):
         #         l+=1
         # return s[start:start+l]
         tmp='#'+"#".join(s)+'#'
-        size=len(tmp)
-        r=[1]*size
-        axis=max_len=visited=pivot=0
-        for i in range(size):
-            if i<visited:
-                r[i]=min(r[(axis<<1)-i],visited-i)
-            while i-r[i]>=0 and i+r[i]<size and tmp[i-r[i]]==tmp[i+r[i]]:
+        r=[1]*len(tmp)
+        axis=maxLen=boundary=pivot=0
+        
+        for i in range(len(tmp)):
+            if i<boundary:
+                r[i]=min(r[(axis<<1)-i],boundary-i)
+            while i-r[i]>=0 and i+r[i]<len(tmp) and tmp[i-r[i]]==tmp[i+r[i]]:
                 r[i]+=1
-            if r[i]+i-1>visited:
-                visited,axis=r[i]+i-1,i
-            if r[i]-1>max_len:
-                max_len,pivot=r[i]-1,i
-        max_r=(max_len)>>1
+            if r[i]+i-1>boundary:
+                boundary,axis=r[i]+i-1,i
+            if r[i]-1>maxLen:
+                maxLen,pivot=r[i]-1,i
+                
+        max_r=(maxLen)>>1
         if pivot&1:
             return s[(pivot>>1)-max_r:(pivot>>1)+max_r+1]
         return s[(pivot>>1)-max_r:(pivot>>1)+max_r]
@@ -36,7 +37,7 @@ java:
 class Solution {
     public String longestPalindrome(String s) {
         StringBuilder tmp=new StringBuilder();
-        int max_len=0,visited=0,axis=0,pivot=0;
+        int maxLen=0,boundary=0,axis=0,pivot=0;
         int size=(s.length()<<1)+1;
         
         for(int i=0;i<size;i++)
@@ -50,24 +51,24 @@ class Solution {
         int[] r=new int[size];
         for(int i=0;i<size;++i)
         {
-            if(i<visited)
-                r[i]=Math.min(r[(axis<<1)-i],visited-i);
+            if(i<boundary)
+                r[i]=Math.min(r[(axis<<1)-i],boundary-i);
             else
                 r[i]=1;
             while(i-r[i]>=0 && i+r[i]<size && tmp.charAt(i-r[i])==tmp.charAt(i+r[i]))
                 ++r[i];
-            if(i+r[i]-1>visited)
+            if(i+r[i]-1>boundary)
             {
-                visited=i+r[i]-1;
+                boundary=i+r[i]-1;
                 axis=i;
             }
-            if(r[i]-1>max_len)
+            if(r[i]-1>maxLen)
             {
-                max_len=r[i]-1;
+                maxLen=r[i]-1;
                 pivot=i;
             }
         }
-        int max_r=max_len>>1;
+        int max_r=maxLen>>1;
         if((pivot&1)==0)
             return s.substring((pivot>>1)-max_r,(pivot>>1)+max_r);
         return s.substring((pivot>>1)-max_r,(pivot>>1)+max_r+1);
