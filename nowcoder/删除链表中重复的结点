@@ -5,17 +5,42 @@
 class Solution:
     def deleteDuplication(self, pHead):
         # write code here
-        newhead=ListNode(None)
-        newhead.next=pHead
-        p=newhead
+        p=dummy=ListNode(0)
+        dummy.next=pHead
         while p.next and p.next.next:
             if p.next.val==p.next.next.val:
-                tmp=cut=p
-                key=p.next.val
-                cut=cut.next
-                while cut and cut.val==key:
-                    cut=cut.next
-                tmp.next=cut
+                nxt=p.next.next.next
+                duplicate=p.next.val
+                while nxt and nxt.val==duplicate:
+                    nxt=nxt.next
+                p.next=nxt
             else:
                 p=p.next
-        return newhead.next
+        
+        return dummy.next
+
+
+
+
+public class Solution {
+    public ListNode deleteDuplication(ListNode pHead)
+    {
+        ListNode dummy=new ListNode(0);
+        dummy.next=pHead;
+        ListNode p=dummy;
+        while(p.next!=null && p.next.next!=null)
+        {
+            if(p.next.val==p.next.next.val)
+            {
+                int duplicate=p.next.val;
+                ListNode nxt=p.next.next.next;
+                while(nxt!=null && nxt.val==duplicate)
+                    nxt=nxt.next;
+                p.next=nxt;
+            }
+            else
+                p=p.next;
+        }
+        return dummy.next;
+    }
+}
