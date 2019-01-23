@@ -22,25 +22,12 @@
 
 class Solution(object):
     steps=[[0,1],[0,-1],[1,0],[-1,0]]
+    
     def longestIncreasingPath(self, matrix):
         """
         :type matrix: List[List[int]]
         :rtype: int
         """
-        def func(g,i,j,m,n):
-            if self.visited[i][j]:
-                return self.visited[i][j]
-
-            tmp=1
-            for s in self.steps:
-                x=i+s[0]
-                y=j+s[1]
-                if not(0<=x<m and 0<=y<n) or g[i][j]>=g[x][y]:
-                    continue
-                tmp=max(tmp,1+func(g,x,y,m,n))
-            self.visited[i][j]=tmp
-            return tmp
-        
         if not matrix or not matrix[0]:
             return 0
         m,n=len(matrix),len(matrix[0])
@@ -48,5 +35,60 @@ class Solution(object):
         result=1
         for i in range(m):
             for j in range(n):
-                result=max(result,func(matrix,i,j,m,n))
+                result=max(result,self.func(matrix,i,j,m,n))
         return result
+    
+    def func(self,g,i,j,m,n):
+        if self.visited[i][j]:
+                return self.visited[i][j]
+
+        maxLen=1
+        for s in self.steps:
+            x=i+s[0]
+            y=j+s[1]
+            if not(0<=x<m and 0<=y<n) or g[i][j]>=g[x][y]:
+                continue
+            maxLen=max(maxLen,1+self.func(g,x,y,m,n))
+        self.visited[i][j]=maxLen
+        return maxLen
+        
+        
+        
+        
+class Solution {
+    int[][] steps={{1,0},{-1,0},{0,1},{0,-1}};
+
+    public int longestIncreasingPath(int[][] matrix) {
+        int m=matrix.length;
+        if(m==0)
+            return 0;
+        int n=matrix[0].length;
+        
+        int result=1;
+        int[][] visited=new int[m][n];
+        
+        for(int i=0;i<m;++i)
+            for(int j=0;j<n;++j)
+                result=Math.max(result,func(matrix,m,n,i,j,visited));
+        
+        return result;
+                
+    }
+    
+    int func(int[][] matrix,int m,int n,int i,int j,int[][] visited)
+    {
+        if(visited[i][j]!=0)
+            return visited[i][j];
+        
+        int maxLen=1;
+        for(int[] s:steps)
+        {
+            int x=i+s[0],y=j+s[1];
+            if(x>=m || x<0 || y>=n || y<0 || matrix[i][j]>=matrix[x][y])
+                continue;
+            maxLen=Math.max(maxLen,1+func(matrix,m,n,x,y,visited));
+        }
+        visited[i][j]=maxLen;
+        return maxLen;
+    }
+}
