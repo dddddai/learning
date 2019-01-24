@@ -31,8 +31,10 @@ class Solution(object):
         wordList=set(wordList)
         if endWord not in wordList:
             return 0
+            
         cur,targets={beginWord},{endWord}
         cnt=2
+        
         while cur:
             nxt=set()
             if len(cur)>len(targets):
@@ -53,3 +55,56 @@ class Solution(object):
             cnt+=1
             
         return 0
+
+
+
+
+
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet wdList=new HashSet(wordList);
+        if(!wdList.contains(endWord))
+            return 0;
+            
+        HashSet cur=new HashSet(),targets=new HashSet();
+        cur.add(beginWord);
+        targets.add(endWord);
+        int cnt=2;
+        
+        while(!cur.isEmpty())
+        {
+            HashSet nxt=new HashSet();
+            if(cur.size()>targets.size())
+            {
+                HashSet tmp=new HashSet();
+                tmp=cur;
+                cur=targets;
+                targets=tmp;
+            }
+            Iterator it=cur.iterator();
+            while(it.hasNext())
+            {
+                String word=it.next().toString();
+                for(int i=0;i<word.length();++i)
+                {
+                    for(char c='a';c<='z';++c)
+                    {
+                        if(c==word.charAt(i))
+                            continue;
+                        String candidate=word.substring(0,i)+c+word.substring(i+1);
+                        if(targets.contains(candidate))
+                            return cnt;
+                        if(wdList.contains(candidate))
+                        {
+                            wdList.remove(candidate);
+                            nxt.add(candidate);
+                        }
+                    }
+                }
+            }
+            ++cnt;
+            cur=nxt;
+        }
+        return 0;
+    }
+}
