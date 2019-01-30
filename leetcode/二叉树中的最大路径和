@@ -36,3 +36,23 @@ class Solution(object):
         self.result=-2**32
         self.func(root)
         return self.result
+
+
+
+class Solution {
+    int result=Integer.MIN_VALUE;
+    
+    int func(TreeNode root)
+    {
+        if(root==null)
+            return 0;
+        int left=Math.max(0,func(root.left));
+        int right=Math.max(0,func(root.right));
+        result=Math.max(result,root.val+left+right);
+        return root.val+Math.max(left,right);
+    }
+    public int maxPathSum(TreeNode root) {
+        func(root);
+        return result;
+    }
+}
