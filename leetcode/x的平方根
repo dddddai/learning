@@ -6,7 +6,7 @@
 
 
 用牛顿迭代法
-https://176.122.157.73:3457/zh-hans/%E7%89%9B%E9%A1%BF%E6%B3%95
+https://baike.baidu.com/item/%E7%89%9B%E9%A1%BF%E8%BF%AD%E4%BB%A3%E6%B3%95
 
 class Solution(object):
     def mySqrt(self, x):
