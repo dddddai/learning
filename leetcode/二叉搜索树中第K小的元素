@@ -1,6 +1,6 @@
 class Solution(object):
     cnt=0
-    int_max=2**32-1
+    
     def kthSmallest(self, root, k):
         """
         :type root: TreeNode
@@ -8,10 +8,12 @@ class Solution(object):
         :rtype: int
         """
         if root is None:
-            return self.int_max
+            return sys.maxsize
+        
         result=self.kthSmallest(root.left,k)
-        if result!=self.int_max:
+        if result!=sys.maxsize:
             return result
+        
         self.cnt+=1
         if self.cnt==k:
             return root.val
