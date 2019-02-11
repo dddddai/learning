@@ -23,11 +23,11 @@ class Solution(object):
         :rtype: int
         """
         result=0
-        stack=[]
+        stack=[0]
         A=[-sys.maxsize-1]+A+[-sys.maxsize-1]
         
-        for i,n in enumerate(A):
-            while stack and A[stack[-1]]>n:
+        for i in xrange(1,len(A)):
+            while A[stack[-1]]>A[i]:
                 idx=stack.pop()
                 result+=A[idx]*(idx-stack[-1])*(i-idx)
             
@@ -51,9 +51,11 @@ class Solution {
             tmp.add(n);
         tmp.add(Integer.MIN_VALUE);
         
-        for(int i=0;i<tmp.size();++i)
+        stack.push(0);
+        
+        for(int i=1;i<tmp.size();++i)
         {
-            while(!stack.isEmpty() && tmp.get(stack.peek())>tmp.get(i))
+            while(tmp.get(stack.peek())>tmp.get(i))
             {
                 int idx=stack.pop();
                 result+=tmp.get(idx)*(idx-stack.peek())*(i-idx);
@@ -62,4 +64,5 @@ class Solution {
         }
         return (int)(result % MOD);
     }
+}
 }        
