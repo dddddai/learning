@@ -40,19 +40,22 @@ class Solution(object):
             if c!=s3[i]:
                 break
             dp[i+1]=True
-        
+            
         for i in xrange(1,len(s1)+1):
             tmp=[False]*(len(s2)+1)
-            tmp[0]=dp[0] and s1[i-1]==s3[i-1]
+            flag=tmp[0]=dp[0] and s1[i-1]==s3[i-1]
+            
+            #flag用来记录每行是否至少有一个True
             
             for j in xrange(1,len(s2)+1):
                 idx=i+j-1
+                tmp[j]=(s3[idx]==s1[i-1] and dp[j]) or (s3[idx]==s2[j-1] and tmp[j-1])
                 
-                if s3[idx]==s1[i-1] and dp[j]:
-                    tmp[j]=True
-                
-                elif s3[idx]==s2[j-1]:
-                    tmp[j]=tmp[j-1]
+                if not flag:
+                    flag=tmp[j]
+            
+            if not flag:
+                return False
             
             dp=tmp
             
@@ -78,15 +81,18 @@ class Solution {
         for(int i=1;i<=s1.length();++i){
             boolean[] tmp=new boolean[s2.length()+1];
             tmp[0]=dp[0] && s1.charAt(i-1)==s3.charAt(i-1);
+            boolean flag=tmp[0];    //用来记录每行是否至少有一个true
             
             for(int j=1;j<=s2.length();++j){
                 int idx=i+j-1;
-                if(s3.charAt(idx)==s1.charAt(i-1) && dp[j]){
-                    tmp[j]=true;
+                tmp[j]=(s3.charAt(idx)==s1.charAt(i-1) && dp[j]) || (s3.charAt(idx)==s2.charAt(j-1) && tmp[j-1]);
+                
+                if(!flag){
+                    flag=tmp[j];
                 }
-                else if(s3.charAt(idx)==s2.charAt(j-1)){
-                    tmp[j]=tmp[j-1];
-                }
+            }
+            if(!flag){
+                return false;
             }
             dp=tmp;
         }
