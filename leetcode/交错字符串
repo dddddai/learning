@@ -26,7 +26,7 @@ class Solution(object):
         :type s1: str
         :type s2: str
         :type s3: str
-        :rtype: bool
+        :rtype: boold
         """
         if len(s1)+len(s2)!=len(s3):
             return False
@@ -42,22 +42,18 @@ class Solution(object):
             dp[i+1]=True
             
         for i in xrange(1,len(s1)+1):
-            tmp=[False]*(len(s2)+1)
-            flag=tmp[0]=dp[0] and s1[i-1]==s3[i-1]
-            
+            flag=dp[0]=dp[0] and s1[i-1]==s3[i-1]
             #flag用来记录每行是否至少有一个True
             
             for j in xrange(1,len(s2)+1):
                 idx=i+j-1
-                tmp[j]=(s3[idx]==s1[i-1] and dp[j]) or (s3[idx]==s2[j-1] and tmp[j-1])
+                dp[j]=(s3[idx]==s1[i-1] and dp[j]) or (s3[idx]==s2[j-1] and dp[j-1])
                 
                 if not flag:
-                    flag=tmp[j]
+                    flag=dp[j]
             
             if not flag:
                 return False
-            
-            dp=tmp
             
         return dp[-1]
         
@@ -67,35 +63,43 @@ class Solution(object):
 
 class Solution {
     public boolean isInterleave(String s1, String s2, String s3) {
-        if(s1.length()+s2.length()!=s3.length()){
+        if ((s1.length() + s2.length()) != s3.length()) {
             return false;
         }
-        if(s1.length()<s2.length()){
-            return isInterleave(s2,s1,s3);
+
+        if (s1.length() < s2.length()) {
+            return isInterleave(s2, s1, s3);
         }
-        boolean[] dp=new boolean[s2.length()+1];
-        dp[0]=true;
-        for(int i=1;i<=s2.length() && s2.charAt(i-1)==s3.charAt(i-1);++i){
-            dp[i]=true;
+
+        boolean[] dp = new boolean[s2.length() + 1];
+        dp[0] = true;
+
+        for (int i = 1;
+                (i <= s2.length()) && (s2.charAt(i - 1) == s3.charAt(i - 1));
+                ++i) {
+            dp[i] = true;
         }
-        for(int i=1;i<=s1.length();++i){
-            boolean[] tmp=new boolean[s2.length()+1];
-            tmp[0]=dp[0] && s1.charAt(i-1)==s3.charAt(i-1);
-            boolean flag=tmp[0];    //用来记录每行是否至少有一个true
-            
-            for(int j=1;j<=s2.length();++j){
-                int idx=i+j-1;
-                tmp[j]=(s3.charAt(idx)==s1.charAt(i-1) && dp[j]) || (s3.charAt(idx)==s2.charAt(j-1) && tmp[j-1]);
-                
-                if(!flag){
-                    flag=tmp[j];
+
+        for (int i = 1; i <= s1.length(); ++i) {
+            dp[0] = dp[0] && (s1.charAt(i - 1) == s3.charAt(i - 1));
+
+            boolean flag = dp[0]; //用来记录每行是否至少有一个true
+
+            for (int j = 1; j <= s2.length(); ++j) {
+                int idx = (i + j) - 1;
+                dp[j] = ((s3.charAt(idx) == s1.charAt(i - 1)) && dp[j]) ||
+                    ((s3.charAt(idx) == s2.charAt(j - 1)) && dp[j - 1]);
+
+                if (!flag) {
+                    flag = dp[j];
                 }
             }
-            if(!flag){
+
+            if (!flag) {
                 return false;
             }
-            dp=tmp;
         }
+
         return dp[s2.length()];
     }
 }
