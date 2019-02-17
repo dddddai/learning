@@ -34,21 +34,25 @@ class Solution(object):
         
         
 
-class Solution(object):
-    def nthUglyNumber(self, n):
-        """
-        :type n: int
-        :rtype: int
-        """
-        nums=[1]*n
-        p2=p3=p5=0
-        for i in xrange(1,n):
-            nums[i]=min(nums[p2]<<1,nums[p3]*3,nums[p5]*5)
-            if nums[i]==nums[p2]<<1:
-                p2+=1
-            if nums[i]==nums[p3]*3:
-                p3+=1
-            if nums[i]==nums[p5]*5:
-                p5+=1
-                
-        return nums[-1]
+class Solution {
+    public int nthUglyNumber(int n) {
+        int[] nums=new int[n];
+        nums[0]=1;
+        int p2,p3,p5;
+        p2=p3=p5=0;
+        
+        for(int i=1;i<n;++i){
+            nums[i]=Math.min(Math.min(nums[p2]<<1,nums[p3]*3),nums[p5]*5);
+            if(nums[i]==nums[p2]<<1){
+                ++p2;
+            }
+            if(nums[i]==nums[p3]*3){
+                ++p3;
+            }
+            if(nums[i]==nums[p5]*5){
+                ++p5;
+            }
+        }
+        return nums[n-1];
+    }
+}
