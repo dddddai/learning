@@ -26,8 +26,15 @@ class Solution(object):
         :rtype: int
         """
         citations.sort(reverse=True)
-        for i,n in enumerate(citations):
-            if i+1>n:
-                return i
+        l,r=0,len(citations)-1
         
-        return len(citations)
+        while l<=r:
+            mid=(l+r)>>1
+            if mid+1>citations[mid]:
+                r=mid-1
+            elif mid+1<citations[mid]:
+                l=mid+1
+            else:
+                return mid+1
+        
+        return l
