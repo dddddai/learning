@@ -2,23 +2,13 @@ python:
 
 class Solution(object):
     def longestPalindrome(self, s):
-        # l=0
-        # start=0
-        # for i in xrange(len(s)):
-        #     if i-l>=1 and s[i-l-1:i+1]==s[i-l-1:i+1][::-1]:
-        #         start=i-l-1
-        #         l+=2
-        #     elif s[i-l:i+1]==s[i-l:i+1][::-1]:
-        #         start=i-l
-        #         l+=1
-        # return s[start:start+l]
         tmp='#'+"#".join(s)+'#'
         r=[1]*len(tmp)
         axis=maxLen=boundary=pivot=0
         
         for i in range(len(tmp)):
             if i<boundary:
-                r[i]=min(r[(axis<<1)-i],boundary-i)
+                r[i]=min(r[(axis<<1)-i],boundary-i+1)
             while i-r[i]>=0 and i+r[i]<len(tmp) and tmp[i-r[i]]==tmp[i+r[i]]:
                 r[i]+=1
             if r[i]+i-1>boundary:
@@ -52,7 +42,7 @@ class Solution {
         for(int i=0;i<size;++i)
         {
             if(i<boundary)
-                r[i]=Math.min(r[(axis<<1)-i],boundary-i);
+                r[i]=Math.min(r[(axis<<1)-i],boundary-i+1);
             else
                 r[i]=1;
             while(i-r[i]>=0 && i+r[i]<size && tmp.charAt(i-r[i])==tmp.charAt(i+r[i]))
@@ -73,4 +63,5 @@ class Solution {
             return s.substring((pivot>>1)-max_r,(pivot>>1)+max_r);
         return s.substring((pivot>>1)-max_r,(pivot>>1)+max_r+1);
     }
+}
 }
