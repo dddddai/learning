@@ -1,0 +1,20 @@
+思路：位运算
+
+两个数异或：相当于每一位相加，而不考虑进位；
+两个数相与，并左移一位：相当于求得进位；
+将上述两步的结果相加
+
+
+
+public class Solution {
+    public int Add(int num1,int num2) {
+        int a=num1,b=num2;
+        while(b!=0){
+            int tmp=a^b;
+            int carry=(a&b)<<1;
+            a=tmp;
+            b=carry;
+        }
+        return a;
+    }
+}
