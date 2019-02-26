@@ -13,12 +13,33 @@ class Solution(object):
         :type amount: int
         :rtype: int
         """
-        minCount={0:0}
+        minCount=[i+1 for i in xrange(amount+1)]
+        minCount[0]=0
+        
         for money in xrange(1,amount+1):
-            minCount[money]=money+1
             for coin in coins:
                 if coin<=money and minCount[money-coin]!=money-coin+1:
                     minCount[money]=min(minCount[money-coin]+1,minCount[money])
-        if minCount[amount]==amount+1:
-            return -1
-        return minCount[amount]
+                    
+        return minCount[amount] if minCount[amount]!=amount+1 else -1
+
+
+
+
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] minCount=new int[amount+1];
+        for(int i=1;i<=amount;++i){
+            minCount[i]=i+1;
+        }
+        for(int money=1;money<=amount;++money){
+            for(int coin:coins){
+                if(coin<=money && minCount[money-coin]!=money-coin+1){
+                    minCount[money]=Math.min(minCount[money],minCount[money-coin]+1);
+                }
+            }
+        }
+        return minCount[amount]==amount+1 ? -1:minCount[amount];
+    }
+}
