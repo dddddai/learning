@@ -32,9 +32,11 @@ class Solution(object):
         :type K: int
         :rtype: float
         """
+        if K==1:
+            return sum(A)/float(len(A))
+        
         dp=[0]*(len(A)+1)
         sumOfSubarr=[0]*(len(A)+1)
-        
         for i,n in enumerate(A):
             sumOfSubarr[i+1]=sumOfSubarr[i]+n
         
@@ -42,12 +44,15 @@ class Solution(object):
         for i in xrange(l,r+1):
             dp[i]=sumOfSubarr[i]/float(i)
         
-        for m in xrange(2,K+1):
+        for m in xrange(2,K):
             l+=1
             r+=1
-            for i in xrange(r,l-1,-1):      #从大到小遍历，正好使得左边的值为左上方的值
+            for i in xrange(r,l-1,-1):
                 for j in xrange(l-1,i):
                     dp[i]=max(dp[i],dp[j]+float(sumOfSubarr[i]-sumOfSubarr[j])/(i-j))
+        
+        for j in xrange(l,len(A)):
+            dp[-1]=max(dp[-1],dp[j]+float(sumOfSubarr[-1]-sumOfSubarr[j])/(len(A)-j))
                     
         return dp[-1]
         
@@ -57,16 +62,19 @@ class Solution(object):
         
 class Solution {
     public double largestSumOfAverages(int[] A, int K) {
-        double[] dp=new double[A.length+1];
         double[] sumOfSubarr=new double[A.length+1];
         for(int i=1;i<=A.length;++i){
             sumOfSubarr[i]=sumOfSubarr[i-1]+A[i-1];
         }
+        if(K==1){
+            return sumOfSubarr[A.length]/A.length;
+        }
+        double[] dp=new double[A.length+1];
         int l=1,r=A.length+1-K;
         for(int i=l;i<=r;++i){
             dp[i]=sumOfSubarr[i]/i;
         }
-        for(int m=2;m<=K;++m){
+        for(int m=2;m<K;++m){
             ++l;    
             ++r;
             for(int i=r;i>=l;--i){
@@ -75,6 +83,10 @@ class Solution {
                 }
             }
         }
+        for(int j=l-1;j<A.length;++j){
+            dp[A.length]=Math.max(dp[A.length],
+                                  dp[j]+(sumOfSubarr[A.length]-sumOfSubarr[j])/(A.length-j));
+        }
         return dp[A.length];
     }
-}                       
+}
