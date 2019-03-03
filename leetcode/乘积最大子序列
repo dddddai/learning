@@ -19,10 +19,10 @@ class Solution(object):
         :rtype: int
         """
         result=pos_max=neg_max=nums[0]
-        for n in nums[1:]:
+        for i in xrange(1,len(nums)):
             tp,tn=pos_max,neg_max
-            pos_max=max(n,max(n*tp,n*tn))
-            neg_max=min(n,min(n*tp,n*tn))
+            pos_max=max(nums[i],max(nums[i]*tp,nums[i]*tn))
+            neg_max=min(nums[i],min(nums[i]*tp,nums[i]*tn))
             result=max(result,pos_max)
         return result
 
