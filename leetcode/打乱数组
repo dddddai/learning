@@ -1,0 +1,76 @@
+打乱一个没有重复元素的数组。
+
+示例:
+
+// 以数字集合 1, 2 和 3 初始化数组。
+int[] nums = {1,2,3};
+Solution solution = new Solution(nums);
+
+// 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
+solution.shuffle();
+
+// 重设数组到它的初始状态[1,2,3]。
+solution.reset();
+
+// 随机返回数组[1,2,3]打乱后的结果。
+solution.shuffle();
+
+
+
+class Solution(object):
+
+    def __init__(self, nums):
+        """
+        :type nums: List[int]
+        """
+        self.origin=nums
+
+    def reset(self):
+        """
+        Resets the array to its original configuration and return it.
+        :rtype: List[int]
+        """
+        return self.origin
+
+    def shuffle(self):
+        """
+        Returns a random shuffling of the array.
+        :rtype: List[int]
+        """
+        arr=self.origin[:]
+        for i in xrange(len(arr)-1,-1,-1):
+            idx=random.randint(0,i)
+            arr[i],arr[idx]=arr[idx],arr[i]
+            
+        return arr
+        
+        
+        
+        
+
+class Solution {
+    private int[] origin;
+    
+    public Solution(int[] nums) {
+        origin=nums;
+    }
+    
+    /** Resets the array to its original configuration and return it. */
+    public int[] reset() {
+        return origin;
+    }
+    
+    /** Returns a random shuffling of the array. */
+    public int[] shuffle() {
+        int[] arr=new int[origin.length];
+        System.arraycopy(origin,0,arr,0,arr.length);
+        Random generator=new Random();
+        for(int i=arr.length-1;i>=0;--i){
+            int idx=generator.nextInt(i+1);
+            int tmp=arr[idx];
+            arr[idx]=arr[i];
+            arr[i]=tmp;
+        }
+        return arr;
+    }
+}
