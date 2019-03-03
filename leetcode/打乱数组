@@ -17,6 +17,10 @@ solution.shuffle();
 
 
 
+Fisher–Yates Shuffle算法：
+
+
+
 class Solution(object):
 
     def __init__(self, nums):
