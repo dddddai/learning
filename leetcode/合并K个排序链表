@@ -39,10 +39,10 @@ class Solution(object):
             
         head=p=ListNode(0)
         
-        while lists[0].val!=sys.maxsize:
+        while lists[0].val!=float('inf'):
             p.next=ListNode(lists[0].val)
             p=p.next
-            lists[0]=lists[0].next if lists[0].next else ListNode(sys.maxsize)
+            lists[0]=lists[0].next if lists[0].next else ListNode(float('inf'))
             self.perc_down(lists,0,size-1)
             
         return head.next
