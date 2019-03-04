@@ -83,3 +83,32 @@ if __name__=="__main__":
 0 0 0
 1 0 0
 1 2 2
+
+
+第一个例子，改变append方法
+
+class task_queue:
+    queue=[]
+    
+    def append(self,obj):
+        self.queue=[obj]
+        
+    def print_queue(self):
+        print self.queue
+        
+
+
+a=task_queue()
+b=task_queue()
+c=task_queue()
+    
+a.append('tc_1')
+    
+a.print_queue()
+b.print_queue()
+c.print_queue()
+
+
+['tc_1']
+[]
+[]
