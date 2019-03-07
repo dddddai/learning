@@ -64,12 +64,12 @@ class Solution {
         if(start>=end){
             return 0;
         }
-        List<List<Integer>> idxs=new ArrayList<>(26);
+        List[] idxs=new ArrayList[26];
         for(int i=0;i<26;++i){
-            idxs.add(new ArrayList<Integer>());
+            idxs[i]=new ArrayList<Integer>();
         }
         for(int i=start;i<end;++i){
-            idxs.get(s.charAt(i)-'a').add(i);
+            idxs[s.charAt(i)-'a'].add(i);
         }
         for(List<Integer> row:idxs){
             if(row.size()>0 && row.size()<k){
@@ -79,4 +79,4 @@ class Solution {
         }
         return end-start;
     }
-}        
+}
