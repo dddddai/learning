@@ -19,6 +19,7 @@ one five
 
 
 
+
 import java.util.*;
 
 public class Main {
@@ -29,21 +30,11 @@ public class Main {
         for(int i=0;i<num.length();++i){
             sum+=num.charAt(i)-48;
         }
-        Map<Integer,String> map=new HashMap<>();
-        map.put(0,"zero");
-        map.put(1,"one");
-        map.put(2,"two");
-        map.put(3,"three");
-        map.put(4,"four");
-        map.put(5,"five");
-        map.put(6,"six");
-        map.put(7,"seven");
-        map.put(8,"eight");
-        map.put(9,"nine");
+        String[] map=new String[]{"zero","one","two","three","four","five","six","seven","eight","nine"};
         String s=String.valueOf(sum);
-        System.out.print(map.get(s.charAt(0)-48));
+        System.out.print(map[s.charAt(0)-48]);
         for(int i=1;i<s.length();++i){
-            System.out.print(" "+map.get(s.charAt(i)-48));
+            System.out.print(" "+map[s.charAt(i)-48]);
         }
     }
 }
