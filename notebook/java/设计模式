@@ -44,4 +44,6 @@ private Object readResolve() throws ObjectStreamException {
     return instance;
 }
 
+反序列化一个对象的时候，JVM会给我们创建一个对象。
+但是，反序列化的时候JVM并不会去调用类的构造函数。
 --------------------------------------------------------------------------------------
