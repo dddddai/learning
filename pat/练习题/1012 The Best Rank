@@ -1,4 +1,7 @@
-To evaluate the performance of our first year CS majored students, we consider their grades of three courses only: C – C Programming Language, M – Mathematics (Calculus or Linear Algebra), and E – English. At the mean time, we encourage students by emphasizing on their best ranks — that is, among the four ranks with respect to the three courses and the average grade, we print the best rank for each student.
+To evaluate the performance of our first year CS majored students, 
+we consider their grades of three courses only: C – C Programming Language, M – Mathematics (Calculus or Linear Algebra), 
+and E – English. At the mean time, we encourage students by emphasizing on their best ranks — that is, 
+among the four ranks with respect to the three courses and the average grade, we print the best rank for each student.
 
 For example, The grades of C, M, E and A – Average of 4 students are given as the following:
 
