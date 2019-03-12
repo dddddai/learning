@@ -57,25 +57,59 @@ N/A
 
 
 
-两个测试样例超时QAQ
+1个测试样例超时QAQ
 
 
+import java.io.*;
 import java.util.*;
 
+//专门用来加快读取输入，Scanner太慢啦！！
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+    
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            //TODO add check for eof if necessary
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+    static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+}
+
 public class Main{
-    public static void main(String args[]){
-        Scanner sc = new Scanner(System.in);
-        int n=sc.nextInt(),m=sc.nextInt();
+    public static void main(String args[]) throws Exception {
+        Reader.init(System.in);
+        int n=Reader.nextInt(),m=Reader.nextInt();
         List<List<Integer>> arr=new ArrayList<>(4);
         for(int i=0;i<4;++i){
             arr.add(new ArrayList<>(n));
         }
         Map<Long,int[]> map=new HashMap<>(n);
         for(int i=0;i<n;++i){
-            long id=sc.nextLong();
-            int gradeC=sc.nextInt();
-            int gradeM=sc.nextInt();
-            int gradeE=sc.nextInt();
+            long id=Reader.nextLong();
+            int gradeC=Reader.nextInt();
+            int gradeM=Reader.nextInt();
+            int gradeE=Reader.nextInt();
             int gradeA=(int)Math.round((gradeC+gradeE+gradeM)/3.);
             insert(arr.get(1),gradeC);
             insert(arr.get(2),gradeM);
@@ -84,7 +118,7 @@ public class Main{
             map.put(id,new int[]{gradeA,gradeC,gradeM,gradeE});
         }
         for(int i=0;i<m;++i){
-            long id=sc.nextLong();
+            long id=Reader.nextLong();
             if(!map.containsKey(id)){
                 System.out.println("N/A");
             }else{
