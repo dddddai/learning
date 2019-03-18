@@ -27,13 +27,13 @@ class Solution:
     def NumberOf1Between1AndN_Solution(self, n):
         # write code here
         result=0
-        size=len(str(n))
-        for i in xrange(size):
-            div=10**i
+        div=1
+        while div<=n:
             a,b=n/div,n%div
             result+=((a+8)/10)*div
             if a%10==1:
                 result+=b+1
+            div*=10
                 
         return result
         
