@@ -55,14 +55,12 @@ public class Main{
             if(isPalindromic(num)){
                 System.out.println(num);
                 System.out.println(i);
-                break;
+                return;
             }
             num=num.add(new BigInteger(new StringBuilder(num.toString()).reverse().toString()));
         }
-        if(i==k) {
-            System.out.println(num);
-            System.out.println(k);
-        }
+        System.out.println(num);
+        System.out.println(k);
     }
     private static boolean isPalindromic(BigInteger num){
         String s=num.toString();
