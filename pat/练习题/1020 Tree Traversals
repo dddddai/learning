@@ -47,7 +47,7 @@ public class Main{
         for (i=0;i<n;++i){
             in[i]=Reader.nextInt();
         }
-        func(n-1,0,n-1,0);
+        func(n-1,0,n-1,1);
         Iterator<Integer> it=result.values().iterator();
         System.out.print(it.next());
         while(it.hasNext()){
@@ -63,8 +63,8 @@ public class Main{
             ++j;
         }
         result.put(idx,post[root]);
-        func(root-1-end+j,start,j-1,(idx<<1)+1);
-        func(root-1,j+1,end,(idx<<1)+2);
+        func(root-1-end+j,start,j-1,idx<<1);
+        func(root-1,j+1,end,(idx<<1)+1);
     }
 }
 
