@@ -25,15 +25,13 @@ public class Main{
     public static void main(String[] args) throws Exception {
         Reader.init(System.in);
         int n=Reader.nextInt();
-        int div=1;
         int result=0;
-        while (div<=n){
+        for(int div=1;div<=n;div*=10){
             int a=n/div,b=n%div;
-            result+=((a+8)/10)*div;
-            if (a%10==1){
+            result+=(a+8)/10*div;
+            if(a%10==1){
                 result+=b+1;
             }
-            div*=10;
         }
         System.out.println(result);
     }
