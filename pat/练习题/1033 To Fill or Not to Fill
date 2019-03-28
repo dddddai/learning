@@ -1,0 +1,150 @@
+With highways available, driving a car from Hangzhou to any other city is easy. 
+But since the tank capacity of a car is limited, we have to find gas stations on the way from time to time. 
+Different gas station may give different price. You are asked to carefully design the cheapest route to go.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains 4 positive numbers: 
+Cmax (<= 100), the maximum capacity of the tank; 
+D (<=30000), the distance between Hangzhou and the destination city; 
+Davg (<=20), the average distance per unit gas that the car can run; 
+and N (<= 500), the total number of gas stations. 
+
+Then N lines follow, each contains a pair of non-negative numbers: 
+Pi, the unit gas price, and Di (<=D), the distance between this station and Hangzhou, for i=1,…N. 
+All the numbers in a line are separated by a space.
+
+
+Output Specification:
+
+For each test case, print the cheapest price in a line, accurate up to 2 decimal places. 
+It is assumed that the tank is empty at the beginning. 
+If it is impossible to reach the destination, print “The maximum travel distance = X” 
+where X is the maximum possible distance the car can run, accurate up to 2 decimal places.
+
+
+Sample Input 1:
+50 1300 12 8
+6.00 1250
+7.00 600
+7.00 150
+7.10 0
+7.20 200
+7.50 400
+7.30 1000
+6.85 300
+
+Sample Output 1:
+749.17
+
+
+Sample Input 2:
+50 1300 12 2
+7.10 0
+7.00 600
+
+Sample Output 2:
+The maximum travel distance = 1200.00
+
+
+
+import java.util.*;
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        Reader.init(System.in);
+        double capacity=Reader.nextDouble(),target=Reader.nextDouble(),avg=Reader.nextDouble();
+        int n=Reader.nextInt();
+        Station[] arr=new Station[n+1];
+        for(int i=0;i<n;++i){
+            arr[i]=new Station(Reader.nextDouble(),Reader.nextDouble());
+        }
+        arr[n]=new Station(-1,target);    //终点也作为一个station，方便处理
+        Arrays.sort(arr);
+        if(arr[0].dist!=0){
+            System.out.print("The maximum travel distance = 0.00");
+            return;
+        }
+        int idx=0;
+        double maxDist=capacity*avg;
+        double cost=0,position=0,leftDist=0,curPrice=arr[0].price;
+        while(position<target){
+            boolean flag=true;
+            double minPrice=Double.MAX_VALUE,minPriceDist=-1;
+            for(int i=idx+1;i<=n && arr[i].dist<=position+maxDist;++i){
+                if(arr[i].price<curPrice){
+                    cost+=(arr[i].dist-position-leftDist)/avg*curPrice;
+                    leftDist=0;
+                    curPrice=arr[i].price;
+                    position=arr[i].dist;
+                    flag=false;
+                    idx=i;
+                    break;
+                }
+                if(arr[i].price<minPrice){
+                    minPrice=arr[i].price;
+                    minPriceDist=arr[i].dist;
+                    idx=i;
+                }
+            }
+            if(flag){
+                if(minPriceDist==-1){
+                    System.out.format("The maximum travel distance = %.2f",position+maxDist);
+                    return;
+                }
+                cost+=(capacity-leftDist/avg)*curPrice;
+                leftDist=maxDist-minPriceDist+position;
+                curPrice=minPrice;
+                position=minPriceDist;
+            }
+        }
+        System.out.format("%.2f",cost);
+    }
+}
+class Station implements Comparable<Station>{
+    double price;
+    Double dist;
+
+    public Station(double price,Double dist) {
+        this.price = price;
+        this.dist = dist;
+    }
+
+    @Override
+    public int compareTo(Station o) {
+        return dist.compareTo(o.dist);
+    }
+}
+
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    /** call this method to initialize reader for InputStream */
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+    static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+}
