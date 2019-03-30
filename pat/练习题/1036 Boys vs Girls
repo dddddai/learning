@@ -48,60 +48,32 @@ public class Main{
     public static void main(String[] args) throws Exception {
         Reader.init(System.in);
         int n=Reader.nextInt();
-        List<Student> males=new ArrayList<>(n);
-        List<Student> females=new ArrayList<>(n);
+        int max=0,min=100;
+        String femaleName,femaleId,maleName,maleId;
+        femaleName=femaleId=maleName=maleId=null;
         for(int i=0;i<n;++i){
-            String name=Reader.next(),gender=Reader.next();
+            String name=Reader.next(),gender=Reader.next(),id=Reader.next();
+            int grade=Reader.nextInt();
             if(gender.equals("M")){
-                males.add(new Student(name,gender,Reader.next(),Reader.nextInt()));
+                if(grade<min){
+                    min=grade;
+                    maleName=name;
+                    maleId=id;
+                }
             }else{
-                females.add(new Student(name,gender,Reader.next(),Reader.nextInt()));
+                if(grade>max){
+                    max=grade;
+                    femaleName=name;
+                    femaleId=id;
+                }
             }
         }
-        Collections.sort(males,new MaleComparator());
-        Collections.sort(females,new FemaleComparator());
-        boolean flag=false;
-        if(females.isEmpty()){
-            System.out.println("Absent");
-            flag=true;
-        }else {
-            System.out.println(females.get(0).name + " " + females.get(0).id);
-        }
-        if(males.isEmpty()){
-            System.out.println("Absent");
-            flag=true;
-        }else {
-            System.out.println(males.get(0).name + " " + males.get(0).id);
-        }
-        System.out.println(flag?"NA":females.get(0).grade-males.get(0).grade);
+        System.out.println(femaleId==null ? "Absent":femaleName+" "+femaleId);
+        System.out.println(maleId==null ? "Absent":maleName+" "+maleId);
+        System.out.println(femaleId==null || maleId==null ? "NA":max-min);
     }
 }
 
-class Student{
-    String name,gender,id;
-    Integer grade;
-
-    public Student(String name, String gender, String id, Integer grade) {
-        this.name = name;
-        this.gender = gender;
-        this.id = id;
-        this.grade = grade;
-    }
-}
-class MaleComparator implements Comparator<Student>{
-
-    @Override
-    public int compare(Student o1, Student o2) {
-        return o1.grade.compareTo(o2.grade);
-    }
-}
-class FemaleComparator implements Comparator<Student>{
-
-    @Override
-    public int compare(Student o1, Student o2) {
-        return o2.grade.compareTo(o1.grade);
-    }
-}
 class Reader {
     static BufferedReader reader;
     static StringTokenizer tokenizer;
