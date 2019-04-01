@@ -47,6 +47,8 @@ LOR6 4 1 2 4 5
 NON9 0
 
 
+一个样例内存超限
+
 
 import java.util.*;
 import java.io.*;
