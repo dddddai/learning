@@ -1,0 +1,52 @@
+Given a string, you are supposed to output the length of the longest symmetric sub-string. 
+For example, given “Is PAT&TAP symmetric?”, the longest symmetric sub-string is “s PAT&TAP s”, hence you must output 11.
+
+Input Specification:
+
+Each input file contains one test case which gives a non-empty string of length no more than 1000.
+
+Output Specification:
+
+For each test case, simply print the maximum length in a line.
+
+Sample Input:
+Is PAT&TAP symmetric?
+
+Sample Output:
+11
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        Scanner sc=new Scanner(System.in);
+        char[] arr=sc.nextLine().toCharArray();
+        StringBuilder s=new StringBuilder();
+        s.append('#');
+        for(char c:arr){
+            s.append(c);
+            s.append('#');
+        }
+        int maxLen=0,boundary=0,axis=0;
+        int[] r=new int[s.length()];
+        for(int i=0;i<s.length();++i){
+            if(i<boundary) {
+                r[i] = Math.min(r[(axis << 1) - i], boundary - i + 1);
+            }else{
+                r[i]=1;
+            }
+            while(i+r[i]<s.length() && i-r[i]>=0 && s.charAt(i+r[i])==s.charAt(i-r[i])){
+                ++r[i];
+            }
+            maxLen=Math.max(maxLen,r[i]-1);
+            if(i+r[i]-1>boundary){
+                boundary=i+r[i]-1;
+                axis=i;
+            }
+        }
+        System.out.print(maxLen);
+    }
+}
