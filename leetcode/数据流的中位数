@@ -79,3 +79,43 @@ class MedianFinder(object):
         if self.size&1:
             return self.min_heap[0]
         return (self.min_heap[0]-self.max_heap[0])/2.
+
+
+
+
+class MedianFinder {
+    private Queue<Integer> minHeap;
+    private Queue<Integer> maxHeap;
+    private int size;
+    
+    /** initialize your data structure here. */
+    public MedianFinder() {
+        minHeap=new PriorityQueue<>();
+        maxHeap=new PriorityQueue<>(Collections.reverseOrder());
+        minHeap.add(Integer.MAX_VALUE);
+        maxHeap.add(Integer.MIN_VALUE);
+        size=0;
+    }
+    
+    public void addNum(int num) {
+        if((++size&1)==1){
+            if(num<maxHeap.peek()){
+                minHeap.add(maxHeap.poll());
+                maxHeap.add(num);
+            }else{
+                minHeap.add(num);
+            }
+        }else{
+            if(num>minHeap.peek()){
+                maxHeap.add(minHeap.poll());
+                minHeap.add(num);
+            }else{
+                maxHeap.add(num);
+            }
+        }
+    }
+    
+    public double findMedian() {
+        return (size&1)==1 ? minHeap.peek():(maxHeap.peek()+minHeap.peek())/2.;
+    }
+}
