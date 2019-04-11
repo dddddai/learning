@@ -1,0 +1,88 @@
+给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+
+示例:
+
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+给定 word = "ABCCED", 返回 true.
+给定 word = "SEE", 返回 true.
+给定 word = "ABCB", 返回 false.
+
+
+
+class Solution(object):
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        self.m,self.n=len(board),len(board[0])
+        self.visited=[[False for i in xrange(self.n)] for j in xrange(self.m)]
+        for i in xrange(self.m):
+            for j in xrange(self.n):
+                if board[i][j]==word[0]:
+                    result=self.dfs(board,i,j,word,0)
+                    if result:
+                        return True
+        
+        return False
+        
+    def dfs(self,board,i,j,word,idx):
+        if idx==len(word):
+            return True
+        if not(0<=i<self.m and 0<=j<self.n) or board[i][j]!=word[idx] or self.visited[i][j]:
+            return False
+        
+        self.visited[i][j]=True
+        result=(self.dfs(board,i+1,j,word,idx+1) or self.dfs(board,i-1,j,word,idx+1)
+                    or self.dfs(board,i,j+1,word,idx+1) or self.dfs(board,i,j-1,word,idx+1))
+        self.visited[i][j]=False
+        
+        return result
+        
+        
+        
+        
+class Solution {
+    private static boolean[][] visited;
+    private int m,n;
+    
+    public boolean exist(char[][] board, String word) {
+        m=board.length;
+        n=board[0].length;
+        visited=new boolean[m][n];
+        for(int i=0;i<m;++i){
+            for(int j=0;j<n;++j){
+                if(board[i][j]==word.charAt(0)){
+                    boolean result=dfs(board,i,j,word,0);
+                    if(result){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean dfs(char[][] board,int i,int j,String word,int idx){
+        if(idx==word.length()){
+            return true;
+        }
+        if(i<0 || i>=m || j<0 || j>=n || board[i][j]!=word.charAt(idx) || visited[i][j]){
+            return false;
+        }
+        visited[i][j]=true;
+        boolean result=dfs(board,i+1,j,word,idx+1) || dfs(board,i-1,j,word,idx+1)
+                        || dfs(board,i,j+1,word,idx+1) || dfs(board,i,j-1,word,idx+1);
+        visited[i][j]=false;
+        return result;
+    }
+}        
