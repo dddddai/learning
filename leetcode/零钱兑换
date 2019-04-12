@@ -1,0 +1,45 @@
+给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+
+示例 1:
+
+输入: coins = [1, 2, 5], amount = 11
+输出: 3 
+解释: 11 = 5 + 5 + 1
+
+class Solution(object):
+    def coinChange(self, coins, amount):
+        """
+        :type coins: List[int]
+        :type amount: int
+        :rtype: int
+        """
+        minCount=[i+1 for i in xrange(amount+1)]
+        minCount[0]=0
+        
+        for money in xrange(1,amount+1):
+            for coin in coins:
+                if coin<=money and minCount[money-coin]!=money-coin+1:
+                    minCount[money]=min(minCount[money-coin]+1,minCount[money])
+                    
+        return minCount[amount] if minCount[amount]!=amount+1 else -1
+
+
+
+
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] minCount=new int[amount+1];
+        for(int i=1;i<=amount;++i){
+            minCount[i]=i+1;
+        }
+        for(int money=1;money<=amount;++money){
+            for(int coin:coins){
+                if(coin<=money && minCount[money-coin]!=money-coin+1){
+                    minCount[money]=Math.min(minCount[money],minCount[money-coin]+1);
+                }
+            }
+        }
+        return minCount[amount]==amount+1 ? -1:minCount[amount];
+    }
+}

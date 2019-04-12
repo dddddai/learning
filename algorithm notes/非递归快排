@@ -1,0 +1,36 @@
+非递归的思路是：
+
+通过两个栈 startStack 和 endStack 来记录需要排序的子数组的起始下表start和终止下表end。
+初始化两个栈，向startStack中push 0，向endStack中push len(nums)-1.
+while循环，终止条件为两个栈为空（排序完成）
+在循环中从两个栈中pop出这次循环的start和end， 如果start>=end continue循环, 
+否则完成findPos(A,start,end) 操作后得到两个待处理的子数组，将两个数组的start和end push进栈。
+
+
+def quickSort(nums):
+    #初始化两个栈
+    startStack = [0]
+    endStack = [len(nums)-1]
+
+    #进入循环，两个栈均为空时，排序结束
+    while startStack:
+        #得到本次循环的start 和 end
+        start = startStack.pop()
+        end = endStack.pop()
+        #判断子数组是否有序
+        if start>=end:
+            continue
+        i = start 
+        j = end
+        while i<j:
+            if nums[i]>nums[j]:
+                nums[i],nums[j-1],nums[j] = nums[j-1],nums[j],nums[i]
+                # nums[j]是pivot
+                j-=1
+            else:
+                i+=1
+        #将两个子数组的开始和结尾push进栈中
+        startStack.append(start)
+        endStack.append(i-1)
+        startStack.append(i+1)
+        endStack.append(end)

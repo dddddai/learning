@@ -1,0 +1,50 @@
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。
+假设压入栈的所有数字均不相等。
+例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，
+但4,3,5,1,2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
+
+用一个stack模拟该过程
+
+class Solution:
+    def IsPopOrder(self, pushV, popV):
+        # write code here
+        stack=[]
+        idx=0
+        for n in pushV:
+            if n==popV[idx]:
+                idx+=1
+            else:
+                stack.append(n)
+        for j in xrange(idx,len(popV)):
+            if stack[-1]==popV[j]:
+                stack.pop()
+            else:
+                return False
+        return True
+        
+        
+        
+        
+import java.util.Stack;
+
+public class Solution {
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        Stack<Integer> stack=new Stack<>();
+        int idx=0;
+        for(int n:pushA)
+        {
+            if(n==popA[idx])
+                ++idx;
+            else
+                stack.push(n);
+        }
+        for(int j=idx;j<popA.length;++j)
+        {
+            if(popA[j]==stack.peek())
+                stack.pop();
+            else
+                return false;
+        }
+        return true;
+    }
+}

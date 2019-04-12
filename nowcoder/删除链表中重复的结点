@@ -1,0 +1,46 @@
+题目描述
+在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，
+重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5
+
+class Solution:
+    def deleteDuplication(self, pHead):
+        # write code here
+        p=dummy=ListNode(0)
+        dummy.next=pHead
+        while p.next and p.next.next:
+            if p.next.val==p.next.next.val:
+                nxt=p.next.next.next
+                duplicate=p.next.val
+                while nxt and nxt.val==duplicate:
+                    nxt=nxt.next
+                p.next=nxt
+            else:
+                p=p.next
+        
+        return dummy.next
+
+
+
+
+public class Solution {
+    public ListNode deleteDuplication(ListNode pHead)
+    {
+        ListNode dummy=new ListNode(0);
+        dummy.next=pHead;
+        ListNode p=dummy;
+        while(p.next!=null && p.next.next!=null)
+        {
+            if(p.next.val==p.next.next.val)
+            {
+                int duplicate=p.next.val;
+                ListNode nxt=p.next.next.next;
+                while(nxt!=null && nxt.val==duplicate)
+                    nxt=nxt.next;
+                p.next=nxt;
+            }
+            else
+                p=p.next;
+        }
+        return dummy.next;
+    }
+}

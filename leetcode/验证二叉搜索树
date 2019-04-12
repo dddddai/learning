@@ -1,0 +1,35 @@
+class Solution(object):
+    def isValidBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return self.func(root, -sys.maxsize - 1, sys.maxsize)
+
+    def func(self, root, minimum, maximum):
+        if root is None:
+            return True
+
+        if minimum < root.val < maximum:
+            return self.func(root.left, minimum, root.val) and self.func(
+                root.right, root.val, maximum)
+
+        return False
+        
+        
+        
+        
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return func(root,-Double.MAX_VALUE,Double.MAX_VALUE);
+    }
+    boolean func(TreeNode root,double min,double max)
+    {
+        if(root==null)
+            return true;
+        if(root.val>min && root.val<max)
+            return func(root.left,min,root.val) && func(root.right,root.val,max);
+        
+        return false;
+    }
+}        

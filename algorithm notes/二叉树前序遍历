@@ -1,0 +1,71 @@
+递归:
+
+class Solution(object):
+    def preorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if root is None:
+            return []
+        result=[]
+        result.append(root.val)
+        result.extend(self.preorderTraversal(root.left))
+        result.extend(self.preorderTraversal(root.right))
+        return result
+        
+        
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result=new ArrayList<>();
+        if(root==null)
+            return result;
+        result.add(root.val);
+        result.addAll(preorderTraversal(root.left));
+        result.addAll(preorderTraversal(root.right));
+        return result;
+    }
+}
+
+
+非递归：
+
+class Solution(object):
+    def preorderTraversal(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[int]
+        """
+        if root is None:
+            return []
+        result=[]
+        stack=[root]
+        while stack:
+            node=stack.pop()
+            result.append(node.val)
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+        return result
+        
+        
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result=new ArrayList<>();
+        if(root==null)
+            return result;
+        Stack<TreeNode> stack=new Stack<>();
+        stack.push(root);
+        while(!stack.empty())
+        {
+            TreeNode node=stack.pop();
+            result.add(node.val);
+            if(node.right!=null)
+                stack.push(node.right);
+            if(node.left!=null)
+                stack.push(node.left);
+        }
+        return result;
+    }
+}        

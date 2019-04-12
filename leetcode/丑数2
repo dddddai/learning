@@ -1,0 +1,58 @@
+编写一个程序，找出第 n 个丑数。
+
+丑数就是只包含质因数 2, 3, 5 的正整数。
+
+示例:
+
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+
+
+
+
+class Solution(object):
+    def nthUglyNumber(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        nums=[1]*n
+        p2=p3=p5=0
+        for i in xrange(1,n):
+            nums[i]=min(nums[p2]<<1,nums[p3]*3,nums[p5]*5)
+            if nums[i]==nums[p2]<<1:
+                p2+=1
+            if nums[i]==nums[p3]*3:
+                p3+=1
+            if nums[i]==nums[p5]*5:
+                p5+=1
+                
+        return nums[-1]
+        
+        
+        
+        
+
+class Solution {
+    public int nthUglyNumber(int n) {
+        int[] nums=new int[n];
+        nums[0]=1;
+        int p2,p3,p5;
+        p2=p3=p5=0;
+        
+        for(int i=1;i<n;++i){
+            nums[i]=Math.min(Math.min(nums[p2]<<1,nums[p3]*3),nums[p5]*5);
+            if(nums[i]==nums[p2]<<1){
+                ++p2;
+            }
+            if(nums[i]==nums[p3]*3){
+                ++p3;
+            }
+            if(nums[i]==nums[p5]*5){
+                ++p5;
+            }
+        }
+        return nums[n-1];
+    }
+}

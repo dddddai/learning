@@ -1,0 +1,15 @@
+Integer数组转化为int数组：
+
+Integer[] tmp={2,234,3,543,5,4};
+int[] arr=Arrays.stream(tmp).mapToInt(Integer::valueOf).toArray();
+System.out.println(Arrays.toString(arr));
+
+
+
+int数组转化为Integer数组：
+
+import java.util.stream.Collectors;
+
+int[] arr={2,3,4,54,3,5};
+List<Integer> list=Arrays.stream(arr).boxed().collect(Collectors.toList());
+System.out.println(list);

@@ -1,0 +1,94 @@
+示例 1:
+
+输入: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+输出: 4 
+解释: 最长递增路径为 [1, 2, 6, 9]。
+示例 2:
+
+输入: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+输出: 4 
+解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。
+
+
+class Solution(object):
+    steps=[[0,1],[0,-1],[1,0],[-1,0]]
+    
+    def longestIncreasingPath(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: int
+        """
+        if not matrix or not matrix[0]:
+            return 0
+        m,n=len(matrix),len(matrix[0])
+        self.visited=[[0 for i in range(n)] for j in range(m)]
+        result=1
+        for i in range(m):
+            for j in range(n):
+                result=max(result,self.func(matrix,i,j,m,n))
+        return result
+    
+    def func(self,g,i,j,m,n):
+        if self.visited[i][j]:
+                return self.visited[i][j]
+
+        maxLen=1
+        for s in self.steps:
+            x=i+s[0]
+            y=j+s[1]
+            if not(0<=x<m and 0<=y<n) or g[i][j]>=g[x][y]:
+                continue
+            maxLen=max(maxLen,1+self.func(g,x,y,m,n))
+        self.visited[i][j]=maxLen
+        return maxLen
+        
+        
+        
+        
+class Solution {
+    int[][] steps={{1,0},{-1,0},{0,1},{0,-1}};
+
+    public int longestIncreasingPath(int[][] matrix) {
+        int m=matrix.length;
+        if(m==0)
+            return 0;
+        int n=matrix[0].length;
+        
+        int result=1;
+        int[][] visited=new int[m][n];
+        
+        for(int i=0;i<m;++i)
+            for(int j=0;j<n;++j)
+                result=Math.max(result,func(matrix,m,n,i,j,visited));
+        
+        return result;
+                
+    }
+    
+    int func(int[][] matrix,int m,int n,int i,int j,int[][] visited)
+    {
+        if(visited[i][j]!=0)
+            return visited[i][j];
+        
+        int maxLen=1;
+        for(int[] s:steps)
+        {
+            int x=i+s[0],y=j+s[1];
+            if(x>=m || x<0 || y>=n || y<0 || matrix[i][j]>=matrix[x][y])
+                continue;
+            maxLen=Math.max(maxLen,1+func(matrix,m,n,x,y,visited));
+        }
+        visited[i][j]=maxLen;
+        return maxLen;
+    }
+}

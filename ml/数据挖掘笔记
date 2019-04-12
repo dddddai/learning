@@ -1,0 +1,582 @@
+1）最大最小标准化（Min-Max Normalization）
+
+b）. 本归一化方法比较适用在数值比较集中的情况；
+
+c）. 缺陷：如果max和min不稳定，很容易使得归一化结果不稳定，使得后续使用效果也不稳定。
+实际使用中可以用经验常量来替代max和min。
+
+d）.  应用场景：在不涉及距离度量、协方差计算、数据不符合正太分布的时候，
+可以使用第一种方法或其他归一化方法（不包括Z-score方法）。比如图像处理中，
+将RGB图像转换为灰度图像后将其值限定在[0 255]的范围
+
+2）Z-score标准化方法
+
+a）. 数据处理后符合标准正态分布，即均值为0，标准差为1，其转化函数为：
+
+其中μ为所有样本数据的均值，σ为所有样本数据的标准差。
+
+b）. 本方法要求原始数据的分布可以近似为高斯分布，否则归一化的效果会变得很糟糕；
+
+c）. 应用场景：在分类、聚类算法中，需要使用距离来度量相似性的时候、
+或者使用PCA技术进行降维的时候，Z-score standardization表现更好。
+
+3）非线性归一化
+
+a）. 本归一化方法经常用在数据分化比较大的场景，有些数值很大，有些很小。
+通过一些数学函数，将原始值进行映射。
+
+b）. 该方法包括 log，正切等，需要根据数据分布的情况，决定非线性函数的曲线：
+
+       ---log对数函数转换方法
+
+y = log10(x)，即以10为底的对数转换函数，对应的归一化方法为：x' = log10(x) /log10(max)，
+其中max表示样本数据的最大
+
+值，并且所有样本数据均要大于等于1.
+
+---atan反正切函数转换方法
+
+利用反正切函数可以实现数据的归一化，即
+
+x' = atan(x)*(2/pi)
+
+使用这个方法需要注意的是如果想映射的区间为[0，1]，则数据都应该大于等于0，
+小于0的数据将被映射到[－1，0]区间上.
+
+---L2范数归一化方法
+
+L2范数归一化就是特征向量中每个元素均除以向量的L2范数：
+
+
+
+（三）应用场景说明
+
+1）概率模型不需要归一化，因为这种模型不关心变量的取值，而是关心变量的分布和变量之间的条件概率；
+
+2）SVM、线性回归之类的最优化问题需要归一化，是否归一化主要在于是否关心变量取值；
+
+3）神经网络需要标准化处理，一般变量的取值在-1到1之间，
+这样做是为了弱化某些变量的值较大而对模型产生影响。
+一般神经网络中的隐藏层采用tanh激活函数比sigmod激活函数要好些，
+因为tanh双曲正切函数的取值[-1,1]之间，均值为0.
+
+4）在K近邻算法中，如果不对解释变量进行标准化，那么具有小数量级的解释变量的影响就会微乎其微。
+
+tb=pandas.pivot_table(df,index='age',columns='children',values='income',aggfunc=numpy.mean)
+透视图
+
+
+data=df_train[['TotalBsmtSF','SalePrice']]   pandas的自带画图，这是散点图
+data.plot.scatter('TotalBsmtSF','SalePrice')
+seaborn.distplot(df_train['SalePrice'])    频率分布图
+
+
+import scipy.stats as ss                    统计包
+print ss.ttest_ind(ss.norm.rvs(size=10),ss.norm.rvs(size=30))[1]
+
+seaborn.heatmap(tb,cmap=seaborn.set_palette('Reds'))
+
+seaborn.barplot(x=,y=,hue(钻取)=,data=df)
+
+seaborn.heatmap(df.corr(),vmin=-1,vmax=1)
+
+def getEntrophy(s):
+    if not isinstance(s,pandas.Series):
+        s=pandas.Series(s)
+    t=s.value_counts().values/float(len(s))
+    return -(t*numpy.log2(t)).sum()
+
+
+
+
+def getCondEntropy(s1,s2):              条件熵
+    t={}
+    for i in range(len(s1)):
+        t[s1[i]]=t.get(s1[i],[])+[s2[i]]
+    return sum([getEntrophy(t[j])*len(t[j])/float(len(s1)) for j in t])
+
+
+def getEntropyGain(s1,s2):          
+    return getEntrophy(s1)-getCondEntropy(s2,s1)
+
+
+def getEntropyGainRatio(s1,s2):               熵增益率 
+    return getEntropyGain(s1,s2)/getEntrophy(s2)
+
+
+import math
+def getDiscreteCorr(s1,s2):           
+    return getEntropyGain(s1,s2)/math.sqrt(getEntrophy(s1)*getEntrophy(s2))
+
+def getProbSS(s):               
+    if not isinstance(s,pandas.Series):
+        s=pandas.Series(s)
+    t=s.value_counts().values/float(len(s))
+    return sum(t**2)
+
+def getGini(s1,s2):       不对称
+    t = {}
+    for i in range(len(s1)):
+        t[s1[i]] = t.get(s1[i], []) + [s2[i]]
+    return 1-sum([getProbSS(t[j])*len(t[j])/float(len(s1)) for j in t])
+
+from sklearn.decomposition import PCA                    主成分分析
+pca=PCA()
+t=pca.fit_transform(df[['age','income','children']])
+
+
+seaborn.heatmap(pandas.DataFrame(t).corr(),vmin=-1,vmax=1,cmap=seaborn.color_palette('RdBu',n_colors=128))
+plt.show()
+
+print df.drop('pep',axis=1)   /   print df.drop(['pep','age'],axis=1)          删除某列，记得axis=1
+df.dropna()   
+或者df.dropna(subset=['',''])            要删除的列
+
+df.drop_duplicates() 参数：subset，即要删除的列             keep='first'/'last'/'False'   保留的值，False为不保留全删除        inplace=True/False  原始数据是否变化
+
+df.fillna(填充的值)
+
+df['age'].interpolate()   只能用于series    填充空值，值为前后相加除以2，若是最后一个，则等于前一个
+
+df['age'].quantile(0.25/0.75/0.5/……)   也可以用于dataframe
+
+print df[df['age']<30][df['pep']=='YES']    两个方括号代表“且”，两个条件都要满足
+
+print df[[True if i.startswith('F') else False for i in df['sex']]]
+
+特征选择：
+from sklearn.svm import SVR                         SVR回归器
+from sklearn.tree import DecisionTreeRegressor            决策树回归器
+from sklearn.feature_selection import SelectKBest,RFE,SelectFromModel                    过滤思想、包裹思想、嵌入思想
+skb=SelectKBest(k=选取的特征数量)
+skb.fit(x,y)     训练      y是标签
+skb.transform(X)      提取X的特征
+
+rfe=RFE(estimator=SVR(kernel='linear')（方法）,n_features_to_select=选取的特征数量,step=每次迭代筛选掉的特征数)
+rfe.fit_transform(x,y)
+
+sfm=SelectFromModel(estimator=DecisionTreeRegressor(),threshold=0.1)     特征重要性小于0.1则被删掉，即阈值
+---------------------------------------
+numpy.log(x)       即lnx
+numpy.exp(x)        即e^x
+-------------------------------------------
+l=[6,8,10,15,16,24,25,40,67]
+print pandas.qcut(l,q=3,labels=['low','medium','high'])        等深分箱： l为被分的东西，q为分的份数，labels是分后的标识
+print pandas.cut(l,bins=3,labels=['low','medium','high'])        等宽分箱：bins为分的分数
+--------------------
+from sklearn.preprocessing import  MinMaxScaler,StandardScaler             归一化和标准化（均值为0，方差为1）
+l=numpy.array([6,8,10,15,16,24,25,40,67])
+print MinMaxScaler().fit_transform(l.reshape(-1,1))          ！一定要reshape成(-1,1)才行，转换后依然是一个列向量
+print StandardScaler().fit_transform(l.reshape(-1,1))        ！一定要reshape成(-1,1)才行，转换后依然是一个列向量
+
+from sklearn.preprocessing import LabelEncoder,OneHotEncoder                    标签编码和独热编码
+print LabelEncoder().fit_transform(married)
+
+                
+lbe=LabelEncoder()
+lbe.fit(numpy.array(['a','b','c','d']))
+ohe=OneHotEncoder()
+ohe.fit(lbe.transform(['a','c','d','b']).reshape(-1,1))               ！一定要reshape成(-1,1)才行，要先标签编码！
+print ohe.transform(lbe.transform(['c','a','a','a','d']).reshape(-1,1)).toarray()               ！一定要reshape成(-1,1)才行
+
+可以手动labelencode，像下面这样
+training.loc[training["Sex"] == "male", "Sex"] = 0
+training.loc[training["Sex"] == "female", "Sex"] = 1
+
+training.loc[training["Embarked"] == "S", "Embarked"] = 0
+training.loc[training["Embarked"] == "C", "Embarked"] = 1
+training.loc[training["Embarked"] == "Q", "Embarked"] = 2
+
+testing.loc[testing["Sex"] == "male", "Sex"] = 0
+testing.loc[testing["Sex"] == "female", "Sex"] = 1
+
+testing.loc[testing["Embarked"] == "S", "Embarked"] = 0
+testing.loc[testing["Embarked"] == "C", "Embarked"] = 1
+testing.loc[testing["Embarked"] == "Q", "Embarked"] = 2
+
+
+
+from sklearn.preprocessing import Normalizer            特征正规化
+print Normalizer(norm='l1').fit_transform([[1,3,4,13,2,321,3]])       注意要两个中括号，
+norm为l1或l2表示两种正规化
+print Normalizer(norm='l2').fit_transform([[1,1,3,-1,2]])
+
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis   LDA降维
+x=[[-1,-1],[-2,-1],[-3,-2],[1,1],[2,1],[3,2]]             x为特征的矩阵
+y=[1,1,1,2,2,2]               y为标签值的列向量
+print LinearDiscriminantAnalysis(n_components=降到几维).fit_transform(x,y)
+
+t=LinearDiscriminantAnalysis(n_components=1).fit(x,y)                 t作为一个分类器
+print t.predict([[0.8,1]])             用t来预测它的分类
+
+
+
+from sklearn.model_selection import  train_test_split   切分训练集和测试集
+X_train,X_test, y_train, y_test =cross_validation.train_test_split(train_data,train_target,
+test_size=0.3, random_state=0)
+
+def modelling(feature,label):
+    fv=feature.values
+    lv=label
+    x_tt,x_val,y_tt,y_val=train_test_split(fv,lv,test_size=0.2)                 
+    训练、验证、测试集分成6：2：2，第一步先分出验证集
+    x_train,x_test,y_train,y_test=train_test_split(x_tt,y_tt,test_size=0.25)                 
+    第二布再来分训练和测试
+    print len(x_train),len(x_val),len(x_test)
+
+
+print pandas.get_dummies(df['region'])          pandas直接使用这个函数进行onehotcoding
+
+
+import pandas as pd
+df = pd.DataFrame([
+            ['green', 'M', 10.1, 'class1'], 
+            ['red', 'L', 13.5, 'class2'], 
+            ['blue', 'XL', 15.3, 'class1']])
+ 
+df.columns = ['color', 'size', 'prize', 'class label']
+ 
+size_mapping = {
+           'XL': 3,
+           'L': 2,
+           'M': 1}
+df['size'] = df['size'].map(size_mapping)
+ 
+class_mapping = {label:idx for idx,label in enumerate(set(df['class label']))}
+df['class label'] = df['class label'].map(class_mapping)
+
+
+knn
+
+from sklearn.neighbors import NearestNeighbors,KNeighborsClassifier
+from sklearn.metrics import accuracy_score,recall_score,f1_score
+knn_clf=KNeighborsClassifier(n_neighbors=取几个近邻的点)
+knn_clf.fit(x_tr,y_tr)                   
+y_predict=knn_clf.predict(x_v)                     预测验证集
+print accuracy_score(y_v,y_predict),recall_score(y_v,y_predict),f1_score(y_v,y_predict)               看预测的准确度            准确率、召回率、综合反映
+
+
+from sklearn.externals import joblib        存储模型
+joblib.dump(knn_clf,'knn_clf')                  存储
+joblib.load('knn_clf')            调用模型
+
+朴素贝叶斯                用到的特征必须是离散的，否则模型效果很差
+
+from sklearn.naive_bayes import GaussianNB,BernoulliNB            
+二值（比如0、1）用伯努利，高斯假设特征是高斯分布的
+用法和knn一样
+
+决策树
+
+from sklearn.tree import DecisionTreeClassifier
+用法也一样
+dtc=DecisionTreeClassifier(criterion='entropy' or 'gini')            
+用信息增益的决策树，如不填这个参数则默认用基尼系数的决策树
+
+SVM  支持向量机
+
+from sklearn.svm import SVC
+svc=SVC(C=10000)     C用来控制准确性，越大的话准确度越高，计算时间越长
+用法一样
+
+随机森林
+
+from sklearn.ensemble import RandomForestClassifier
+用法一样，参数看官方文档，化身调参侠
+	
+n_estimators  ，max_features  ,  bootstrap=True/False……  
+
+
+AdaBoost
+from sklearn.ensemble import AdaBoostClassifier
+用法一样，调参侠 
+
+
+xgboost
+from xgboost import XGBClassifier
+用法一样，调参侠
+
+from xgboost import plot_importance          画各个特征的重要程度
+import matplotlib.pyplot as plt
+
+model=XGBClassifier()
+model.fit(x_tr,y_tr)
+plot_importance(model)
+plt.show()
+
+
+from sklearn.linear_model import LinearRegression,Ridge,Lasso     线性回归、岭回归、Lasso回归
+from sklearn.metrics import mean_squared_error        用这个来衡量回归的好坏
+
+df=pandas.read_csv('bank-data.csv')
+model=LinearRegression()
+model.fit(df['age'].values.reshape(-1,1),df['income'].values.reshape(-1,1))                  
+都一定要reshape成一列
+y_pred=model.predict(df['age'].values.reshape(-1,1))
+print model.coef_                         回归方程的参数
+print mean_squared_error(y_pred,df['income'].values.reshape(-1,1))      
+
+
+from sklearn.linear_model import LogisticRegression   逻辑斯特回归 大多数情况用作分类器  
+用法一样
+
+
+神经网络
+输入层必须是归一化的 即0-1的数
+输出层是onehot形式的
+
+from keras.models import Sequential     容器
+from keras.layers.core import Dense,Activation    神经网络层、激活函数
+from keras.optimizers import SGD    随机梯度下降算法
+mdl=Sequential()
+mdl.add(Dense(50,input_dim=len(feature_value.iloc[0])))     先建立一个稠密层，
+表示它的输入层，50是下一个隐含层的神经元个数，input_dim是输入数据的维度
+mdl.add(Activation('sigmoid'))   加入sigmoid激活函数
+mdl.add(Dense(2))       加入隐含层，下一层输出2维
+mdl.add(Activation('softmax'))     归一化
+sgd=SGD(lr=0.01)   优化器,lr是学习率
+mdl.compile(loss='mean_squared_error',optimizer=sgd或者'adam'等等)     编译，指定loss函数，
+即损失函数，optimizer是优化器，填入刚才的sgd或者其它
+
+
+mdl.fit(x_tr,[[0,1]if i==0 else [1,0]  for i in y_tr],nb_epoch=1000,batch_size=2000)
+注意y_tr必须传入onehot编码后的值，nb_epoch指的是迭代次数，batch_size是每次随机选取的数量
+y_pred=mdl.predict_classes(x_t)
+
+
+GBDT
+from sklearn.ensemble import GradientBoostingClassifier
+用法一样
+model=GradientBoostingClassifier(max_depth=6,n_estimators=100)   树的深度，树的个数
+K-means、DBSCAN、层次聚类
+import numpy
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans,DBSCAN,AgglomerativeClustering
+from sklearn.datasets import make_circles,make_blobs,make_moons    sklearn自带的数据集
+samples=1000         指定样本量为1000
+
+circles=make_circles(n_samples=samples,factor=0.5,noise=0.05)
+点的数量、大小两个圆的差距、噪声
+
+blobs=make_blobs(n_samples=samples,random_state=4,center_box=(-1,1),cluster_std=0.1)
+ 
+指定random_state让它每次产生的随机结果一样
+center_box指定生成点的区间
+cluster_std是生成点的标准差
+
+moons=make_moons(n_samples=samples,noise=0.05)
+
+random_data=numpy.random.rand(samples,2),None   
+加None是为了和上面3种数据结构对齐，后面的那一项是不需要用到的
+产生1000个二维的点
+
+f=plt.figure()    先建一个figure
+colors='bgrcmyk'       一个字符表示一种颜色
+data=[circles,moons,blobs,random_data]
+models=[('None',None),('KMeans',KMeans(n_clusters=3)) ,('DBSCAN',DBSCAN(min_samples=5,eps=0.1))
+,('Agglomerative',AgglomerativeClustering(n_clusters=3,linkage='ward')]   
+先不用模型，画出最初始的图，然后与Kmeans画出的图对比
+n_clusters为分类的种数，这里把所有点分成3类
+min_samples是核心点在半径内拥有的最小点数
+eps是半径
+linkage是使用哪种连接标准，具体看官方文档
+
+labels=[]
+for inx,model in enumerate(models):
+    for i,dataset in enumerate(data):
+        points=dataset[0]         dataset[0]就是产生的所有点
+        if model:
+            cur_model.fit(points)
+            labels=cur_model.labels_.astype(numpy.int)  为每个点的标签赋值，类型为int
+        else:
+            labels=[0]*len(points)    如果不用模型，标签值都一样，为0
+        f.add_subplot(len(models),len(data),inx*len(data)+i+1)
+设置子图的位置
+        [plt.scatter(points[p,0],points[p,1],color=colors[labels[p]]) for p in range(len(points))]
+用scatter画散点图，参数为x、y、颜色（不同的类用不同的颜色表示）
+plt.show()
+
+
+train.drop(train[(train['GrLivArea']>4000) & (train['SalePrice']<300000)].index,inplace=True)
+删除离群点，要加index！！
+
+all_data=pandas.concat((train,test)).reset_index(drop=True)
+合并训练集和测试集，记得.reset_index(drop=True)
+
+
+numeric_features=all_data.dtypes[all_data.dtypes!='object'].index
+skewness=all_data[numeric_features].skew().sort_values()
+skewness=skewness[abs(skewness)>0.75]
+skewed_features=skewness.index
+for feature in skewed_features:
+    all_data['feature']=boxcox1p(all_data['feature'],0.15)
+
+如果数据有离群点，对数据进行均差和方差的标准化效果不好，
+这种情况可以使用robust_scale和RobustScaler，
+它们有对数据中心化和数据的缩放鲁棒性更强的参数
+
+Title_0                -0.567364
+Sex_male               -0.543351
+Pclass                 -0.338481
+Deck_0                 -0.319572
+Fare_(-0.001, 8.662]   -0.277673
+FamilyLabel_1          -0.252576
+TicketGroup_1          -0.240131
+Embarked_S             -0.155660
+TicketGroup_0          -0.142168
+FamilyLabel_0          -0.096040
+Age                    -0.039731
+Embarked_Q              0.003650
+Title_1                 0.016255
+Fare_(8.662, 26.0]      0.026914
+Deck_1                  0.027271
+Embarked_C              0.174718
+Fare_(26.0, 512.329]    0.253865
+FamilyLabel_2           0.279855
+TicketGroup_2           0.298000
+Deck_2                  0.321393
+Sex_female              0.543351
+Title_2                 0.566512
+Survived                1.000000
+{'n_estimators': 100, 'subsample': 0.8, 'max_depth': 3}
+
+
+Numpy中的矩阵合并
+列合并/扩展：np.column_stack()
+
+行合并/扩展：np.row_stack()
+
+>>> import numpy as np
+>>> a = np.arange(9).reshape(3,-1)
+>>> a
+
+array([[0, 1, 2],
+       [3, 4, 5],
+       [6, 7, 8]])
+>>> b = np.arange(10, 19).reshape(3, -1)
+>>> b
+
+array([[10, 11, 12],
+       [13, 14, 15],
+       [16, 17, 18]])
+>>> top = np.column_stack((a, np.zeros((3,3))))
+>>> top
+
+array([[ 0.,  1.,  2.,  0.,  0.,  0.],
+       [ 3.,  4.,  5.,  0.,  0.,  0.],
+       [ 6.,  7.,  8.,  0.,  0.,  0.]])
+>>> bottom = np.column_stack((np.zeros((3,3)), b))
+>>> bottom
+
+array([[  0.,   0.,   0.,  10.,  11.,  12.],
+       [  0.,   0.,   0.,  13.,  14.,  15.],
+       [  0.,   0.,   0.,  16.,  17.,  18.]])
+>>> np.row_stack((top, bottom))
+
+array([[  0.,   1.,   2.,   0.,   0.,   0.],
+       [  3.,   4.,   5.,   0.,   0.,   0.],
+       [  6.,   7.,   8.,   0.,   0.,   0.],
+       [  0.,   0.,   0.,  10.,  11.,  12.],
+       [  0.,   0.,   0.,  13.,  14.,  15.],
+       [  0.,   0.,   0.,  16.,  17.,  18.]])
+
+
+models=[('LinearSVC',LinearSVC(C=31)),('BernoulliNB',BernoulliNB(fit_prior=True)),
+        ('KNN',KNeighborsClassifier(n_neighbors=9)),('SVC',SVC(kernel='rbf',C=11)),
+        ('Xgboost',XGBClassifier(learning_rate=0.0001,
+	colsample_bytree=0.8,reg_lambda=1,n_estimators=100,subsample=0.8,max_depth=3)),
+        ('Adaboost',AdaBoostClassifier(n_estimators=30,learning_rate=0.1)),
+        ('RandomForest',RandomForestClassifier(n_estimators=13,max_depth=6,criterion='entropy')),
+        ('Logestic',LogisticRegression(solver='liblinear'))]
+
+prices_pred=numpy.exp((lasso.predict(test)*0.3+enet.predict(test)*0.4
+                       +xgb.predict(test)*0.1+lgbm.predict(test)*0.1
+                       +GBoost.predict(test)*0.1))*test['GrLivArea'].values
+
+
+
+
+
+rmse=numpy.sqrt(-cross_val_score(model,train.values,y_tr,scoring="neg_mean_squared_error",
+cv=n_folds))
+
+
+from sklearn.cross_validation import cross_val_score # K折交叉验证模块
+
+#使用K折交叉验证模块
+scores = cross_val_score(knn, X, y, cv=5, scoring='accuracy')
+
+#将5次的预测准确率打印出
+print(scores)
+# [ 0.96666667  1.          0.93333333  0.96666667  1.        ]
+
+#将5次的预测准确平均率打印出
+print(scores.mean())
+# 0.973333333333
+
+
+
+一般来说平均方差(Mean squared error)会用于判断回归(Regression)模型的好坏。
+
+import matplotlib.pyplot as plt
+k_range = range(1, 31)
+k_scores = []
+for k in k_range:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    loss = -cross_val_score(knn, X, y, cv=10, scoring='mean_squared_error')
+    k_scores.append(loss.mean())
+
+plt.plot(k_range, k_scores)
+plt.xlabel('Value of K for KNN')
+plt.ylabel('Cross-Validated MSE')
+plt.show()
+
+
+激活函数
+
+Rectified Linear Unit(ReLU) - 用于隐层神经元输出
+Sigmoid - 用于隐层神经元输出
+Softmax - 用于多分类神经网络输出
+Linear - 用于回归神经网络输出（或二分类问题）
+
+
+
+CNN
+输入-卷积*x-池-卷积*x-池-Flatten-Dense-Dense-输出
+最好连续添加Conv + relu图层
+
+
+比如对于一个有 2000 个训练样本的数据集。将 2000 个样本分成大小为 500 的 batch，
+那么完成一个 epoch 需要 4 个 iteration。
+
+
+在基于梯度的学习方法中，通常将数值变量标准化以加速训练
+
+
+、GBDT和XGBOOST的区别有哪些？
+
+传统GBDT以CART作为基分类器，xgboost还支持线性分类器，
+这个时候xgboost相当于带L1和L2正则化项的逻辑斯蒂回归（分类问题）或者线性回归（回归问题）。
+传统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同
+时用到了一阶和二阶导数。顺便提一下，xgboost工具支持自定义代价函数，只要函数可一阶和二阶求导。
+xgboost在代价函数里加入了正则项，用于控制模型的复杂度。
+正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和。从Bias-variance tradeoff角度来讲，正则项降低了模型的variance，使学习出来的模型更加简单，防止过拟合，这也是xgboost优于传统GBDT的一个特性。
+Shrinkage（缩减），相当于学习速率（xgboost中的eta）。
+xgboost在进行完一次迭代后，会将叶子节点的权重乘上该系数，
+主要是为了削弱每棵树的影响，让后面有更大的学习空间。实际应用中，
+一般把eta设置得小一点，然后迭代次数设置得大一点。（补充：传统GBDT的实现也有学习速率）
+列抽样（column subsampling）。xgboost借鉴了随机森林的做法，支持列抽样，
+不仅能降低过拟合，还能减少计算，这也是xgboost异于传统gbdt的一个特性。
+对缺失值的处理。对于特征的值有缺失的样本，xgboost可以自动学习出它的分裂方向。
+xgboost工具支持并行。boosting不是一种串行的结构吗?怎么并行的？
+注意xgboost的并行不是tree粒度的并行，xgboost也是一次迭代完才能
+进行下一次迭代的（第t次迭代的代价函数里包含了前面t-1次迭代的预测值）。x
+gboost的并行是在特征粒度上的。我们知道，决策树的学习最耗时的一个步骤就是
+对特征的值进行排序（因为要确定最佳分割点），xgboost在训练之前，预先对数据
+进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小
+计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个
+特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行。
+可并行的近似直方图算法。树节点在进行分裂时，我们需要计算每个特
+征的每个分割点对应的增益，即用贪心法枚举所有可能的分割点。当数据无法
+一次载入内存或者在分布式情况下，贪心算法效率就会变得很低，所以xgboost还提
+出了一种可并行的近似直方图算法，用于高效地生成候选的分割点。

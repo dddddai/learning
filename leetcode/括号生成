@@ -1,0 +1,55 @@
+给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。
+
+例如，给出 n = 3，生成结果为：
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+
+class Solution(object):
+    def func(self,cur,left,right,n):
+            if right==n:
+                self.result.append(cur)
+                return
+            if left<n:
+                self.func(cur+'(',left+1,right,n)
+            if left>right:
+                self.func(cur+')',left,right+1,n)
+                
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        self.result=[]
+        self.func('',0,0,n)
+        return self.result
+
+
+
+class Solution {
+    List<String> result=new ArrayList<>();
+    
+    void func(String cur,int left,int right,int n)
+    {
+        if(right==n)
+        {
+            result.add(cur);
+            return;
+        }
+        if(left<n)
+            func(cur.concat("("),left+1,right,n);
+        
+        if(right<left)
+            func(cur.concat(")"),left,right+1,n);
+    }
+    public List<String> generateParenthesis(int n) {
+        func("",0,0,n);
+        return result;
+    }
+}

@@ -1,0 +1,19 @@
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if not nums:
+            return 0
+        size=1
+        i=0
+        key=nums[0]
+        for num in nums:
+            if num==key:
+                continue
+            i+=1
+            nums[i]=num
+            key=num
+            size+=1
+        return size

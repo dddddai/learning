@@ -1,0 +1,24 @@
+示例:
+
+输入："23"
+输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+class Solution(object):
+    d={'2':['a','b','c'],'3':['d','e','f'],'4':['g','h','i'],'5':['j','k','l'],
+          '6':['m','n','o'],'7':['p','q','r','s']
+          ,'8':['t','u','v'],'9':['w','x','y','z']}
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+        result=[]
+        if not digits:
+            return []
+        if len(digits)==1:
+            return self.d[digits[0]]
+        tmp=self.letterCombinations(digits[1:])
+        for i in tmp:
+            for j in self.d[digits[0]]:
+                result.append(j+i)
+        return result

@@ -1,0 +1,82 @@
+找到给定字符串（由小写字符组成）中的最长子串 T ， 要求 T 中的每一字符出现次数都不少于 k 。输出 T 的长度。
+
+示例 1:
+
+输入:
+s = "aaabb", k = 3
+
+输出:
+3
+
+最长子串为 "aaa" ，其中 'a' 重复了 3 次。
+示例 2:
+
+输入:
+s = "ababbc", k = 2
+
+输出:
+5
+
+最长子串为 "ababb" ，其中 'a' 重复了 2 次， 'b' 重复了 3 次。
+
+
+
+
+
+class Solution(object):
+    def longestSubstring(self, s, k):
+        """
+        :type s: str
+        :type k: int
+        :rtype: int
+        """
+        if k>len(s):
+            return 0
+        
+        return self.func(s,0,len(s),k)
+        
+    def func(self,s,start,end,k):
+        if start>=end:
+            return 0
+        idxs=[[] for _ in xrange(26)]
+        for i in xrange(start,end):
+            idxs[ord(s[i])-97].append(i)
+        
+        for row in idxs:
+            if row and len(row)<k:
+                i=row[len(row)>>1]
+                return max(self.func(s,start,i,k),self.func(s,i+1,end,k))
+            
+        return end-start
+        
+        
+        
+        
+        
+class Solution {
+    public int longestSubstring(String s, int k) {
+        if(k>s.length()){
+            return 0;
+        }
+        return func(s,0,s.length(),k);
+    }
+    private int func(String s,int start,int end,int k){
+        if(start>=end){
+            return 0;
+        }
+        List[] idxs=new ArrayList[26];
+        for(int i=0;i<26;++i){
+            idxs[i]=new ArrayList<Integer>();
+        }
+        for(int i=start;i<end;++i){
+            idxs[s.charAt(i)-'a'].add(i);
+        }
+        for(List<Integer> row:idxs){
+            if(row.size()>0 && row.size()<k){
+                int i=row.get(row.size()>>1);
+                return Math.max(func(s,start,i,k),func(s,i+1,end,k));
+            }
+        }
+        return end-start;
+    }
+}

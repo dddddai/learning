@@ -1,0 +1,59 @@
+Given any positive integer N, 
+you are supposed to find all of its prime factors, and write them in the format N = p1^k1 * p2^k2 *…*pm^km.
+
+Input Specification:
+
+Each input file contains one test case which gives a positive integer N in the range of long int.
+
+Output Specification:
+
+Factor N in the format N = p1^k1 * p2^k2 *…*pm^km, where pi’s are prime factors of N in increasing order, 
+and the exponent ki is the number of pi — hence when there is only one pi, ki is 1 and must NOT be printed out.
+
+Sample Input:
+97532468
+
+Sample Output:
+97532468=2^2*11*17*101*1291
+
+
+
+import java.util.*;
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws Exception{
+        long num=new Scanner(System.in).nextLong();
+        boolean[] map=new boolean[9999999];
+        for(int i=2;i*i<500000;++i){
+            for(int j=2;i*j<500000;++j){
+                map[i*j]=true;
+            }
+        }
+        System.out.print(num+"=");
+        if(num==1){
+            System.out.print(1);
+            return;
+        }
+        for(int i=2;num>=2;++i){
+            if(map[i]){
+                continue;
+            }
+            int cnt=0;
+            while(num%i==0){
+                num/=i;
+                ++cnt;
+            }
+            if(cnt!=0){
+                if(cnt==1){
+                    System.out.print(i);
+                }else {
+                    System.out.print(i + "^" + cnt);
+                }
+                if(num!=1) {
+                    System.out.print('*');
+                }
+            }
+        }
+    }
+}

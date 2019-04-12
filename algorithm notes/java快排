@@ -1,0 +1,68 @@
+    public void quickSort(int[] arr,int start,int end)
+    {
+        if(start>=end)
+            return;
+        int mid=(start+end)>>1;
+        int md_value=Math.max(Math.min(arr[start],arr[mid]),
+                     Math.min(Math.max(arr[start],arr[mid]),arr[end]));
+        if(md_value!=arr[start])
+        {
+            int idx=(arr[end]==md_value)?end:mid;
+            arr[idx]=arr[start];
+            arr[start]=md_value;
+        }
+        int pivot=arr[start],l=start,r=end;
+        while(l<r)
+        {
+            while(l<r && arr[r]>=pivot)
+                r--;
+            arr[l]=arr[r];
+            while(l<r && arr[l]<pivot)
+                l++;
+            arr[r]=arr[l];
+        }
+        arr[l]=pivot;
+        quickSort(arr,start,l-1);
+        quickSort(arr,l+1,end);
+    }
+
+非递归:
+
+    public static void quickSort(int[] arr)
+    {
+        Stack<Integer> startStack=new Stack<>();
+        Stack<Integer> endStack=new Stack<>();
+        startStack.push(0);
+        endStack.push(arr.length-1);
+        while(!startStack.empty())
+        {
+            int start=startStack.pop(),end=endStack.pop();
+            if(start>=end)
+                continue;
+            int mid=(start+end)>>1,i=start,j=end;
+            int md_value=Math.max(Math.min(arr[i],arr[mid]),
+                                    Math.min(Math.max(arr[i],arr[mid]),arr[j]));
+            if(md_value!=arr[j])
+                {
+                    int idx=(arr[mid]==md_value)?mid:i;
+                    arr[idx]=arr[j];
+                    arr[j]=md_value;
+                }
+            while(i<j)
+            {
+                if(arr[i]>arr[j])
+                {
+                    int pivot=arr[j];
+                    arr[j]=arr[i];
+                    arr[i]=arr[--j];
+                    arr[j]=pivot;
+                }
+                else
+                    i++;
+            }
+            startStack.push(i+1);
+            endStack.push(end);
+            startStack.push(start);
+            endStack.push(i-1);
+        }
+    }

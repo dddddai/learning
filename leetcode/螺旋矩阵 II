@@ -1,0 +1,52 @@
+给定一个正整数 n，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+
+示例:
+
+输入: 3
+输出:
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+
+class Solution(object):
+    def generateMatrix(self, n):
+        """
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        matrix=[[0 for i in range(n)] for j in range(n)]
+        left,right,top,bottom=0,n-1,0,n-1
+        count=1
+
+        while 1:
+            for i in range(left, right + 1):
+                matrix[top][i] = count
+                count += 1
+            top += 1
+            if top > bottom:
+                break
+                
+            for i in range(top, bottom + 1):
+                matrix[i][right] = count
+                count += 1
+            right -= 1
+            if left > right:
+                break
+                
+            for j in range(right,left-1,-1):
+                matrix[bottom][j] = count
+                count += 1
+            bottom -= 1
+            if top > bottom:
+                break
+                
+            for i in range(bottom,top-1,-1):
+                matrix[i][left] = count
+                count += 1
+            left += 1
+            if left > right:
+                break
+
+        return matrix

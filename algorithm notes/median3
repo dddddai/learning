@@ -1,0 +1,1 @@
+median = max(min(a,b), min(max(a,b),c));

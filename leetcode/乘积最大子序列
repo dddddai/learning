@@ -1,0 +1,45 @@
+示例 1:
+
+输入: [2,3,-2,4]
+输出: 6
+解释: 子数组 [2,3] 有最大乘积 6。
+示例 2:
+
+输入: [-2,0,-1]
+输出: 0
+解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。
+
+
+python:
+
+class Solution(object):
+    def maxProduct(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        result=pos_max=neg_max=nums[0]
+        for i in xrange(1,len(nums)):
+            tp,tn=pos_max,neg_max
+            pos_max=max(nums[i],max(nums[i]*tp,nums[i]*tn))
+            neg_max=min(nums[i],min(nums[i]*tp,nums[i]*tn))
+            result=max(result,pos_max)
+        return result
+
+
+java:
+
+class Solution {
+    public int maxProduct(int[] nums) {
+        int result,negMax,posMax;
+        result=negMax=posMax=nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            int tp=posMax,tn=negMax;
+            posMax=Math.max(nums[i],Math.max(nums[i]*tp,nums[i]*tn));
+            negMax=Math.min(nums[i],Math.min(nums[i]*tp,nums[i]*tn));
+            result=result>posMax?result:posMax;
+        }
+        return result;
+    }
+}
