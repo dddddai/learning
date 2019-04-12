@@ -1,0 +1,36 @@
+题目描述
+有两个用字符串表示的非常大的大整数,算出他们的乘积，也是用字符串表示。不能用系统自带的大整数类型。
+输入描述:
+空格分隔的两个字符串，代表输入的两个大整数
+输出描述:
+输入的乘积，用字符串表示
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String a=sc.next(),b=sc.next();
+        if("0".equals(a) || "0".equals(b)){
+            System.out.print(0);
+            return;
+        }
+        int[] result=new int[a.length()+b.length()];
+        result[0]='*';
+        for(int i=a.length()-1;i>=0;--i){
+            int carry=0;
+            for(int j=b.length()-1;j>=0;--j){
+                int product=(a.charAt(i)-'0')*(b.charAt(j)-'0');
+                int tmp=product+result[i+j+1]+carry;
+                result[i+j+1]=tmp%10;
+                carry=tmp/10;
+            }
+            result[i]=carry;
+        }
+        for(int i=result[0]==0 ? 1:0;i<result.length;++i){
+            System.out.print(result[i]);
+        }
+    }
+}
