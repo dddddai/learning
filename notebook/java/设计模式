@@ -20,6 +20,15 @@
 当不能保证构造函数在整个对象构造完成前执行完毕的时候，线程B可能会看到一个不完整的instance对象，
 因为java的某些实现会在内存中开辟一片存储对象的区域后直接返回内存的引用，所以线程B判断不为null。从而得到不完整的对象。
 
+instance=new Singeleton()可分为以下三步伪代码：
+
+memory=allocate()  // 1.分配对象内存空间
+instance(memory)   //2.初始化对象
+instance=memory    //3.设置instance指向刚刚分配的内存地址，此时instance!=null
+
+由于2和3之间不存在数据依赖关系，因此允许重排序，导致在instance!=null时可能还未完成初始化，
+因此可能导致线程访问到未完成初始化的对象
+
 
 jdk1.5之后，instance如果被声明成volatile的成员：
 
