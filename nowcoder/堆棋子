@@ -1,0 +1,82 @@
+题目描述
+小易将n个棋子摆放在一张无限大的棋盘上。第i个棋子放在第x[i]行y[i]列。同一个格子允许放置多个棋子。
+每一次操作小易可以把一个棋子拿起并将其移动到原格子的上、下、左、右的任意一个格子中。
+小易想知道要让棋盘上出现有一个格子中至少有i(1 ≤ i ≤ n)个棋子所需要的最少操作次数.
+
+输入描述:
+输入包括三行,第一行一个整数n(1 ≤ n ≤ 50),表示棋子的个数
+第二行为n个棋子的横坐标x[i](1 ≤ x[i] ≤ 10^9)
+第三行为n个棋子的纵坐标y[i](1 ≤ y[i] ≤ 10^9)
+
+输出描述:
+输出n个整数,第i个表示棋盘上有一个格子至少有i个棋子所需要的操作数,以空格分割。行末无空格
+
+如样例所示:
+对于1个棋子: 不需要操作
+对于2个棋子: 将前两个棋子放在(1, 1)中
+对于3个棋子: 将前三个棋子放在(2, 1)中
+对于4个棋子: 将所有棋子都放在(3, 1)中
+
+示例1
+
+输入
+4
+1 2 4 9
+1 1 1 1
+
+输出
+0 1 3 10
+
+
+
+
+xy轴其实是独立的，先只考虑x坐标，采用反证法，假设把k个棋子堆到x0(x0不为任意一个棋子坐标)格子所用的步骤最少。
+a个棋子初始在x0的左边，b个棋子初始在x0的右边.左边到x0的总距离为A,右边到x0的总距离为B.
+
+如果a>b,那么对于最靠近x0左边的棋子坐标x[a]来说,这k个棋子到x[a]的步数会更少；
+
+同理对于b>a的情况，那么对于最靠近x0右边的棋子坐标x[b],这k个棋子到x[b]的步数会更少，
+
+如果a=b，x[a]、x0、x[b]的步数是一样的。
+因此，最终汇聚棋子的x坐标只要在棋子初始的x个坐标中考虑
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        sc.nextLine();
+        int[] x=new int[n],y=new int[n];
+        for(int i=0;i<n;++i){
+            x[i]=sc.nextInt();
+        }
+        for(int i=0;i<n;++i){
+            y[i]=sc.nextInt();
+        }
+        sc.close();
+        int[] result=new int[n];
+        Arrays.fill(result,Integer.MAX_VALUE);
+        
+        for(int i=0;i<n;++i){
+            for(int j=0;j<n;++j){
+                int[] sumOfDistance=new int[n];
+                for(int k=0;k<n;++k){
+                    sumOfDistance[k]=Math.abs(x[k]-x[i])+Math.abs(y[k]-y[j]);
+                }
+                Arrays.sort(sumOfDistance);
+                int sum=0;
+                for(int k=0;k<n;++k){
+                    sum+=sumOfDistance[k];
+                    result[k]=Math.min(result[k],sum);
+                }
+            }
+        }
+        System.out.print(result[0]);
+        for(int i=1;i<n;++i){
+            System.out.print(" "+result[i]);
+        }
+    }
+}
