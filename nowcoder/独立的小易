@@ -26,6 +26,7 @@ public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         int x=sc.nextInt(),f=sc.nextInt(),d=sc.nextInt(),p=sc.nextInt();
+        sc.close();
         if(d>=x*f){
             System.out.print(f+(d-x*f)/(x+p));
         }else{
