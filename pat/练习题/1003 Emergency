@@ -78,7 +78,7 @@ public class Main{
                     idx=j;
                 }
             }
-            if(idx==-1){
+            if(idx==c2 || idx==-1){
                 break;
             }
             visited[idx]=true;
