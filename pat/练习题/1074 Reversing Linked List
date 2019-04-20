@@ -1,0 +1,121 @@
+Given a constant K and a singly linked list L, you are supposed to reverse the links of every K elements on L. 
+For example, given L being 1→2→3→4→5→6, if K = 3, then you must output 3→2→1→6→5→4; if K = 4, you must output 4→3→2→1→5→6.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains the address of the first node, 
+a positive N (<= 105) which is the total number of nodes, 
+and a positive K (<=N) which is the length of the sublist to be reversed. 
+The address of a node is a 5-digit nonnegative integer, and NULL is represented by -1.
+Then N lines follow, each describes a node in the format:
+Address Data Next
+where Address is the position of the node, Data is an integer, and Next is the position of the next node.
+
+Output Specification:
+
+For each case, output the resulting ordered linked list. Each node occupies a line, and is printed in the same format as in the input.
+
+Sample Input:
+
+00100 6 4
+00000 4 99999
+00100 1 12309
+68237 6 -1
+33218 3 00000
+99999 5 68237
+12309 2 33218
+
+Sample Output:
+
+00000 4 33218
+33218 3 12309
+12309 2 00100
+00100 1 99999
+99999 5 68237
+68237 6 -1
+
+
+
+一个错误一个超时
+
+
+
+import java.util.*;
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        Reader.init(System.in);
+        String head=Reader.next();
+        int n=Reader.nextInt(),k=Reader.nextInt();
+        Map<String,Node> map=new HashMap<>(n<<1);
+        for(int i=0;i<n;++i){
+            String address=Reader.next();
+            map.put(address,new Node(address,Reader.nextInt(),Reader.next()));
+        }
+        map.put("-1",null);
+        Node p=map.get(head);
+        while(p!=null){
+            Node[] arr=new Node[k];
+            for(int i=0;i<k;++i){
+                arr[i]=p;
+                p=map.get(p.next);
+                if(p==null){
+                    break;
+                }
+            }
+            if(arr[k-1]!=null){
+                for(int i = k - 1; i > 0; --i) {
+                    System.out.format("%s %d %s\n", arr[i].address, arr[i].val, arr[i - 1].address);
+                }
+                System.out.format("%s %d %s\n", arr[0].address, arr[0].val,p==null? "-1":p.address);
+            }else{
+                for(int i=0;arr[i]!=null;++i){
+                    System.out.format("%s %d %s\n",arr[i].address,arr[i].val,arr[i].next);
+                }
+            }
+        }
+    }
+}
+class Node{
+    String address;
+    int val;
+    String next;
+
+    public Node(String address,int val, String next) {
+        this.address=address;
+        this.val = val;
+        this.next = next;
+    }
+}
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    /** call this method to initialize reader for InputStream */
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+    static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+}
