@@ -1,0 +1,107 @@
+The task of this problem is simple: 
+insert a sequence of distinct positive integers into a hash table, and output the positions of the input numbers. 
+The hash function is defined to be “H(key) = key % TSize” where TSize is the maximum size of the hash table.
+Quadratic probing (with positive increments only) is used to solve the collisions.
+
+Note that the table size is better to be prime. If the maximum size given by the user is not prime, 
+you must re-define the table size to be the smallest prime number which is larger than the size given by the user.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains two positive numbers:
+MSize (<=104) and N (<=MSize) which are the user-defined table size and the number of input numbers, respectively. 
+Then N distinct positive integers are given in the next line. All the numbers in a line are separated by a space.
+
+Output Specification:
+
+For each test case, print the corresponding positions (index starts from 0) of the input numbers in one line. 
+All the numbers in a line are separated by a space, and there must be no extra space at the end of the line. 
+In case it is impossible to insert the number, print “-” instead.
+
+Sample Input:
+4 4
+10 6 4 15
+
+Sample Output:
+0 1 4 –
+
+
+
+import java.util.*;
+import java.io.*;
+
+public class Main{
+    public static void main(String[] args) throws Exception {
+        Reader.init(System.in);
+        int size=Reader.nextInt(),n=Reader.nextInt();
+        while(!isPrime(size)){
+            ++size;
+        }
+        boolean[] used=new boolean[size];
+        int num=Reader.nextInt();
+        int idx=num%size;
+        used[idx]=true;
+        System.out.print(idx);
+
+        for(int i=1;i<n;++i){
+            num=Reader.nextInt();
+            int start=num%size;
+            int step;
+            for(step=0;step<size;++step){       //step增加到size时就说明无法插入
+                idx=(start+step*step)%size;
+                if(!used[idx]){
+                    System.out.print(" "+idx);
+                    used[idx]=true;
+                    break;
+                }
+            }
+            if(step==size){
+                System.out.print(" -");
+            }
+        }
+    }
+    private static boolean isPrime(int num){
+        if(num==1){
+            return false;
+        }
+        double max=Math.sqrt(num);
+        for(int i=2;i<=max;++i){
+            if(num%i==0){
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    /** call this method to initialize reader for InputStream */
+    static void init(InputStream input) {
+        reader = new BufferedReader(
+                new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    /** get next word */
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+    static long nextLong() throws IOException{
+        return Long.parseLong(next());
+    }
+}
