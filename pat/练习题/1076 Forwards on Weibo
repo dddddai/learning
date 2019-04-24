@@ -62,10 +62,10 @@ public class Main{
         }
         int k=Reader.nextInt();
         for(int i=0;i<k;++i){
-            System.out.println(dfs(graph,Reader.nextInt(),maxLevel,new boolean[n+1]));
+            System.out.println(bfs(graph,Reader.nextInt(),maxLevel,new boolean[n+1]));
         }
     }
-    private static int dfs(List<List<Integer>> graph,int root,int maxLevel,boolean[] visited){
+    private static int bfs(List<List<Integer>> graph,int root,int maxLevel,boolean[] visited){
         Queue<Integer> queue=new LinkedList<>();
         visited[root]=true;
         int level=0,cnt=0;
