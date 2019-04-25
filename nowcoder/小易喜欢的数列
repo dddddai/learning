@@ -29,6 +29,8 @@ dp[i][j]表示整个状态空间，其中i(1<=i<=n)表示数列的长度，j(1<=
 为此可以先将长度为i-1的合法数列求和(记为sum)。然后对于数列长度为i的每一个j，求出数列长度为i-1时非法的序列个数（记为invalid）,
 即有dp[i][j] = sum - invalid。
 
+可以只用一维数组，优化空间复杂度
+
 
 import java.util.*;
 
@@ -39,27 +41,29 @@ public class Main{
         Scanner sc=new Scanner(System.in);
         int n=sc.nextInt(),k=sc.nextInt();
         sc.close();
-        int[][] dp=new int[n+1][k+1];
-        for(int i=0;i<=k;++i){
-            dp[1][i]=1;
+        int[] dp=new int[k+1];
+        int[] next=new int[k+1];
+        for(int i=1;i<=k;++i){
+            dp[i]=1;
         }
         for(int i=2;i<=n;++i){
             int sum=0;
             for(int j=1;j<=k;++j){
-                sum=(sum+dp[i-1][j])%MOD;
+                sum=(sum+dp[j])%MOD;
             }
             for(int j=1;j<=k;++j){
                 int invalid=0;
                 for(int multiplier=2;multiplier*j<=k;++multiplier){
-                    invalid=(invalid+dp[i-1][multiplier*j])%MOD;
+                    invalid=(invalid+dp[multiplier*j])%MOD;
                 }
-                dp[i][j]=(sum-invalid+MOD)%MOD;
+                next[j]=(sum-invalid+MOD)%MOD;
                 //+MOD是为了避免sum-invalid为负数，因为sum是求过余的，可能很小
             }
+            dp=next;
         }
         int result=0;
         for(int i=1;i<=k;++i){
-            result=(result+dp[n][i])%MOD;
+            result=(result+dp[i])%MOD;
         }
         System.out.print(result);
     }
