@@ -56,8 +56,7 @@ public class Main{
                 for(int multiplier=2;multiplier*j<=k;++multiplier){
                     invalid=(invalid+dp[multiplier*j])%MOD;
                 }
-                next[j]=(sum-invalid+MOD)%MOD;
-                //+MOD是为了避免sum-invalid为负数，因为sum是求过余的，可能很小
+                next[j]=sum<invalid ? sum-invalid+MOD : sum-invalid;
             }
             dp=next;
         }
