@@ -30,6 +30,7 @@ public class Main{
         int n=sc.nextInt(),m=sc.nextInt();
         sc.nextLine();
         char[] arr=sc.nextLine().toCharArray();
+        sc.close();
         int result=0,l=0,a=0,b=0;
         for(int r=0;r<n;++r){
             if(arr[r]=='a'){
