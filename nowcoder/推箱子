@@ -42,6 +42,7 @@ public class Main{
         for(int i=0;i<n;++i){
             graph[i]=sc.nextLine().toCharArray();
         }
+        sc.close();
         bfs(graph,n,m);
     }
     
