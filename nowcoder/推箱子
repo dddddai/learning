@@ -1,0 +1,107 @@
+题目描述
+有一个推箱子的游戏'.' 表示可到达的位置, '#' 表示不可到达的位置，
+其中 S 表示你起始的位置, 0表示初始箱子的位置, E表示预期箱子的位置，
+你可以走到箱子的上下左右任意一侧, 将箱子向另一侧推动。
+
+如下图将箱子向右推动一格;
+..S0.. -> ...S0.
+
+注意不能将箱子推动到'#'上, 也不能将箱子推出边界;
+现在, 给你游戏的初始样子, 你需要输出最少几步能够完成游戏, 如果不能完成, 则输出-1。
+
+输入描述:
+第一行为2个数字,n, m, 表示游戏盘面大小有n 行m 列(5< n, m < 50);
+后面为n行字符串,每行字符串有m字符, 表示游戏盘面;
+
+输出描述:
+一个数字,表示最少几步能完成游戏,如果不能,输出-1;
+
+示例1
+
+输入
+3 6
+.S#..E
+.#.0..
+......
+
+输出
+11
+
+
+
+import java.util.*;
+
+public class Main{
+    private static int[][] steps={{1,0},{-1,0},{0,1},{0,-1}};
+    
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt();
+        sc.nextLine();
+        char[][] graph=new char[n][m];
+        for(int i=0;i<n;++i){
+            graph[i]=sc.nextLine().toCharArray();
+        }
+        bfs(graph,n,m);
+    }
+    
+    private static void bfs(char[][] graph,int n,int m){
+        Queue<Integer> queue=new LinkedList<>();
+        int[][][][] map=new int[n][m][n][m];
+        int sx=0,sy=0,bx=0,by=0,ex=0,ey=0;
+        for(int i=0;i<n;++i){
+            for(int j=0;j<m;++j){
+                if(graph[i][j]=='S'){
+                    sx=i;
+                    sy=j;
+                }else if(graph[i][j]=='0'){
+                    bx=i;
+                    by=j;
+                }else if(graph[i][j]=='E'){
+                    ex=i;
+                    ey=j;
+                }
+            }
+        }
+        queue.offer(sx);
+        queue.offer(sy);
+        queue.offer(bx);
+        queue.offer(by);
+        
+        while(!queue.isEmpty()){
+            int sxNow=queue.poll(),sxNext;
+            int syNow=queue.poll(),syNext;
+            int bxNow=queue.poll(),bxNext;
+            int byNow=queue.poll(),byNext;
+            for(int[] step:steps){
+                sxNext=sxNow+step[0];
+                syNext=syNow+step[1];
+                bxNext=sxNext+step[0];
+                byNext=syNext+step[1];
+                if(sxNext>=0 && syNext>=0 && sxNext<n && syNext<m){
+                    if(sxNext==bxNow && syNext==byNow){
+                        if(bxNext>=0 && byNext>=0 && bxNext<n && byNext<m
+                           && map[sxNext][syNext][bxNext][byNext]==0&& graph[bxNext][byNext]!='#'){
+                            if(bxNext==ex && byNext==ey){
+                                System.out.print(map[sxNow][syNow][sxNext][syNext]+1);
+                                return;
+                            }
+                            map[sxNext][syNext][bxNext][byNext]=map[sxNow][syNow][sxNext][syNext]+1;
+                            queue.offer(sxNext);
+                            queue.offer(syNext);
+                            queue.offer(bxNext);
+                            queue.offer(byNext);
+                        }
+                    }else if(map[sxNext][syNext][bxNow][byNow]==0 && graph[sxNext][syNext]!='#'){
+                        map[sxNext][syNext][bxNow][byNow]=map[sxNow][syNow][bxNow][byNow]+1;
+                        queue.offer(sxNext);
+                        queue.offer(syNext);
+                        queue.offer(bxNow);
+                        queue.offer(byNow);
+                }
+                }
+            }
+        }
+        System.out.print(-1);
+    }
+}
