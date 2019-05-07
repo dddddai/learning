@@ -1,0 +1,129 @@
+题目描述
+产品经理(PM)有很多好的idea，而这些idea需要程序员实现。
+现在有N个PM，在某个时间会想出一个 idea，每个 idea 有提出时间、所需时间和优先等级。
+对于一个PM来说，最想实现的idea首先考虑优先等级高的，相同的情况下优先所需时间最小的，还相同的情况下选择最早想出的，
+没有 PM 会在同一时刻提出两个 idea。
+
+同时有M个程序员，每个程序员空闲的时候就会查看每个PM尚未执行并且最想完成的一个idea,
+然后从中挑选出所需时间最小的一个idea独立实现，如果所需时间相同则选择PM序号最小的。直到完成了idea才会重复上述操作。
+如果有多个同时处于空闲状态的程序员，那么他们会依次进行查看idea的操作。
+求每个idea实现的时间。
+
+输入第一行三个数N、M、P，分别表示有N个PM，M个程序员，P个idea。
+随后有P行，每行有4个数字，分别是PM序号、提出时间、优先等级和所需时间。
+输出P行，分别表示每个idea实现的时间点。
+
+输入描述:
+输入第一行三个数N、M、P，分别表示有N个PM，M个程序员，P个idea。
+随后有P行，每行有4个数字，分别是PM序号、提出时间、优先等级和所需时间。
+全部数据范围 [1, 3000]。
+
+输出描述:
+输出P行，分别表示每个idea实现的时间点。
+
+示例1
+
+输入
+2 2 5
+1 1 1 2
+1 2 1 1
+1 3 2 2
+2 1 1 2
+2 3 5 5
+
+输出
+3
+4
+5
+3
+9
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt(),p=sc.nextInt();
+        sc.nextLine();
+        Idea[] ideas=new Idea[p];
+        int[] end=new int[p];
+        int now=Integer.MAX_VALUE;
+        for(int i=0;i<p;++i){
+            int pm=sc.nextInt();
+            int start=sc.nextInt();
+            now=Math.min(now,start);
+            ideas[i]=new Idea(i,pm,start,sc.nextInt(),sc.nextInt());
+        }
+        Arrays.sort(ideas,(a,b)->a.start-b.start);
+        int[] freeTime=new int[m];
+        Arrays.fill(freeTime,now);
+        Map<Integer,Queue<Idea>> map=new HashMap<>(n);
+        
+        int j=0,cnt=0;
+        while(cnt<p){
+            for(;j<p && ideas[j].start<=now;++j){
+                Queue<Idea> pq=map.get(ideas[j].pm);
+                if(pq==null){
+                    Queue<Idea> tmp=new PriorityQueue<>(n,(a,b)->{
+                        if(a.priority==b.priority){
+                            if(a.time==b.time){
+                                return a.start-b.start;
+                            }
+                            return a.time-b.time;
+                        }
+                        return b.priority-a.priority;
+                    });
+                    tmp.offer(ideas[j]);
+                    map.put(ideas[j].pm,tmp);
+                }else{
+                    pq.offer(ideas[j]);
+                }
+            }
+            Queue<Idea> candidates=new PriorityQueue<>(n,(a,b)->{
+                if(a.time==b.time){
+                    return a.pm-b.pm;
+                }
+                return a.time-b.time;
+            });
+            for(Queue<Idea> queue:map.values()){
+                if(!queue.isEmpty()){
+                    candidates.offer(queue.peek());
+                }
+            }
+            for(int k=0;k<m;++k){
+                if(candidates.isEmpty()){
+                    break;
+                }
+                if(freeTime[k]<=now){
+                    Idea idea=candidates.poll();
+                    freeTime[k]=end[idea.idx]=now+idea.time;
+                    Queue<Idea> queue=map.get(idea.pm);
+                    queue.poll();
+                    ++cnt;
+                    if(!queue.isEmpty()){
+                        candidates.offer(map.get(idea.pm).peek());
+                    }
+                }
+            }
+            ++now;
+        }
+        for(int num:end){
+            System.out.println(num);
+        }
+    }
+    
+    static class Idea{
+        int idx,pm,start,priority,time;
+        
+        public Idea(int idx,int pm,int start,int priority,int time){
+            this.idx=idx;
+            this.pm=pm;
+            this.start=start;
+            this.priority=priority;
+            this.time=time;
+        }
+    }
+}
