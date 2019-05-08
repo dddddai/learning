@@ -57,6 +57,7 @@ public class Main{
             now=Math.min(now,start);
             ideas[i]=new Idea(i,pm,start,sc.nextInt(),sc.nextInt());
         }
+        sc.close();
         Arrays.sort(ideas,(a,b)->a.start-b.start);
         int[] freeTime=new int[m];
         Arrays.fill(freeTime,now);
