@@ -105,7 +105,7 @@ public class Main{
                     queue.poll();
                     ++cnt;
                     if(!queue.isEmpty()){
-                        candidates.offer(map.get(idea.pm).peek());
+                        candidates.offer(queue.peek());
                     }
                 }
             }
