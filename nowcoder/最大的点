@@ -39,6 +39,7 @@ public class Main{
             arr[i]=new Node(sc.nextInt(),sc.nextInt());
             sc.nextLine();
         }
+        sc.close();
         Arrays.sort(arr,(a,b) -> b.y-a.y);
         int max=0;
         for(Node node:arr){
