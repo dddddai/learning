@@ -23,7 +23,6 @@ class Solution(object):
                 continue
             path.append(nums[i])
             self.result.append(path[:])
-            #一定要加入path的copy，java也是，我还不懂为什么
             self.func(path,nums,i+1)
             path.pop()
             
