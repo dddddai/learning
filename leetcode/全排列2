@@ -64,7 +64,6 @@ class Solution {
     {
         if(candidates.size()==nums.length)
             result.add(new ArrayList<>(candidates));
-            //不知道为什么不能直接add(candidates)
         else
         {
             for(int i=0;i<nums.length;++i)
