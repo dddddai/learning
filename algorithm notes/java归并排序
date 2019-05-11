@@ -1,0 +1,33 @@
+public static void mergeSort(int[] arr){
+    mergeSort(arr,new int[arr.length],0,arr.length-1);
+}
+
+private static void mergeSort(int[] arr,int[] tmp,int l,int r){
+    if(l<r){
+        int mid=(l+r)>>1;
+        mergeSort(arr,tmp,l,mid);
+        mergeSort(arr,tmp,mid+1,r);
+        merge(arr,tmp,l,mid+1,r);
+    }
+}
+
+private static void merge(int[] arr,int[] tmp,int leftStart,int rightStart,int rightEnd){
+    int leftEnd=rightStart-1;
+    int idx=leftStart,l=leftStart,r=rightStart;
+    while (l<=leftEnd && r<=rightEnd){
+        if(arr[l]<=arr[r]){
+            tmp[idx++]=arr[l++];
+        }else{
+            tmp[idx++]=arr[r++];
+        }
+    }
+    while (l<=leftEnd){
+        tmp[idx++]=arr[l++];
+    }
+    while (r<=rightEnd){
+        tmp[idx++]=arr[r++];
+    }
+    for (int i=leftStart;i<=rightEnd;++i){
+        arr[i]=tmp[i];
+    }
+}
