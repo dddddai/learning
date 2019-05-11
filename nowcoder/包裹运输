@@ -32,20 +32,16 @@ public class Main{
         Scanner sc=new Scanner(System.in);
         while(true){
             int[] arr=new int[7];
-            boolean flag=true;
             for(int i=1;i<7;++i){
                 arr[i]=sc.nextInt();
-                if(arr[i]!=0){
-                    flag=false;
-                }
-            }
-            if(flag){
-                break;
             }
             int result=arr[6]+arr[5]+arr[4]+((arr[3]+3)>>2);
             result+=Math.max(0,(arr[2]-arr[4]*5-twoInThree[arr[3]&3]+8)/9);
             result+=Math.max(0,((arr[1]-result*36+arr[6]*36+arr[5]*25+(arr[4]<<4)
                              +arr[3]*9+(arr[2]<<2))+35)/36);
+            if(result==0){
+                break;
+            }
             System.out.println(result);
             sc.nextLine();
         }
