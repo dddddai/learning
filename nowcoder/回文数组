@@ -48,6 +48,7 @@ public class Main{
             arr[i]=sc.nextInt();
             sum+=arr[i];
         }
+        sc.close();
         long[] dp=new long[n];
         for(int i=n-1;i>=0;--i){
             long bottomLeft=dp[i];
