@@ -1,0 +1,34 @@
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String s=sc.next();
+        sc.close();
+        StringBuilder tmp=new StringBuilder("#");
+        for(int i=0;i<s.length();++i){
+            tmp.append(s.charAt(i));
+            tmp.append('#');
+        }
+        int[] r=new int[tmp.length()];
+        int axis=0,boundary=0,maxLen=0;
+        for(int i=0;i<tmp.length();++i){
+            if(i<boundary){
+                r[i]=Math.min(r[(axis<<1)-i],boundary-i+1);
+            }else{
+                r[i]=1;
+            }
+            while(i+r[i]<tmp.length() && i-r[i]>=0 && tmp.charAt(i+r[i])==tmp.charAt(i-r[i])){
+                ++r[i];
+            }
+            if(i+r[i]-1>boundary){
+                axis=i;
+                boundary=i+r[i]-1;
+            }
+            if(i+r[i]==tmp.length()){
+                maxLen=Math.max(maxLen,r[i]-1);
+            }
+        }
+        System.out.print((s.length()<<1)-maxLen);
+    }
+}
