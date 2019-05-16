@@ -1,0 +1,41 @@
+题目描述
+给定一个字符串s, 请计算输出含有连续两个s作为子串的最短字符串。 注意两个s可能有重叠部分。例如,"ababa"含有两个"aba".
+
+输入描述:
+输入包括一个字符串s,字符串长度length(1 ≤ length ≤ 50),s中每个字符都是小写字母.
+
+输出描述:
+输出一个字符串,即含有连续两个s作为子串的最短字符串。
+
+示例1
+
+输入
+abracadabra
+
+输出
+abracadabracadabra
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String s=sc.next();
+        sc.close();
+        for(int i=1;i<s.length();++i){
+            int j=i;
+            for(int k=0;j<s.length();++j,++k){
+                if(s.charAt(j)!=s.charAt(k)){
+                    break;
+                }
+            }
+            if(j==s.length()){
+                System.out.print(s.substring(0,i)+s);
+                return;
+            }
+        }
+        System.out.print(s+s);
+    }
+}
