@@ -1,0 +1,47 @@
+给定5个正整数, 它们的最小的众倍数是指的能够被其中至少三个数整除的最小正整数。 
+给定5个不同的正整数, 请计算输出它们的最小众倍数。
+
+输入描述:
+输入包括一行,一行中有五个各不相同的正整数a, b, c, d, e(1 ≤ a, b, c, d, e ≤ 100), 以空格分割
+
+
+输出描述:
+输出一个整数,表示它们的最小众倍数
+
+示例1
+
+输入
+1 2 3 4 5
+
+输出
+4
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int[] arr=new int[5];
+        Map<Integer,Integer> map=new HashMap<>(20);
+        for(int i=0;i<5;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        Arrays.sort(arr);
+        for(int i=1;;++i){
+            for(int n:arr){
+                Integer val=map.get(i*n);
+                if(val==null){
+                    map.put(i*n,1);
+                }else if(val==2){
+                    System.out.print(i*n);
+                    return;
+                }else{
+                    map.put(i*n,val+1);
+                }
+            }
+        }
+    }
+}
