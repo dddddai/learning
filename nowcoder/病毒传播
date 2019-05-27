@@ -1,0 +1,107 @@
+给出一个图G(V,E)，图上有n个点，m条边，所有的边都是无向边。
+
+最开始，也就是第0天的时候，这n个点中有一个点v感染了病毒，之后的每一天，凡是感染病毒的点都会向它的邻居点传播病毒。
+经过了t天之后，得到了感染病毒的点集S。要求找出第0天感染病毒的点v。如果v有很多不同的答案，把它们都找出来。
+
+输入描述:
+第一行两个数n，m，接下来有m行，每行两个数u，v，表示点u，v之间有一条无向边。接下来一行两个数k，t，其中k表示集合S的大小。
+最后一行k个数，集合S中的元素。输入的图可能有自环和重边，输入保证S中的数互不相同。
+（1≤n≤103,0≤m≤103,1≤t≤109,1≤u,v,k≤n,S中所有元素在区间[1,n]）
+
+
+输出描述:
+输出一行，如果不存在这样的v，输出-1。
+否则输出所有可能的v，按照从小到大的顺序输出，数字之间用空格隔开，不要在行末输出多余的空格。
+
+示例1
+
+输入
+4 3
+3 2
+1 2
+1 4
+3 2
+4 2 1
+
+输出
+4
+
+
+
+import java.util.*;
+
+public class Main{
+    private static Set<Integer> set;
+    private static int n,k,t;
+    private static List<Integer> result;
+    
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        n=sc.nextInt();
+        int m=sc.nextInt();
+        sc.nextLine();
+        List<LinkedList<Integer>> graph=new ArrayList<>(n+1);
+        result=new ArrayList<>(n>>1);
+        for(int i=0;i<n+1;++i){
+            graph.add(new LinkedList<>());
+        }
+        for(int i=0;i<m;++i){
+            int u=sc.nextInt(),v=sc.nextInt();
+            graph.get(u).add(v);
+            graph.get(v).add(u);
+            sc.nextLine();
+        }
+        k=sc.nextInt();
+        t=sc.nextInt();
+        sc.nextLine();
+        set=new HashSet<>(k);
+        for(int i=0;i<k;++i){
+            set.add(sc.nextInt());
+        }
+        sc.close();
+        for(int i=1;i<=n;++i){
+            if(set.contains(i)){
+                bfs(graph,i);
+            }
+        }
+        if(result.isEmpty()){
+            System.out.print(-1);
+        }else{
+            Collections.sort(result);
+            System.out.print(result.get(0));
+            for(int i=1;i<result.size();++i){
+                System.out.print(" "+result.get(i));
+            }
+        }
+    }
+    
+    private static void bfs(List<LinkedList<Integer>> graph,int root){
+        Queue<Integer> queue=new LinkedList<>();
+        queue.offer(root);
+        boolean[] visited=new boolean[n+1];
+        visited[root]=true;
+        int cnt=1;
+        for(int i=0;!queue.isEmpty() && i<t;++i){
+            int size=queue.size();
+            for(int j=0;j<size;++j){
+                int node=queue.poll();
+                for(int next:graph.get(node)){
+                    if(!visited[next]){
+                        if(set.contains(next)){
+                            queue.offer(next);
+                            if(++cnt>k){
+                                return;
+                            }
+                            visited[next]=true;
+                        }else{
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        if(cnt==k){
+            result.add(root);
+        }
+    }
+}
