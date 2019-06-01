@@ -1,0 +1,98 @@
+给出一张图，图上有n个节点，从1到n编号，和m条边，每条边有一个权重，表示小明走路通过这条边的时间，边都是无向的。
+小明从1号节点触发，他要取n号节点，他想用的总时间尽可能短。
+有些节点有共享单车，当他到达一个有车节点后，他就可以一直汽车。骑车后时间减半（向下取整）。
+求从1号节点到n号节点所需最短时间。
+
+输入描述：
+第一行两个数n、m，接下来有m行，每行三个数u v w，表示u和v之间有一条权重为w的边
+接下来一行有一个数k
+接下来一行有k个数，分别表示有车的节点
+
+输出描述：
+输出1号节点到n号节点所需最短时间
+
+
+示例1
+
+输入
+4 3
+1 3 1
+1 2 3
+2 4 4
+1
+3
+
+输出
+4
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt();
+        sc.nextLine();
+        List<LinkedList<Edge>> graph=new ArrayList<>(n+1);
+        for(int i=0;i<=n;++i){
+            graph.add(new LinkedList<>());
+        }
+        for(int i=0;i<m;++i){
+            int u=sc.nextInt(),v=sc.nextInt(),w=sc.nextInt();
+            graph.get(u).add(new Edge(v,w));
+            graph.get(v).add(new Edge(u,w));
+            sc.nextLine();
+        }
+        int k=sc.nextInt();
+        sc.nextLine();
+        boolean[] hasBike=new boolean[n+1];
+        for(int i=0;i<k;++i){
+            hasBike[sc.nextInt()]=true;
+        }
+        sc.close();
+        long map[][]=new long[2][n+1];
+        Arrays.fill(map[0],Long.MAX_VALUE);
+        Arrays.fill(map[1],Long.MAX_VALUE);
+        Queue<Node> pq=new PriorityQueue<>(n,(a,b) -> a.dist-b.dist>0 ? 1:-1);
+        pq.offer(new Node(1,0,hasBike[1]));
+        map[hasBike[1] ? 1:0][1]=0;
+        
+        while(!pq.isEmpty()){
+            Node node=pq.poll();
+            if(node.idx==n){
+                System.out.print(node.dist);
+                return;
+            }
+            for(Edge e:graph.get(node.idx)){
+                long dist=node.dist+(node.flag ? e.weight>>1 : e.weight);
+                boolean nextFlag=node.flag || hasBike[e.pointTo];
+                int row=nextFlag ? 1:0;
+                if(dist<map[row][e.pointTo]){
+                    map[row][e.pointTo]=dist;
+                    pq.offer(new Node(e.pointTo,dist,nextFlag));
+                }
+            }
+        }
+        System.out.print(-1);
+    }
+    
+    static class Node{
+        int idx;
+        long dist;
+        boolean flag;
+        public Node(int idx,long dist,boolean flag){
+            this.idx=idx;
+            this.dist=dist;
+            this.flag=flag;
+        }
+    }
+    
+    static class Edge{
+        int pointTo,weight;
+        public Edge(int pointTo,int weight){
+            this.pointTo=pointTo;
+            this.weight=weight;
+        }
+    }
+}
