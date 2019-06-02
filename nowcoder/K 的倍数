@@ -1,0 +1,66 @@
+序列中任意个连续的元素组成的子序列称为该序列的子串。 
+现在给你一个序列P和一个整数K，询问元素和是K的倍数的子串的最大长度。      
+比如序列【1,2,3,4,5】，给定的整数K为 5，其中满足条件的子串为{5}、{2,3}、{1,2,3,4}、{1,2,3,4,5}，              
+
+那么答案就为 5，因为最长的子串为{1,2,3,4,5};如果满足条件的子串不存在，就输出 0。
+
+输入描述:
+第一行包含一个整数N, 1 ≤ 𝑁 ≤ 105。
+第二行包含 N 个整数𝑝𝑖，𝑝𝑖表示序列P第i个元素的值。0 ≤ 𝑝𝑖 ≤ 105。第三行包含一个整数K，1 ≤ 𝐾 ≤ 105。
+
+输出描述:
+输出一个整数ANS，表示答案。
+
+示例1
+
+输入
+5
+1 2 3 4 5
+5
+
+输出
+5
+
+示例2
+
+输入
+6
+3 1 2 7 7 7
+4
+
+输出
+5
+
+
+将之前输入得到的序列第i位变成包括他的前i位的和
+用一个数组存储第一次出现某个余数对应的序号i，当之后再出现相同余数，则之间的序列和能被k整除
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        sc.nextLine();
+        long[] arr=new long[n+1];
+        for(int i=1;i<=n;++i){
+            arr[i]=sc.nextLong()+arr[i-1];
+        }
+        sc.nextLine();
+        int k=sc.nextInt();
+        sc.close();
+        int result=0;
+        int[] firstIdxOfMod=new int[k];
+        Arrays.fill(firstIdxOfMod,-1);
+        for(int i=0;i<=n;++i){
+            int mod=(int)(arr[i]%k);
+            if(firstIdxOfMod[mod]==-1){
+                firstIdxOfMod[mod]=i;
+            }else{
+                result=Math.max(result,i-firstIdxOfMod[mod]);
+            }
+        }
+        System.out.print(result);
+    }
+}
