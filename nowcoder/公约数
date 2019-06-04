@@ -1,0 +1,64 @@
+桌面上有n张牌，每张牌上写了一个数字，现在从中选出k张牌，把选出牌上的数字全部乘起来，得到一个数X
+问有多少种不同的选牌方案，使得X和A的最大公约数大于等于B
+
+输入描述：
+第一行4个数，n，K,A,B
+接下来一行n个数
+
+输出描述：
+输出方案数
+
+
+示例1
+
+输入
+5 2 12 6
+4 4 1 2 3
+
+输出
+3
+
+
+dp[i][j]表示选i张牌，它们的乘积与A的最大公约数为j的方案数
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),k=sc.nextInt(),a=sc.nextInt(),b=sc.nextInt();
+        sc.nextLine();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        long[][] dp=new long[k+1][a+1];
+        dp[1][maxCommonDivisor(arr[0],a)]=1;
+        for(int i=1;i<n;++i){
+            for(int j = i+1>k ? k:i+1;j>1;--j){
+                for(int mcd=1;mcd<=a;++mcd){
+                    if(dp[j-1][mcd]!=0){
+                        dp[j][mcd*maxCommonDivisor(arr[i],a/mcd)]+=dp[j-1][mcd];
+                    }
+                }
+            }
+            ++dp[1][maxCommonDivisor(arr[i],a)];
+        }
+        long result=0;
+        for(int i=b;i<=a;++i){
+            result+=dp[k][i];
+        }
+        System.out.print(result);
+    }
+    
+    private static int maxCommonDivisor(int a,int b){
+        while(b!=0){
+            int tmp=a%b;
+            a=b;
+            b=tmp;
+        }
+        return a;
+    }
+}
