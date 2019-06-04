@@ -101,3 +101,38 @@ class Solution {
         return nxt;
     }
 }        
+
+
+
+sunday算法：https://www.cnblogs.com/bonelee/p/5887015.html
+
+
+class Solution(object):
+    def strStr(self, haystack, needle):
+        """
+        :type haystack: str
+        :type needle: str
+        :rtype: int
+        """
+        idxOfChar={}
+        for i,c in enumerate(needle):
+            idxOfChar[c]=i
+        len1=len(haystack)
+        len2=len(needle)
+        for i in xrange(len1-len2+1):
+            flag=True
+            for j,c in enumerate(needle):
+                if haystack[i+j]!=c:
+                    flag=False
+                    if i+len2<len1:
+                        if haystack[i+len2] in idxOfChar:
+                            i+=len2-idxOfChar[c]
+                        else:
+                            i+=len2+1
+                    else:
+                        return -1
+                    break
+            if flag:
+                return i
+
+        return -1
