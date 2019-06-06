@@ -119,14 +119,15 @@ class Solution(object):
             idxOfChar[c]=i
         len1=len(haystack)
         len2=len(needle)
-        for i in xrange(len1-len2+1):
+        i=0
+        while i<=len1-len2:
             flag=True
             for j,c in enumerate(needle):
                 if haystack[i+j]!=c:
                     flag=False
                     if i+len2<len1:
                         if haystack[i+len2] in idxOfChar:
-                            i+=len2-idxOfChar[c]
+                            i+=len2-idxOfChar[haystack[i+len2]]
                         else:
                             i+=len2+1
                     else:
@@ -136,3 +137,38 @@ class Solution(object):
                 return i
 
         return -1
+        
+        
+        
+        
+class Solution {
+    public int strStr(String haystack, String needle) {
+        int len1=haystack.length(),len2=needle.length();
+        Map<Character,Integer> idxOfChar=new HashMap<>(len2);
+        for(int i=0;i<len2;++i){
+            idxOfChar.put(needle.charAt(i),i);
+        }
+        for(int i=0;i<=len1-len2;){
+            boolean flag=true;
+            for(int j=0;j<len2;++j){
+                if(haystack.charAt(i+j)!=needle.charAt(j)){
+                    flag=false;
+                    if(i+len2<len1){
+                        if(idxOfChar.containsKey(haystack.charAt(i+len2))){
+                            i+=len2-idxOfChar.get(haystack.charAt(i+len2));
+                        }else{
+                            i+=len2+1;
+                        }
+                    }else{
+                        return -1;
+                    }
+                    break;
+                }
+            }
+            if(flag){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
