@@ -13,12 +13,12 @@ public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         String a=sc.next(),b=sc.next();
+        sc.close();
         if("0".equals(a) || "0".equals(b)){
             System.out.print(0);
             return;
         }
         int[] result=new int[a.length()+b.length()];
-        result[0]='*';
         for(int i=a.length()-1;i>=0;--i){
             int carry=0;
             for(int j=b.length()-1;j>=0;--j){
