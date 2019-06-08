@@ -1,0 +1,41 @@
+小田非常喜欢吃鱼，特别喜欢煎着吃。有一天她抓到了 n 条鱼，她有一个煎锅，每次可以同时煎 m 条鱼。
+这个煎锅可以花一分钟的时间煎熟鱼的一面，当一条鱼的两面都煎熟了它就可以吃了。现在她想知道最少需要花多少时间能够把所有的鱼都煎熟。
+
+输入描述:
+第一行包含两个整数𝑛, 𝑚。1 ≤ 𝑛, 𝑚 ≤ 500
+
+输出描述:
+输出对应的答案。
+
+示例1
+
+输入
+3 2
+
+输出
+3
+
+示例2
+
+输入
+4 2
+
+输出
+4
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt();
+        sc.close();
+        if(n<=m){
+            System.out.print(2);
+        }else{
+            System.out.print((n<<1)%m==0 ? (n<<1)/m : (n<<1)/m+1);
+        }
+    }
+}
