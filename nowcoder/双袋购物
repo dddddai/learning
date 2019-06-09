@@ -1,0 +1,66 @@
+一条马路上有n个点，从左到右从1到n编号，小明一开始在马路的最左边，一直往右走，一直走到最右边，中途不允许回头，只能往右走。
+每个点上都有一个物品，第i个点的物品体积为v[i]，价值为w[i]，小明有2个袋子，1号袋子体积为a，2号袋子体积为b。
+最开始小明使用1号袋子，在整个过程中的任意一个时刻，小明可以选择把1号袋子收起来，接下来使用2号袋子，滞后他再也不能使用1号袋子。
+小明可以从最开始就使用2号袋子，也可以一直使用1号袋子。
+求小明能获得的最大价值。
+
+输入描述：
+输入第一行三个数n,a,b
+接下来有n行，每行两个数v[i]，w[i]，表示每个物品的体积和价值。
+
+输出描述：
+输出最大价值
+
+示例1
+
+输入
+5 10 50
+3 3
+7 4
+4 7
+49 50
+2 2
+
+输出
+60
+
+说明
+用一号袋子装1号和3号物品，之后收起一号袋子，用二号袋子装4号物品。
+
+
+01背包
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),a=sc.nextInt(),b=sc.nextInt();
+        sc.nextLine();
+        int[] v=new int[n],w=new int[n];
+        int[] bagA=new int[a+1],bagB=new int[b+1];
+        int[] maxOfA=new int[n],maxOfB=new int[n];   
+        //表示1号袋子收集到i点的最大价值，2号袋子从后往前收集到i点最大价值
+       
+        for(int i=0;i<n;++i){
+            v[i]=sc.nextInt();
+            w[i]=sc.nextInt();
+            for(int j=a;j>=v[i];--j){
+                bagA[j]=Math.max(bagA[j],bagA[j-v[i]]+w[i]);
+            }
+            maxOfA[i]=bagA[a];
+        }
+        for(int i=n-1;i>=0;--i){     //2号袋子相当于从后往前dp
+            for(int j=b;j>=v[i];--j){
+                bagB[j]=Math.max(bagB[j],bagB[j-v[i]]+w[i]);
+            }
+            maxOfB[i]=bagB[b];
+        }
+        int result=Math.max(maxOfA[n-1],maxOfB[0]);
+        for(int i=0;i<n-1;++i){
+            result=Math.max(result,maxOfA[i]+maxOfB[i+1]);
+        }
+        System.out.print(result);
+    }
+}
