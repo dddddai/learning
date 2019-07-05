@@ -36,6 +36,29 @@ private static volatile Singleton instance = null;
 
 则可以解决此问题，因为volatile的变量，禁止指令重排序
 
+
+
+正确的双重检查锁
+
+public class Singleton {
+    private volatile static Singleton uniqueSingleton;
+
+    private Singleton() {
+    }
+
+    public Singleton getInstance() {
+        if (null == uniqueSingleton) {
+            synchronized (Singleton.class) {
+                if (null == uniqueSingleton) {
+                    uniqueSingleton = new Singleton();
+                }
+            }
+        }
+        return uniqueSingleton;
+    }
+}
+
+
 ---------------------------------------------------------------------------
 
 单例模式如何防止反射和反序列化的漏洞（枚举式没有此问题）：
