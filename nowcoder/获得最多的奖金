@@ -49,3 +49,44 @@
 
 说明：
 [ ]  [4, 1, 2] [ ] ，小明没办法，为了保证第一组第三组相等，只能都分成空的。所以小明只能拿到0越南盾。
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        sc.nextLine();
+        int[] d=new int[n];
+        for(int i=0;i<n;++i){
+            d[i]=sc.nextInt();
+        }
+        sc.close();
+        int l=0,r=n-1;
+        long result=0,leftSum=0,rightSum=0;
+        while(l<r){
+            if(leftSum<rightSum){
+                leftSum+=d[l++];
+            }else if(leftSum>rightSum){
+                rightSum+=d[r--];
+            }else{
+                result=leftSum;
+                leftSum+=d[l++];
+                rightSum+=d[r--];
+            }
+        }
+        if(leftSum==rightSum){
+            result=leftSum;
+        }else if(l==r){
+            if(leftSum+d[l]==rightSum){
+                result=rightSum;
+            }else if(rightSum+d[r]==leftSum){
+                result=leftSum;
+            }
+        }
+        System.out.print(result);
+    }
+}
