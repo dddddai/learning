@@ -1,0 +1,63 @@
+一个花坛中有很多花和两个喷泉。
+喷泉可以浇到以自己为中心，半径为r的圆内的所有范围的花。
+现在给出这些花的坐标和两个喷泉的坐标，要求你安排两个喷泉浇花的半径r1和r2，
+使得所有的花都能被浇到的同时, r12 + r22 的值最小。
+
+输入描述:
+第一行5个整数n，x1，y1，x2，y2表示花的数量和两个喷泉的坐标。
+接下来n行，每行两个整数xi, yi表示第i朵花的坐标。
+满足1 <= n <= 2000，花和喷泉的坐标满足-107<= x, y <= 107。
+
+
+输出描述:
+一个整数，r12 + r22 的最小值。
+
+示例1
+
+输入
+2 -1 0 5 3
+0 2
+5 2
+
+输出
+6
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        long x1=sc.nextLong(),y1=sc.nextLong();
+        long x2=sc.nextLong(),y2=sc.nextLong();
+        sc.nextLine();
+        Flower[] arr=new Flower[n];
+        for(int i=0;i<n;++i){
+            long x=sc.nextLong(),y=sc.nextLong();
+            long d1=(x-x1)*(x-x1)+(y-y1)*(y-y1);
+            long d2=(x-x2)*(x-x2)+(y-y2)*(y-y2);
+            arr[i]=new Flower(d1,d2);
+            sc.nextLine();
+        }
+        sc.close();
+        Arrays.sort(arr,(a,b) -> b.d1>a.d1 ? 1:-1);
+        long result=Long.MAX_VALUE;
+        long maxD2=0;
+        for(Flower flower:arr){
+            result=Math.min(result,flower.d1+maxD2);
+            maxD2=Math.max(maxD2,flower.d2);
+        }
+        System.out.print(Math.min(result,maxD2));
+    }
+    
+    private static class Flower{
+        long d1,d2;
+        
+        Flower(long d1,long d2){
+            this.d1=d1;
+            this.d2=d2;
+        }
+    }
+}
