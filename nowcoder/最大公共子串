@@ -1,0 +1,49 @@
+给定两个字符串，请编写代码，输出最长公共子串（Longest Common Substring），
+是指两个字符串中的最长的公共子串，要求子串一定是连续。
+
+输入描述:
+文本格式，2个非空字符串（字母数字组成），2个字符串以","英文逗号分割，字符串长度均小于等于100。
+
+
+输出描述:
+整形，为匹配到的最长子串长度
+
+示例1
+
+输入
+bab,caba
+
+输出
+2
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String[] s=sc.nextLine().split(",");
+        System.out.print(func(s[0],s[1]));
+    }
+    
+    private static int func(String a,String b){
+        if(a.length()<b.length()){
+            return func(b,a);
+        }
+        int result=0;
+        int[] dp=new int[b.length()+1];
+        for(int i=1;i<=a.length();++i){
+            for(int j=b.length();j>0;--j){
+                if(a.charAt(i-1)==b.charAt(j-1)){
+                    dp[j]=dp[j-1]+1;
+                    result=Math.max(result,dp[j]);
+                }else{
+                    dp[j]=0;
+                }
+            }
+        }
+        return result;
+    }
+}
