@@ -1,0 +1,72 @@
+小明目前在做一份毕业旅行的规划。打算从北京出发，分别去若干个城市，然后再回到北京，
+每个城市之间均乘坐高铁，且每个城市只去一次。由于经费有限，希望能够通过合理的路线安排尽可能的省一些路上的花销。
+给定一组城市和每对城市之间的火车票的价钱，找到每个城市只访问一次并返回起点的最小车费花销。
+
+输入描述:
+城市个数n（1<n≤20，包括北京）
+城市间的车票价钱 n行n列的矩阵 m[n][n]
+
+
+输出描述:
+最小车费花销 s
+
+示例1
+
+输入
+4
+0 2 6 5
+2 0 4 4
+6 4 0 2
+5 4 2 0
+
+输出
+13
+
+说明
+共 4 个城市，城市 1 和城市 1 的车费为0，城市 1 和城市 2 之间的车费为 2，城市 1 和城市 3 之间的车费为 6，
+城市 1 和城市 4 之间的车费为 5，依次类推。假设任意两个城市之间均有单程票可购买，且票价在1000元以内，无需考虑极端情况。
+
+
+
+dp[i][j]表示从i触发经过j集合中的城市，回到城市0的花费，j是bitmap
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[][] graph=new int[n][n];
+        for(int i=0;i<n;++i){
+            for(int j=0;j<n;++j){
+                graph[i][j]=sc.nextInt();
+            }
+        }
+        sc.close();
+        int m=1<<(n-1);
+        int[][] dp=new int[n][m-1];
+        for(int i=0;i<n;++i){
+            dp[i][0]=graph[i][0];
+        }
+        for(int j=1;j<m-1;++j){
+            for(int i=1;i<n;++i){
+                dp[i][j]=Integer.MAX_VALUE;
+                if(((j>>(i-1))&1)==1){
+                    continue;
+                }
+                for(int k=1;k<n;++k){
+                    if(((j>>(k-1))&1)==1){
+                        dp[i][j]=Math.min(dp[i][j],graph[i][k]+dp[k][j^(1<<(k-1))]);
+                    }
+                }
+            }
+        }
+        int result=Integer.MAX_VALUE;
+        for(int k=1;k<n;++k){
+            result=Math.min(result,graph[0][k]+dp[k][(m-1)^(1<<(k-1))]);
+        }
+        System.out.print(result);
+    }
+}
