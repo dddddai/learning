@@ -1,0 +1,38 @@
+输入一个自然数n，求表达式 f(n) = 1!\times×2!\times×3!\times×.....\times×n! 的结果末尾有几个连续的0？
+
+输入描述:
+自然数n
+
+输出描述:
+f(n)末尾连续的0的个数
+
+示例1
+
+输入
+11
+
+输出
+9
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        sc.close();
+        int result=0,cnt=0;
+        for(int i=5;i<=n;++i){
+            int num=i;
+            while(num%5==0){
+                num/=5;
+                ++cnt;
+            }
+            result+=cnt;
+        }
+        System.out.print(result);
+    }
+}
