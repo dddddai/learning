@@ -1,0 +1,79 @@
+给定一个整型矩阵 map，其中的值只有 0 和 1 两种，求其中全是 1 的所有矩形区域中，最大的矩形区域里 1 的数量。
+
+输入描述:
+第一行输入两个整数 n 和 m，代表 n*m 的矩阵
+接下来输入一个 n*m 的矩阵
+
+
+输出描述:
+输出其中全是 1 的所有矩形区域中，最大的矩形区域里 1 的数量。
+
+示例1
+
+输入
+1 4
+1 1 1 0
+
+输出
+3
+
+说明:
+最大的矩形区域有3个1，所以返回3
+
+
+
+用递增栈
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt();
+        int[] dp=new int[m];
+        int result=0;
+        for(int i=0;i<n;++i){
+            for(int j=0;j<m;++j){
+                int num=sc.nextInt();
+                if(num==1){
+                    ++dp[j];
+                }else{
+                    dp[j]=0;
+                }
+            }
+            result=Math.max(result,func(dp));
+        }
+        sc.close();
+        System.out.print(result);
+    }
+    
+    private static int func(int[] dp){
+        Stack<Bar> stack=new Stack<>();
+        stack.push(new Bar(-1,0));
+        int result=0;
+        for(int i=0;i<dp.length;++i){
+            while(stack.peek().height>dp[i]){
+                Bar bar=stack.pop();
+                int boundary=stack.peek().idx;
+                result=Math.max(result,bar.height*(i-1-boundary));
+            }
+            stack.push(new Bar(i,dp[i]));
+        }
+        while(stack.size()>1){
+            Bar bar=stack.pop();
+            int boundary=stack.peek().idx;
+            result=Math.max(result,bar.height*(dp.length-1-boundary));
+        }
+        return result;
+    }
+    
+    private static class Bar{
+        int idx,height;
+        
+        private Bar(int idx,int height){
+            this.idx=idx;
+            this.height=height;
+        }
+    }
+}
