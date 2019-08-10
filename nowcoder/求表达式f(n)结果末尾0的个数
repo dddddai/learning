@@ -25,10 +25,19 @@ public class Main{
         int n=sc.nextInt();
         sc.close();
         int result=0,cnt=0;
-        for(int i=5;i<=n;++i){
-            int num=i;
-            while(num%5==0){
-                num/=5;
+        int i;
+        for(i=5;i<=n-5;i+=5){
+            int tmp=i;
+            while(tmp%5==0){
+                tmp/=5;
+                ++cnt;
+            }
+            result+=cnt*5;
+        }
+        while(i<=n){
+            int tmp=i++;
+            while(tmp%5==0){
+                tmp/=5;
                 ++cnt;
             }
             result+=cnt;
