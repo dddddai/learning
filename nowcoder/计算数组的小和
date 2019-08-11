@@ -1,0 +1,83 @@
+数组小和的定义如下：
+例如，数组s = [1, 3, 5, 2, 4, 6]，
+在s[0]的左边小于或等于s[0]的数的和为0；
+在s[1]的左边小于或等于s[1]的数的和为1；
+在s[2]的左边小于或等于s[2]的数的和为1+3=4；
+在s[3]的左边小于或等于s[3]的数的和为1；
+在s[4]的左边小于或等于s[4]的数的和为1+3+2=6；
+在s[5]的左边小于或等于s[5]的数的和为1+3+5+2+4=15。
+所以s的小和为0+1+4+1+6+15=27
+
+给定一个数组s，实现函数返回s的小和
+
+[要求]
+时间复杂度为O(nlogn)O(nlogn)，空间复杂度为O(n)O(n)
+
+输入描述:
+第一行有一个整数N。表示数组长度
+接下来一行N个整数表示数组内的数
+
+
+输出描述:
+一个整数表示答案
+
+示例1
+
+输入
+6
+1 3 5 2 4 6
+
+输出
+27
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        System.out.print(mergeSort(arr,new int[n],0,n-1));
+    }
+    
+    private static long mergeSort(int[] arr,int[] tmp,int l,int r){
+        if(l>=r){
+            return 0;
+        }
+        int mid=(l+r)>>1;
+        long left=mergeSort(arr,tmp,l,mid);
+        long right=mergeSort(arr,tmp,mid+1,r);
+        return left+right+merge(arr,tmp,l,mid,r);
+    }
+    
+    private static long merge(int[] arr,int[] tmp,int leftStart,int leftEnd,int rightEnd){
+        int idx=leftStart;
+        long result=0;
+        int l=leftStart,r=leftEnd+1;
+        while(l<=leftEnd && r<=rightEnd){
+            if(arr[l]>arr[r]){
+                tmp[idx++]=arr[r++];
+            }else{
+                result+=(rightEnd-r+1)*arr[l];
+                tmp[idx++]=arr[l++];
+            }
+        }
+        while(l<=leftEnd){
+            tmp[idx++]=arr[l++];
+        }
+        while(r<=rightEnd){
+            tmp[idx++]=arr[r++];
+        }
+        for(int i=leftStart;i<=rightEnd;++i){
+            arr[i]=tmp[i];
+        }
+        return result;
+    }
+}
