@@ -1,0 +1,73 @@
+给定两个字符串str1和str2，输出连个字符串的最长公共子序列。如过最长公共子序列为空，则输出-1。
+
+输入描述:
+输出包括两行，第一行代表字符串str1，第二行代表str2。
+
+输出描述:
+输出一行，代表他们最长公共子序列。如果公共子序列的长度为空，则输出-1。
+
+示例1
+
+输入
+1A2C3D4B56
+B1D23CA45B6A
+
+输出
+123456
+
+说明
+"123456"和“12C4B6”都是最长公共子序列，任意输出一个。
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String a=sc.nextLine();
+        String b=sc.nextLine();
+        sc.close();
+        func(a,b);
+    }
+    
+    private static void func(String a,String b){
+        if(a.length()<b.length()){
+            func(b,a);
+            return;
+        }
+        StringBuilder result=new StringBuilder(b.length());
+        int[] dp=new int[b.length()+1];
+        int last=b.length()+1;      //a的第i-1个字符匹配的是b中的第几个字符
+        for(int i=1;i<=a.length();++i){
+            int upperLeft=0;
+            int cur=b.length()+1;       //a的第i个字符在匹配的是b中的第几个字符
+            for(int j=1;j<=b.length();++j){
+                int upper=dp[j];
+                if(a.charAt(i-1)==b.charAt(j-1)){
+                    if(cur>b.length() && upperLeft+1>=dp[b.length()]){
+                        //在不减少最长子序列长度的前提下，选择最前面的cur
+                        cur=j;
+                    }
+                    dp[j]=upperLeft+1;
+                }else{
+                    dp[j]=Math.max(upper,dp[j-1]);
+                }
+                upperLeft=upper;
+            }
+            if(dp[b.length()]>upperLeft){
+                result.append(a.charAt(i-1));
+                last=cur;
+            }else if(cur<=b.length() && cur<last){
+                //尽量选择匹配到更前面的字符
+                result.setCharAt(result.length()-1,a.charAt(i-1));
+                last=cur;
+            }
+        }
+        if(dp[b.length()]==0){
+            System.out.print(-1);
+        }else{
+            System.out.print(result);
+        }
+    }
+}
