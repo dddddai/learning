@@ -1,0 +1,62 @@
+在二维坐标系中，所有的值都是double类型，那么一个三角形可以由3个点来代表，给定3个点代表的三角形，
+再给定一个点(x, y)，判断(x, y)是否在三角形中
+
+
+输入描述:
+输入有四行，每行两个浮点数。
+前三行的6个数分别代表三角形的三个顶点的坐标
+最后两个数分别表示(x, y)
+
+
+输出描述:
+若(x, y)在三角形中，输出"Yes"
+否则输出"No"
+
+示例1
+
+输入
+-1.00 0.00
+1.50 3.50
+2.73 -3.12
+1.23 0.23
+
+输出
+Yes
+
+说明
+样例中的图形大致如下
+
+示例2
+
+输入
+-1.00 0.00
+1.50 3.50
+2.73 -3.12
+2333.33 233333.33
+
+输出
+No
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        double x1=sc.nextDouble(),y1=sc.nextDouble();
+        double x2=sc.nextDouble(),y2=sc.nextDouble();
+        double x3=sc.nextDouble(),y3=sc.nextDouble();
+        double x=sc.nextDouble(),y=sc.nextDouble();
+        sc.close();
+        double vx1=x-x1,vy1=y-y1;
+        double vx2=x-x2,vy2=y-y2;
+        double vx3=x-x3,vy3=y-y3;
+        double product1=vx1*vy2-vx2*vy1;
+        double product2=vx2*vy3-vx3*vy2;
+        double product3=vx3*vy1-vx1*vy3;
+        System.out.print((product1>0 && product2>0 && product3>0)
+            || (product1<0 && product2<0 && product3<0) ? "Yes":"No");
+    }
+}
