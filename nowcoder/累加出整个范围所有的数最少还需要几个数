@@ -1,0 +1,71 @@
+给定一个正数数组arr和一个正数range，
+如果可以自由选择arr中的数字，想累加得到1∼range范围上的所有数，返回arr最小还缺几个数
+给出的数组不保证有序！
+
+输入描述:
+第一行一个整数N, K。表示数组长度以及range
+接下来一行N个整数表示数组内的元素
+
+
+输出描述:
+输出一个整数表示答案
+
+示例1
+
+输入
+4 15
+1 2 3 7
+
+输出
+1
+
+说明
+想累加得到1∼15范围上的所有的数，arr还缺14这个数，所以返回1
+
+示例2
+
+输入
+3 14
+1 5 7
+
+输出
+2
+
+说明
+想累加得到1~14范围上所有的数，arr还缺2和4，所以返回2。
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),k=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        Arrays.sort(arr);
+        int result=0;
+        long cur=0;
+        for(int i=0;i<n;){
+            if(arr[i]>cur+1){
+                ++result;
+                cur=(cur<<1)+1;
+                if(cur>=k){
+                    break;
+                }
+            }else{
+                cur+=arr[i++];
+            }
+        }
+        while(cur<k){
+            ++result;
+            cur=(cur<<1)+1;
+        }
+        System.out.print(result);
+    }
+}
