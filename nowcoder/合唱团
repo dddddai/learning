@@ -1,0 +1,64 @@
+有 n 个学生站成一排，每个学生有一个能力值，牛牛想从这 n 个学生中按照顺序选取 k 名学生，
+要求相邻两个学生的位置编号的差不超过 d，使得这 k 个学生的能力值的乘积最大，你能返回最大的乘积吗？
+
+输入描述:
+每个输入包含 1 个测试用例。每个测试数据的第一行包含一个整数 n (1 <= n <= 50)，表示学生的个数，
+接下来的一行，包含 n 个整数，按顺序表示每个学生的能力值 ai（-50 <= ai <= 50）。
+接下来的一行包含两个整数，k 和 d (1 <= k <= 10, 1 <= d <= 50)。
+
+
+输出描述:
+输出一行表示最大的乘积。
+
+示例1
+
+输入
+3
+7 4 7
+2 50
+
+输出
+49
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] a=new int[n];
+        int max=-51;
+        for(int i=0;i<n;++i){
+            a[i]=sc.nextInt();
+            max=Math.max(max,a[i]);
+        }
+        int k=sc.nextInt(),d=sc.nextInt();
+        sc.close();
+        if(k==1){
+            System.out.print(max);
+            return;
+        }
+        long[][] dpMax=new long[k+1][n];
+        long[][] dpMin=new long[k+1][n];
+        long result=Long.MIN_VALUE;
+        for(int i=0;i<n;++i){
+            dpMax[1][i]=dpMin[1][i]=a[i];
+            dpMax[k][i]=Long.MIN_VALUE;
+            for(int j=2;j<=i+1 && j<=k;++j){
+                for(int m=Math.max(i-d,0);m<i;++m){
+                    dpMax[j][i]=Math.max(dpMax[j][i],
+                                         Math.max(dpMax[j-1][m]*a[i],
+                                                  dpMin[j-1][m]*a[i]));
+                    dpMin[j][i]=Math.min(dpMin[j][i],
+                                         Math.min(dpMax[j-1][m]*a[i],
+                                                  dpMin[j-1][m]*a[i]));
+                }
+            }
+            result=Math.max(result,dpMax[k][i]);
+        }
+        System.out.print(result);
+    }
+}
