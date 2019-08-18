@@ -1,0 +1,87 @@
+牛牛的作业薄上有一个长度为 n 的排列 A，这个排列包含了从1到n的n个数，
+但是因为一些原因，其中有一些位置（不超过 10 个）看不清了，但是牛牛记得这个数列顺序对的数量是 k，
+顺序对是指满足 i < j 且 A[i] < A[j] 的对数，请帮助牛牛计算出，符合这个要求的合法排列的数目。
+
+输入描述:
+每个输入包含一个测试用例。
+每个测试用例的第一行包含两个整数 n 和 k（1 <= n <= 100, 0 <= k <= 1000000000），
+接下来的 1 行，包含 n 个数字表示排列 A，其中等于0的项表示看不清的位置（不超过 10 个）。
+
+
+输出描述:
+输出一行表示合法的排列数目。
+
+示例1
+
+输入
+5 5
+4 0 0 2 0
+
+输出
+2
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    private static int result=0;
+    private static int n,k;
+    
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        n=sc.nextInt();
+        k=sc.nextInt();
+        int[] arr=new int[n];
+        boolean[] visited=new boolean[n+1];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+            visited[arr[i]]=arr[i]!=0;
+        }
+        sc.close();
+        List<Integer> absence=new ArrayList<>(10);
+        for(int i=1;i<=n;++i){
+            if(!visited[i]){
+                absence.add(i);
+            }
+        }
+        dfs(arr,absence,0,new boolean[absence.size()]);
+        System.out.print(result);
+    }
+    
+    private static void dfs(int[] arr,List<Integer> absence,int idx,boolean[] used){
+        if(idx==n){
+            if(getCnt(arr)==k){
+                ++result;
+            }
+            return;
+        }
+        if(arr[idx]!=0){
+            dfs(arr,absence,idx+1,used);
+        }else{
+            for(int i=0;i<absence.size();++i){
+                if(!used[i]){
+                    arr[idx]=absence.get(i);
+                    used[i]=true;
+                    dfs(arr,absence,idx+1,used);
+                    arr[idx]=0;
+                    used[i]=false;
+                }
+            }
+        }
+    }
+    
+    private static int getCnt(int[] arr){
+        int cnt=0;
+        for(int i=0;i<n-1;++i){
+            for(int j=i+1;j<n;++j){
+                if(arr[i]<arr[j]){
+                    ++cnt;
+                }
+            }
+        }
+        return cnt;
+    }
+}
