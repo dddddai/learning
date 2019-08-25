@@ -1,0 +1,87 @@
+给定整数m以及n各数字A1,A2,..An，将数列A中所有元素两两异或，共能得到n(n-1)/2个结果，请求出这些结果中大于m的有多少个。
+
+输入描述:
+第一行包含两个整数n,m. 
+第二行给出n个整数A1，A2，...，An。
+
+数据范围：
+对于30%的数据，1 <= n, m <= 1000
+对于100%的数据，1 <= n, m, Ai <= 10^5
+
+
+输出描述:
+输出仅包括一行，即所求的答案
+
+示例1
+
+输入
+3 10  
+6 5 10
+
+输出
+2
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    private static long sum=0;
+    
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),m=sc.nextInt();
+        int[] a=new int[n];
+        for(int i=0;i<n;++i){
+            a[i]=sc.nextInt();
+        }
+        sc.close();
+        TrieTree root=new TrieTree();
+        for(int num:a){
+            TrieTree cur=root;
+            for(int i=31;i>=0;--i){
+                int digit=(num>>i)&1;
+                if(cur.children[digit]==null){
+                    cur.children[digit]=new TrieTree();
+                }else{
+                    ++cur.children[digit].cnt;
+                }
+                cur=cur.children[digit];
+            }
+        }
+        for(int num:a){
+            func(root,num,m,31);
+        }
+        System.out.print(sum>>1);
+    }
+    
+    private static void func(TrieTree root,int num,int m,int bit){
+        TrieTree cur=root;
+        for(int i=bit;cur!=null && i>=0;--i){
+            int x=(num>>i)&1;
+            int y=(m>>i)&1;
+            if(y==0){
+                if(x==0){
+                    sum+=cur.children[1]==null ? 0:cur.children[1].cnt;
+                    cur=cur.children[0];
+                }else{
+                    sum+=cur.children[0]==null ? 0:cur.children[0].cnt;
+                    cur=cur.children[1];
+                }
+            }else{
+                if(x==0){
+                    cur=cur.children[1];
+                }else{
+                    cur=cur.children[0];
+                }
+            }
+        }
+    }
+    
+    private static class TrieTree{
+        TrieTree[] children=new TrieTree[2];
+        int cnt=1;
+    }
+}
