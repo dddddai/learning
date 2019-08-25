@@ -55,11 +55,11 @@ public class Main{
             if(arr[i]>cur+1){
                 ++result;
                 cur=(cur<<1)+1;
-                if(cur>=k){
-                    break;
-                }
             }else{
                 cur+=arr[i++];
+            }
+            if(cur>=k){
+                break;
             }
         }
         while(cur<k){
