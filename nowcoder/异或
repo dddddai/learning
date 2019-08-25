@@ -52,14 +52,14 @@ public class Main{
             }
         }
         for(int num:a){
-            func(root,num,m,31);
+            func(root,num,m);
         }
         System.out.print(sum>>1);
     }
     
-    private static void func(TrieTree root,int num,int m,int bit){
+    private static void func(TrieTree root,int num,int m){
         TrieTree cur=root;
-        for(int i=bit;cur!=null && i>=0;--i){
+        for(int i=31;cur!=null && i>=0;--i){
             int x=(num>>i)&1;
             int y=(m>>i)&1;
             if(y==0){
