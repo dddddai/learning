@@ -25,6 +25,7 @@
 用递增栈
 
 
+
 import java.util.*;
 
 public class Main{
@@ -49,31 +50,20 @@ public class Main{
     }
     
     private static int func(int[] dp){
-        Stack<Bar> stack=new Stack<>();
-        stack.push(new Bar(-1,0));
+        Stack<Integer> stack=new Stack<>();
+        stack.push(-1);
         int result=0;
         for(int i=0;i<dp.length;++i){
-            while(stack.peek().height>dp[i]){
-                Bar bar=stack.pop();
-                int boundary=stack.peek().idx;
-                result=Math.max(result,bar.height*(i-1-boundary));
+            while(stack.peek()!=-1 && dp[stack.peek()]>dp[i]){
+                int idx=stack.pop();
+                result=Math.max(result,dp[idx]*(i-1-stack.peek()));
             }
-            stack.push(new Bar(i,dp[i]));
+            stack.push(i);
         }
         while(stack.size()>1){
-            Bar bar=stack.pop();
-            int boundary=stack.peek().idx;
-            result=Math.max(result,bar.height*(dp.length-1-boundary));
+            int idx=stack.pop();
+            result=Math.max(result,dp[idx]*(dp.length-1-stack.peek()));
         }
         return result;
-    }
-    
-    private static class Bar{
-        int idx,height;
-        
-        private Bar(int idx,int height){
-            this.idx=idx;
-            this.height=height;
-        }
     }
 }
