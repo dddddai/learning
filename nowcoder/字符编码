@@ -35,10 +35,7 @@ public class Main{
             for(char c:arr){
                 map.put(c,map.getOrDefault(c,0)+1);
             }
-            Queue<Integer> pq=new PriorityQueue<>(map.size());
-            for(Integer freq:map.values()){
-                pq.offer(freq);
-            }
+            Queue<Integer> pq=new PriorityQueue<>(map.values());
             int result=0;
             while(pq.size()>1){
                 int tmp=pq.poll()+pq.poll();
