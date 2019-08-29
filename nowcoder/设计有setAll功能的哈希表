@@ -1,0 +1,74 @@
+哈希表常见的三个操作时put、get和containsKey，而且这三个操作的时间复杂度为O(1)。
+现在想加一个setAll功能，就是把所有记录value都设成统一的值。
+请设计并实现这种有setAll功能的哈希表，并且put、get、containsKey和setAll四个操作的时间复杂度都为O(1)。
+
+输入描述:
+第一行一个整数N表示操作数。
+接下来N行，每行第一个数字opt代表操作类型
+若opt=1，接下来有两个整数x, y表示设置key=x对应的value=y
+若opt=2，接下来一个整数x，表示查询key=x对应的value，若key=x不存在输出-1
+若opt=3，接下来一个整数x，表示把加入过的所有的key对应的value都设置为x
+
+
+输出描述:
+对于每个操作2，输出一个整数表示答案
+
+
+示例1
+
+输入
+6
+1 1 2
+2 1
+2 2
+3 4
+2 1
+2 2
+
+输出
+2
+-1
+4
+-1
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        Map<Integer,Node> map=new HashMap<>((int)(n/0.75)+1);
+        int last=-1;
+        int tmp=0;
+        for(int i=0;i<n;++i){
+            int opt=sc.nextInt();
+            if(opt==1){
+                map.put(sc.nextInt(),new Node(sc.nextInt(),i));
+            }else if(opt==2){
+                Node node=map.get(sc.nextInt());
+                if(node==null){
+                    System.out.println(-1);
+                }else{
+                    System.out.println(node.timestamp<last ? tmp:node.val);
+                }
+            }else{
+                tmp=sc.nextInt();
+                last=i;
+            }
+        }
+        sc.close();
+    }
+    
+    private static class Node{
+        int val,timestamp;
+        
+        private Node(int val,int timestamp){
+            this.val=val;
+            this.timestamp=timestamp;
+        }
+    }
+}
