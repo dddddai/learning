@@ -35,19 +35,17 @@ public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         int n=sc.nextInt();
-        int[] paths=new int[n];
         List<Queue<Integer>> map=new ArrayList<>(n);
         for(int i=0;i<n;++i){
             map.add(new LinkedList<>());
         }
         int capital=0;
         for(int i=0;i<n;++i){
-            paths[i]=sc.nextInt();
-            if(i==paths[i]){
+            int num=sc.nextInt();
+            if(i==num){
                 capital=i;
             }else{
-                Queue<Integer> queue=map.get(paths[i]);
-                queue.offer(i);
+                map.get(num).offer(i);
             }
         }
         sc.close();
