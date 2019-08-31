@@ -1,0 +1,77 @@
+给定一个正数数组arr，其中所有的值都为整数，以下是最小不可组成和的概念
+把arr每个子集内的所有元素加起来会出现很多值，其中最小的记为min，最大的记为max
+在区间[min, max]上，如果有数不可以被arr某一个子集相加得到，那么其中最小的那个数是arr的最小不可组成和
+在区间[min, max]上，如果所有的数都可以被arr的某一个子集相加得到，那么max+1是arr的最小不可组成和
+请写函数返回正数数组arr的最小不可组成和
+
+输入描述:
+第一行一个整数N，表示数组长度。
+接下来一行N个整数表示数组内的元素。
+
+
+输出描述:
+输出一个整数表示数组的最小不可组成和
+
+
+示例1
+
+输入
+3
+2 3 9
+
+输出
+4
+
+
+示例2
+
+输入
+3
+1 2 4
+
+输出
+8
+
+说明
+3 = 1 + 2
+5 = 1 + 4
+6 = 2 + 4
+7 = 1 + 2 + 4
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[n];
+        int sum=0;
+        int min=Integer.MAX_VALUE;
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+            sum+=arr[i];
+            min=Math.min(min,arr[i]);
+        }
+        sc.close();
+        boolean[] dp=new boolean[sum-min+2];
+        dp[0]=true;
+        for(int num:arr){
+            for(int j=sum-min+1;min+j-1>=num;--j){
+                if(!dp[j]){
+                    dp[j]=dp[min+j-num];
+                }
+            }
+        }
+        for(int i=1;i<=sum-min;++i){
+            if(!dp[i]){
+                System.out.print(i+min);
+                return;
+            }
+        }
+        System.out.print(sum+1);
+    }
+}
