@@ -1,0 +1,63 @@
+一群孩子做游戏，现在请你根据游戏得分来发糖果，要求如下：
+1. 每个孩子不管得分多少，起码分到一个糖果。
+2. 任意两个相邻的孩子之间，得分较多的孩子必须拿多一些糖果。(若相同则无此限制)
+给定一个数组arr代表得分数组，请返回最少需要多少糖果。
+
+输入描述:
+第一行一个整数N表示数组大小
+接下来一行N个整数表示数组内的元素
+
+
+输出描述:
+输出一个整数表示答案
+
+
+示例1
+
+输入
+3
+1 2 2
+
+输出
+4
+
+说明
+最优分配方案为1, 2, 1
+
+
+
+
+时间复杂度O(n)，空间复杂度O(1)怎么解？？
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        int[] candy=new int[n];
+        for(int i=1;i<n;++i){
+            if(arr[i]>arr[i-1]){
+                candy[i]=candy[i-1]+1;
+            }
+        }
+        for(int i=n-2;i>=0;--i){
+            if(arr[i]>arr[i+1]){
+                candy[i]=Math.max(candy[i],candy[i+1]+1);
+            }
+        }
+        int result=n;
+        for(int num:candy){
+            result+=num;
+        }
+        System.out.print(result);
+    }
+}
