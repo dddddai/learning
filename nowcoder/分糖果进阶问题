@@ -1,0 +1,80 @@
+一群孩子做游戏，现在请你根据游戏得分来发糖果，要求如下：
+1. 每个孩子不管得分多少，起码分到一个糖果。
+2. 任意两个相邻的孩子之间，得分较多的孩子必须拿多一些糖果。
+3. 任意两个相邻的孩子之间的得分如果一样多，糖果数必须相同
+给定一个数组arr代表得分数组，请返回最少需要多少糖果。
+
+
+
+输入描述:
+第一行一个整数N表示数组大小
+接下来一行N个整数表示数组内的元素
+
+
+输出描述:
+输出一个整数表示答案
+
+
+示例1
+
+输入
+3
+1 2 2
+
+输出
+5
+
+说明
+最优分配方案为1, 2, 2
+
+
+示例2
+
+输入
+13
+0 1 2 3 3 3 2 2 2 2 2 1 1
+
+输出
+30
+
+说明
+最优的分配方案为
+1 2 3 4 4 4 2 2 2 2 2 1 1
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        int[] candy=new int[n];
+        for(int i=1;i<n;++i){
+            if(arr[i]>arr[i-1]){
+                candy[i]=candy[i-1]+1;
+            }else if(arr[i]==arr[i-1]){
+                candy[i]=candy[i-1];
+            }
+        }
+        for(int i=n-2;i>=0;--i){
+            if(arr[i]>arr[i+1]){
+                candy[i]=Math.max(candy[i],candy[i+1]+1);
+            }else if(arr[i]==arr[i+1]){
+                candy[i]=Math.max(candy[i],candy[i+1]);
+            }
+        }
+        int result=n;
+        for(int num:candy){
+            result+=num;
+        }
+        System.out.print(result);
+    }
+}
