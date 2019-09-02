@@ -73,19 +73,18 @@ public class Main{
         while(low<high){
             long mid=(low+high)>>1;
             long sum=0;
-            int cnt=0;
+            int cnt=1;
             for(long num:arr){
-                if(sum+num>mid){
+                sum+=num;
+                if(sum>mid){
                     sum=num;
-                    if(++cnt>=k){
+                    if(++cnt>k){
                         low=mid+1;
                         break;
                     }
-                }else{
-                    sum+=num;
                 }
             }
-            if(++cnt<=k){
+            if(cnt<=k){
                 high=mid;
             }
         }
