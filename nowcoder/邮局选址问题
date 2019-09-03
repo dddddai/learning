@@ -1,0 +1,70 @@
+一条直线上有居民点，邮局只能建在居民点上。给定一个有序整形数组arr，
+每个值表示居民点的一维坐标，再给定一个正数num，表示邮局数量。
+选择num个居民点建立num个邮局，使所有的居民点到邮局的总距离最短，返回最短的总距离。
+
+输入描述:
+第一行有两个整数N,num。分别表示居民点的数量，要建的邮局数量。
+接下来一行N个整数表示邮局的坐标。保证坐标递增
+
+
+输出描述:
+输出一个整数表示答案
+
+
+示例1
+
+输入
+6 2
+1 2 3 4 5 1000
+
+输出
+6
+
+说明
+第一个邮局建立在3位置，第二个邮局建立在1000位置。
+那么1位置到邮局的距离为2,2位置到邮局距离为1,3位置到邮局的距离为0，
+4位置到邮局的距离为1,5位置到邮局的距离为2,1000位置到邮局的距离为0.
+这种方案下的总距离为6。
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),num=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        int[][] minDist=new int[n][n];
+        for(int i=0;i<n-1;++i){
+            for(int j=i+1;j<n;++j){
+                minDist[i][j]=minDist[i][j-1]+arr[j]-arr[(i+j)>>1];
+            }
+        }
+        int[] dp=new int[n];
+        int[] idxOfPostOffice=new int[n];
+        for(int i=0;i<n;++i){
+            dp[i]=minDist[0][i];
+        }
+        for(int i=1;i<num;++i){
+            for(int j=n-1;j>=i;--j){
+                int min=idxOfPostOffice[j];
+                int max= j==n-1 ? n-1 : idxOfPostOffice[j+1];
+                dp[j]=Integer.MAX_VALUE;
+                for(int k=min;k<=max;++k){
+                    if(dp[k]+minDist[Math.min(k+1,n-1)][j]<dp[j]){
+                        dp[j]=dp[k]+minDist[k+1][j];
+                        idxOfPostOffice[j]=k;
+                    }
+                }
+            }
+        }
+        System.out.print(dp[n-1]);
+    }
+}
