@@ -1,0 +1,70 @@
+给定数组 arr 和整数 num，共返回有多少个子数组满足如下情况：
+max(arr[i...j] - min(arr[i...j]) <= num
+max(arr[i...j])表示子数组arr[i...j]中的最大值，
+min[arr[i...j])表示子数组arr[i...j]中的最小值。
+
+
+输入描述:
+第一行输入两个数 n 和 num，其中 n 表示数组 arr 的长度
+第二行输入n个整数，表示数组arr中的每个元素
+
+
+输出描述:
+输出给定数组中满足条件的子数组个数
+
+
+示例1
+
+输入
+5 2 
+1 2 3 4 5
+
+输出
+12
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),num=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        Deque<Integer> dq1=new LinkedList<>();
+        Deque<Integer> dq2=new LinkedList<>();
+        int i=0,j=0;
+        int result=0;
+        while(i<n){
+            while(j<n){
+                while(!dq1.isEmpty() && arr[j]>=arr[dq1.peekLast()]){
+                    dq1.pollLast();
+                }
+                dq1.offerLast(j);
+                while(!dq2.isEmpty() && arr[j]<=arr[dq2.peekLast()]){
+                    dq2.pollLast();
+                }
+                dq2.offerLast(j);
+                if(arr[dq1.peekFirst()]-arr[dq2.peekFirst()]>num){
+                    break;
+                }
+                ++j;
+            }
+            result+=j-i;
+            if(dq1.peekFirst()==i){
+                dq1.pollFirst();
+            }
+            if(dq2.peekFirst()==i){
+                dq2.pollFirst();
+            }
+            ++i;
+        }
+        System.out.print(result);
+    }
+}
