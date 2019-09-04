@@ -55,10 +55,9 @@ public class Main{
         for(int i=1;i<num;++i){
             for(int j=n-1;j>=i;--j){
                 int min=leftBoundary[j];
-                int max= j==n-1 ? n-1 : leftBoundary[j+1];
-                dp[j]=Integer.MAX_VALUE;
+                int max= j==n-1 ? n-2 : leftBoundary[j+1];
                 for(int k=min;k<=max;++k){
-                    if(dp[k]+minDist[Math.min(k+1,n-1)][j]<dp[j]){
+                    if(dp[k]+minDist[k+1][j]<dp[j]){
                         dp[j]=dp[k]+minDist[k+1][j];
                         leftBoundary[j]=k;
                     }
