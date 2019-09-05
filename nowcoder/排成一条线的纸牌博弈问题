@@ -1,0 +1,53 @@
+给定一个整型数组arr，代表数值不同的纸牌排成一条线，玩家A和玩家B依次拿走每张纸牌，
+规定玩家A先拿，玩家B后拿，但是每个玩家每次只能拿走最左和最右的纸牌，玩家A和玩家B绝顶聪明。
+请返回最后的获胜者的分数。
+
+输入描述:
+输出包括两行，第一行一个整数n(1≤n≤5000)，代表数组arr长度，
+第二行包含n个整数，第i个代表arr[i]
+
+
+输出描述:
+输出一个整数，代表最后获胜者的分数。
+
+
+示例1
+
+输入
+4
+1 2 100 4
+
+输出
+101
+
+
+
+
+dp[i][j]表示，arr[i...j]中玩家A或玩家B能得到的最高分
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int[] arr=new int[n];
+        int[] sum=new int[n+1];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+            sum[i+1]=sum[i]+arr[i];
+        }
+        sc.close();
+        int[] dp=new int[n];
+        for(int i=n-1;i>=0;--i){
+            dp[i]=arr[i];
+            for(int j=i+1;j<n;++j){
+                dp[j]=Math.max(sum[j]-sum[i]-dp[j-1]+arr[j],
+                               sum[j+1]-sum[i+1]-dp[j]+arr[i]);
+            }
+        }
+        System.out.print(Math.max(dp[n-1],sum[n]-dp[n-1]));
+    }
+}
