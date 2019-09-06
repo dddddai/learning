@@ -1,0 +1,52 @@
+如果一个字符串为str，把字符串的前面任意部分挪到后面形成的字符串交str的旋转词。
+比如str=“12345”，str的旋转串有“12345”、“45123”等等。给定两个字符串，判断是否为旋转词。
+
+输入描述:
+输出包含三行，第一个两个整数n和m,分别表示两个字符串的长度。
+第二行和第三行各输入一个字符串。
+
+
+输出描述:
+如果两个字符串互为旋转词请输出“YES”，否则输出“NO”。
+
+
+示例1
+
+输入
+4 4
+abcd
+cdab
+
+输出
+YES
+
+
+示例2
+
+输入
+2 3
+aa
+aaa
+
+输出
+NO
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        sc.nextLine();
+        String a=sc.nextLine();
+        String b=sc.nextLine();
+        sc.close();
+        if(a.length()!=b.length()){
+            System.out.print("NO");
+            return;
+        }
+        System.out.print((a+a).contains(b) ? "YES":"NO");
+    }
+}
