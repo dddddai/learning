@@ -57,18 +57,18 @@ public class Main{
             min=Math.min(min,arr[i]);
         }
         sc.close();
-        boolean[] dp=new boolean[sum-min+2];
+        boolean[] dp=new boolean[sum+1];
         dp[0]=true;
         for(int num:arr){
-            for(int j=sum-min+1;min+j-1>=num;--j){
+            for(int j=sum;j>=num;--j){
                 if(!dp[j]){
-                    dp[j]=dp[min+j-num];
+                    dp[j]=dp[j-num];
                 }
             }
         }
-        for(int i=1;i<=sum-min;++i){
+        for(int i=min;i<=sum;++i){
             if(!dp[i]){
-                System.out.print(i+min);
+                System.out.print(i);
                 return;
             }
         }
