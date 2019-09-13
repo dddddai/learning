@@ -1,0 +1,67 @@
+给一个全是小写字母的字符串str，删除多余字符，使得每种字符只保留一个，并且让最终结果字符串字典序最小。
+
+输入描述:
+输入包含一行字符串，代表str
+
+
+输出描述:
+输出一行，代表删除后的字符串。
+
+
+示例1
+
+输入
+acbc
+
+输出
+abc
+
+
+示例2
+
+输入
+dbcacbca
+
+
+输出
+dabc
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        char[] arr=sc.nextLine().toCharArray();
+        sc.close();
+        StringBuilder sb=new StringBuilder(arr.length);
+        int[] cnt=new int[26];
+        for(char c:arr){
+            ++cnt[c-'a'];
+        }
+        int cur=0;
+        while(cur<26 && cnt[cur]==0){
+            ++cur;
+        }
+        for(char c:arr){
+            if(c-'a'==cur){
+                cnt[cur]=0;
+                sb.append(c);
+                while(cur<26 && cnt[cur]==0){
+                    ++cur;
+                }
+                if(cur==26){
+                    break;
+                }
+            }else{
+                if(cnt[c-'a']==1){
+                    sb.append(c);
+                }
+                --cnt[c-'a'];
+            }
+        }
+        System.out.print(sb);
+    }
+}
