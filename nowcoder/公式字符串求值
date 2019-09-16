@@ -1,0 +1,81 @@
+给定一个字符串str，str表示一个公式，公式里可以有整数，加减乘除和左右括号，
+返回公式的计算结果（注意：题目中所有运算都是整型运算，向下取整,且保证数据合法，不会出现除0等情况）。
+
+输入描述:
+输出一行字符串，代表str（保证str计算的结果不会出现除零，int溢出等情况）。
+
+
+输出描述:
+输出一个整数，代表表达式的计算结果。
+
+
+示例1
+
+输入
+48*((70-65)-43)+8*1
+
+输出
+-1816
+
+
+示例2
+
+输入
+3+1*4
+
+输出
+7
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        char[] arr=sc.nextLine().toCharArray();
+        sc.close();
+        System.out.print(func(arr,0)[0]);
+    }
+    
+    private static int[] func(char[] arr,int start){
+        int result=0;
+        int tmp=0;
+        char operator='+';
+        Stack<Integer> stack=new Stack<>();
+        int i=start;
+        while(i<arr.length && arr[i]!=')'){
+            if(Character.isDigit(arr[i])){
+                tmp=tmp*10+arr[i]-'0';
+            }
+            if(!Character.isDigit(arr[i]) || i==arr.length-1 || arr[i+1]==')'){
+                if(arr[i]=='('){
+                    int[] tmpArr=func(arr,i+1);
+                    tmp=tmpArr[0];
+                    i=tmpArr[1];
+                }
+                switch(operator){
+                    case '+':
+                        stack.push(tmp);
+                        break;
+                    case '-':
+                        stack.push(-tmp);
+                        break;
+                    case '*':
+                        stack.push(stack.pop()*tmp);
+                        break;
+                    case '/':
+                        stack.push(stack.pop()/tmp);
+                }
+                tmp=0;
+                operator=arr[i];
+            }
+            ++i;
+        }
+        while(!stack.isEmpty()){
+            result+=stack.pop();
+        }
+        return new int[]{result,i};
+    }
+}
