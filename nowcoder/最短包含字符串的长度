@@ -1,0 +1,77 @@
+给定字符串str1和str2，求str1的字串中含有str2所有字符的最小字符串长度。
+
+
+输入描述:
+输入包括两行，第一行一个字符串，代表str1，
+第二行也是一个字符串，代表str2
+
+
+输出描述:
+输出str1的字串中含有str2所有字符的最小字符串长度，如果不存在请输出0。
+
+
+示例1
+
+输入
+abcde
+ac
+
+输出
+3
+
+说明
+“abc”中包含“ac”，且“abc”是所有满足条件中最小的。
+
+
+示例2
+
+输入
+12345
+344
+
+输出
+0
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String a=sc.nextLine();
+        String b=sc.nextLine();
+        sc.close();
+        Map<Character,Integer> map=new HashMap<>((int)(b.length()/0.75)+1);
+        for(int i=0;i<b.length();++i){
+            map.put(b.charAt(i),map.getOrDefault(b.charAt(i),0)+1);
+        }
+        int result=a.length()+1;
+        int l=0;
+        int cnt=b.length();
+        for(int r=0;r<a.length();++r){
+            Integer freq=map.get(a.charAt(r));
+            if(freq!=null){
+                map.put(a.charAt(r),freq-1);
+                if(freq>=1){
+                    --cnt;
+                }
+            }
+            if(cnt==0){
+                while(true){
+                    freq=map.get(a.charAt(l));
+                    if(freq!=null){
+                        if(freq==0){
+                            break;
+                        }
+                        map.put(a.charAt(l),freq+1);
+                    }
+                    ++l;
+                }
+                result=Math.min(result,r-l+1);
+            }
+        }
+        System.out.print(result==a.length()+1 ? 0 : result);
+    }
+}
