@@ -1,0 +1,87 @@
+一个字符串可以分解为多种二叉树。如果str长度为1，认为不可分解；
+如果str长度为N(N>1),左半部分长度可以为1~N-1，右半部分为剩下的长度，然后你可以交换左右两部分。
+并且左右部分可以按照同样的逻辑，继续分解。每一个形成的字符串都可以是原字符串的旋变字符串。
+现在给你两个字符串str1和str2，判断str2是否为str1的旋变字符串。
+
+
+输入描述:
+输入包括两行，第一行一个字符串，代表str1，
+第二行一个字符串，代表str2
+
+
+输出描述:
+如果str2是str1的旋变字符串请输出“YES”，否则输出“NO”。
+
+
+示例1
+
+输入
+abcd
+dbac
+
+输出
+YES
+
+说明
+abcd->d...abc->d...ab...c->d...b...a...c
+
+
+示例2
+
+输入
+IJz
+JzI
+
+输出
+YES
+
+说明
+左边为l右边为Jz交换  变Jzl
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    private static int[][][] memory;
+    //memory[i][j][k]表示str1[i...i+k-1]和str2[j...j+k-1]是否是旋变字符串
+    
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        String a=sc.nextLine(),b=sc.nextLine();
+        sc.close();
+        if(a.length()!=b.length()){
+            System.out.print("NO");
+            return;
+        }
+        memory=new int[a.length()][a.length()][a.length()+1];
+        for(int[][] m:memory){
+            for(int[] row:m){
+                Arrays.fill(row,-1);
+            }
+        }
+        System.out.print(func(a,b,0,0,a.length()) ? "YES":"NO");
+    }
+    
+    private static boolean func(String a,String b,int idx1,int idx2,int len){
+        if(memory[idx1][idx2][len]!=-1){
+            return memory[idx1][idx2][len]==0 ? false:true;
+        }
+        if(len==1){
+            return a.charAt(idx1)==b.charAt(idx2);
+        }
+        boolean result=false;
+        for(int i=1;i<len;++i){
+            result=(func(a,b,idx1,idx2,i) && func(a,b,idx1+i,idx2+i,len-i))
+                || (func(a,b,idx1,idx2+len-i,i) && func(a,b,idx1+i,idx2,len-i));
+            if(result){
+                memory[idx1][idx2][len]=1;
+                return true;
+            }
+        }
+        memory[idx1][idx2][len]=0;
+        return false;
+    }
+}
