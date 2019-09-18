@@ -75,7 +75,7 @@ public class Main{
         boolean result=false;
         for(int i=1;i<len;++i){
             result=(func(a,b,idx1,idx2,i) && func(a,b,idx1+i,idx2+i,len-i))
-                || (func(a,b,idx1,idx2+len-i,i) && func(a,b,idx1+i,idx2,len-i));
+                || (func(a,b,idx1+len-i,idx2,i) && func(a,b,idx1,idx2+i,len-i));
             if(result){
                 memory[idx1][idx2][len]=1;
                 return true;
