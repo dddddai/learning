@@ -44,35 +44,45 @@ class Solution(object):
         
         
         
+        
 class Solution {
-    List<List<String>> result=new ArrayList<>();
+    private List<List<String>> result=new ArrayList<>();
+    private int[][] memory;
     
     public List<List<String>> partition(String s) {
+        memory=new int[s.length()][s.length()];
+        for(int[] row:memory){
+            Arrays.fill(row,-1);
+        }
         func(s,0,new ArrayList<>());
         return result;
     }
-    void func(String s,int start,List<String> candidates)
-    {
-        if(start==s.length())
+    
+    private void func(String s,int start,List<String> candidates){
+        if(start==s.length()){
             result.add(new ArrayList(candidates));
-        
-        for(int i=start;i<s.length();++i)
-        {
-            if(isPalindrome(s,start,i))
-            {
+        }
+        for(int i=start;i<s.length();++i){
+            if(memory[start][i]==0){
+                continue;
+            }
+            if(memory[start][i]==1 || isPalindrome(s,start,i)){
                 candidates.add(s.substring(start,i+1));
                 func(s,i+1,candidates);
                 candidates.remove(candidates.size()-1);
             }
         }
     }
-    boolean isPalindrome(String s,int startIdx,int endIdx)
-    {
+    
+    private boolean isPalindrome(String s,int startIdx,int endIdx){
         int l=startIdx,r=endIdx;
-        while(l<r)
-            if(s.charAt(l++)!=s.charAt(r--))
+        while(l<r){
+            if(s.charAt(l++)!=s.charAt(r--)){
+                memory[startIdx][endIdx]=0;
                 return false;
-        
+            }
+        }
+        memory[startIdx][endIdx]=1;
         return true;
     }
-}        
+}
