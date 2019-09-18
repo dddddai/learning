@@ -44,7 +44,7 @@ class Solution(object):
         
         
         
-        
+
 class Solution {
     private List<List<String>> result=new ArrayList<>();
     private int[][] memory;
@@ -63,10 +63,7 @@ class Solution {
             result.add(new ArrayList(candidates));
         }
         for(int i=start;i<s.length();++i){
-            if(memory[start][i]==0){
-                continue;
-            }
-            if(memory[start][i]==1 || isPalindrome(s,start,i)){
+            if(isPalindrome(s,start,i)){
                 candidates.add(s.substring(start,i+1));
                 func(s,i+1,candidates);
                 candidates.remove(candidates.size()-1);
@@ -75,14 +72,17 @@ class Solution {
     }
     
     private boolean isPalindrome(String s,int startIdx,int endIdx){
-        int l=startIdx,r=endIdx;
-        while(l<r){
-            if(s.charAt(l++)!=s.charAt(r--)){
-                memory[startIdx][endIdx]=0;
-                return false;
+        if(memory[startIdx][endIdx]==-1){
+            int l=startIdx,r=endIdx;
+            while(l<r){
+                if(s.charAt(l++)!=s.charAt(r--)){
+                    memory[startIdx][endIdx]=0;
+                    return false;
+                }
             }
+            memory[startIdx][endIdx]=1;
+            return true;
         }
-        memory[startIdx][endIdx]=1;
-        return true;
+        return memory[startIdx][endIdx]==0 ? false:true;
     }
 }
