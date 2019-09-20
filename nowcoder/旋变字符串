@@ -46,7 +46,6 @@ import java.util.*;
 
 public class Main{
     private static int[][][] memory;
-    //memory[i][j][k]表示str1[i...i+k-1]和str2[j...j+k-1]是否是旋变字符串
     
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
@@ -67,7 +66,7 @@ public class Main{
     
     private static boolean func(String a,String b,int idx1,int idx2,int len){
         if(memory[idx1][idx2][len]!=-1){
-            return memory[idx1][idx2][len]==0 ? false:true;
+            return memory[idx1][idx2][len]!=0;
         }
         if(len==1){
             return a.charAt(idx1)==b.charAt(idx2);
