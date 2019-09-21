@@ -1,39 +1,43 @@
-class Solution(object):
-    def func(self,preorder,startPre,endPre,inorder,startIn,endIn):
-        if startPre>endPre or startIn>endIn:
-            return
-        root=TreeNode(preorder[startPre])
-        for i in xrange(startIn,endIn+1):
-            if inorder[i]==preorder[startPre]:
-                root.left=self.func(preorder,startPre+1,startPre+i-startIn,inorder,startIn,i-1)
-                root.right=self.func(preorder,startPre+i-startIn+1,endPre,inorder,i+1,endIn)
-                return root
-        
-    def buildTree(self, preorder, inorder):
-        """
-        :type preorder: List[int]
-        :type inorder: List[int]
-        :rtype: TreeNode
-        """
-        return self.func(preorder,0,len(preorder)-1,inorder,0,len(inorder)-1)
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+   
 
 
-public class Solution {
-    TreeNode func(int[] pre,int startPre,int endPre,int[] in,int startIn,int endIn)
-    {
-        if(startPre>endPre || startIn>endIn)
-            return null;
-        TreeNode root=new TreeNode(pre[startPre]);
-        for(int i=startIn;i<=endIn;++i)
-            if(in[i]==pre[startPre])
-            {
-                root.left=func(pre,startPre+1,startPre+i-startIn,in,startIn,i-1);
-                root.right=func(pre,startPre+i-startIn+1,endPre,in,i+1,endIn);
-                break;
-            }
-        return root;
-    }
-    public TreeNode reConstructBinaryTree(int [] pre,int [] in) {
+
+class Solution {
+    private Map<Integer,Integer> map;
+    
+    public TreeNode buildTree(int[] pre, int[] in) {
+        map=new HashMap<>((int)(pre.length/0.75)+1);
+        for(int i=0;i<in.length;++i){
+            map.put(in[i],i);
+        }
         return func(pre,0,pre.length-1,in,0,in.length-1);
     }
+    
+    private TreeNode func(int[] pre,int startPre,int endPre,int[] in,int startIn,int endIn){
+        if(startPre>endPre || startIn>endIn){
+            return null;
+        }
+        TreeNode root=new TreeNode(pre[startPre]);
+        int idx=map.get(pre[startPre]);
+        root.left=func(pre,startPre+1,startPre+idx-startIn,in,startIn,idx-1);
+        root.right=func(pre,startPre+idx-startIn+1,endPre,in,idx+1,endIn);
+        return root;
+    }
+    
 }
