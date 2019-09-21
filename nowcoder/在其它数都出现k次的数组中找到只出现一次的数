@@ -1,0 +1,46 @@
+给定一个整型数组arr和一个大于1的整数k。已知arr中只有1个数出现了一次，其他的数出现k次，请返回出现了1次的数。
+
+输入描述:
+输入包含两行，第一行包含两个整数n和k，n代表数组arr的长度，
+第二行n个整数，代表数组arr，数组arr中每个数都是32位整数。
+
+
+输出描述:
+输出一个整数，代表唯一出现1次的数。
+
+
+示例1
+
+输入
+7 3
+5 4 1 1 5 1 5
+
+输出
+4
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),k=sc.nextInt();
+        int[] arr=new int[n];
+        for(int i=0;i<n;++i){
+            arr[i]=sc.nextInt();
+        }
+        sc.close();
+        int result=0;
+        for(int i=0;i<32;++i){
+            int cnt=0;
+            for(int num:arr){
+                cnt+=(num>>i)&1;
+            }
+            result|=(cnt%k)<<i;
+        }
+        System.out.print(result);
+    }
+}
