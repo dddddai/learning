@@ -63,24 +63,6 @@ class Solution {
             result.add(new ArrayList(candidates));
         }
         for(int i=start;i<s.length();++i){
-            if(isPalindrome(s,start,i))class Solution {
-    private List<List<String>> result=new ArrayList<>();
-    private int[][] memory;
-    
-    public List<List<String>> partition(String s) {
-        memory=new int[s.length()][s.length()];
-        for(int[] row:memory){
-            Arrays.fill(row,-1);
-        }
-        func(s,0,new ArrayList<>());
-        return result;
-    }
-    
-    private void func(String s,int start,List<String> candidates){
-        if(start==s.length()){
-            result.add(new ArrayList(candidates));
-        }
-        for(int i=start;i<s.length();++i){
             if(isPalindrome(s,start,i)){
                 candidates.add(s.substring(start,i+1));
                 func(s,i+1,candidates);
@@ -102,27 +84,5 @@ class Solution {
             return true;
         }
         return memory[startIdx][endIdx]!=0;
-    }
-}{
-                candidates.add(s.substring(start,i+1));
-                func(s,i+1,candidates);
-                candidates.remove(candidates.size()-1);
-            }
-        }
-    }
-    
-    private boolean isPalindrome(String s,int startIdx,int endIdx){
-        if(memory[startIdx][endIdx]==-1){
-            int l=startIdx,r=endIdx;
-            while(l<r){
-                if(s.charAt(l++)!=s.charAt(r--)){
-                    memory[startIdx][endIdx]=0;
-                    return false;
-                }
-            }
-            memory[startIdx][endIdx]=1;
-            return true;
-        }
-        return memory[startIdx][endIdx]==0 ? false:true;
     }
 }
