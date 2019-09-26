@@ -31,7 +31,6 @@
 36
 
 
-
 import java.util.*;
 
 public class Main{
@@ -58,6 +57,7 @@ public class Main{
                     min=Math.min(min,num);
                 }
             }
+            result=Math.max(result,sum*min);
         }
         System.out.print(result);
     }
