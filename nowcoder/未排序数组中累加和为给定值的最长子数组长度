@@ -1,0 +1,47 @@
+给定一个无序数组arr, 其中元素可正、可负、可0。给定一个整数k，求arr所有子数组中累加和为k的最长子数组长度
+
+输入描述:
+第一行两个整数N, k。N表示数组长度，k的定义已在题目描述中给出
+第二行N个整数表示数组内的数
+
+
+输出描述:
+输出一个整数表示答案
+
+
+示例1
+
+输入
+5 0
+1 -2 1 1 1
+
+输出
+3
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),k=sc.nextInt();
+        Map<Integer,Integer> map=new HashMap<>((int)(n/0.75)+1);
+        int sum=0;
+        int result=0;
+        map.put(0,-1);
+        for(int i=0;i<n;++i){
+            sum+=sc.nextInt();
+            Integer idx=map.get(sum-k);
+            if(idx!=null){
+                result=Math.max(result,i-idx);
+            }
+            if(!map.containsKey(sum)){
+                map.put(sum,i);
+            }
+        }
+        sc.close();
+        System.out.print(result);
+    }
+}
