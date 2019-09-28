@@ -1,0 +1,52 @@
+给定一个无序数组arr，其中元素可正、可负、可0。求arr所有子数组中正数与负数个数相等的最长子数组的长度。
+
+输入描述:
+第一行一个整数N，表示数组长度
+接下来一行有N个数表示数组中的数
+
+
+输出描述:
+输出一个整数表示答案
+
+
+示例1
+
+输入
+5
+1 -2 1 1 1
+
+输出
+2
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt();
+        int cnt=0;
+        int result=0;
+        Map<Integer,Integer> map=new HashMap<>((int)(n/0.75)+1);
+        map.put(0,-1);
+        for(int i=0;i<n;++i){
+            int num=sc.nextInt();
+            if(num<0){
+                --cnt;
+            }else if(num>0){
+                ++cnt;
+            }
+            Integer idx=map.get(cnt);
+            if(idx==null){
+                map.put(cnt,i);
+            }else{
+                result=Math.max(result,i-idx);
+            }
+        }
+        sc.close();
+        System.out.print(result);
+    }
+}
