@@ -46,29 +46,28 @@ public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         int n=sc.nextInt(),m=sc.nextInt(),k=sc.nextInt();
-        int[] arr1=new int[n];
-        int[] arr2=new int[m];
-        for(int i=0;i<n;++i){
+        int[] arr1=new int[n+1];
+        int[] arr2=new int[m+1];
+        arr1[0]=arr2[0]=Integer.MIN_VALUE;
+        for(int i=1;i<=n;++i){
             arr1[i]=sc.nextInt();
         }
-        for(int i=0;i<m;++i){
+        for(int i=1;i<=m;++i){
             arr2[i]=sc.nextInt();
         }
         sc.close();
-        System.out.print(n<m ? func(arr1,arr2,k) : func(arr2,arr1,k));
+        System.out.print(func(arr1,arr2,k));
     }
     
     private static int func(int[] arr1,int[] arr2,int k){
-        int low=0,high=arr1.length-1;
+        if(arr2.length<arr1.length){
+            return func(arr2,arr1,k);
+        }
+        int low=0,high=Math.min(arr1.length-1,k);
         int l1=0,l2=0,r1=0,r2=0;
-        int sumOfIdx=((k-1)>>1)<<1;
         while(low<=high){
             int c1=(low+high)>>1;
-            int c2=sumOfIdx-c1;
-            if(c2<0){
-                high=c1-1;
-                continue;
-            }
+            int c2=k-c1;
             l1 = arr1[c1];
             r1 = c1==arr1.length-1 ? Integer.MAX_VALUE : arr1[c1+1];
             l2 = arr2[c2];
@@ -81,6 +80,6 @@ public class Main{
                 break;
             }
         }
-        return ((k&1)==1) ? Math.min(l1,l2) : Math.max(l1,l2);
+        return Math.max(l1,l2);
     }
 }
