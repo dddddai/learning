@@ -1,0 +1,75 @@
+给定两个有序数组arr1和arr2，再给定一个整数k，返回来自arr1和arr2的两个数相加和最大的前k个，两个数必须分别来自两个数组
+按照降序输出
+
+
+输入描述:
+第一行三个整数N, K分别表示数组arr1, arr2的大小，以及需要询问的数
+接下来一行N个整数，表示arr1内的元素
+再接下来一行N个整数，表示arr2内的元素
+
+输出描述:
+输出K个整数表示答案
+
+
+示例1
+
+输入
+5 4
+1 2 3 4 5
+3 5 7 9 11
+
+输出
+16 15 14 14
+
+
+
+
+
+import java.util.*;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n=sc.nextInt(),k=sc.nextInt();
+        int[] arr1=new int[n],arr2=new int[n];
+        for(int i=0;i<n;++i){
+            arr1[i]=sc.nextInt();
+        }
+        for(int i=0;i<n;++i){
+            arr2[i]=sc.nextInt();
+        }
+        sc.close();
+        boolean[][] visited=new boolean[n][n];
+        Queue<Node> pq=new PriorityQueue<>(
+            n,(a,b) -> arr1[b.idx1]+arr2[b.idx2]-arr1[a.idx1]-arr2[a.idx2]);
+        pq.offer(new Node(n-1,n-1));
+        visited[n-1][n-1]=true;
+        boolean first=true;
+        while(k-->0 && !pq.isEmpty()){
+            Node node=pq.poll();
+            if(first){
+                System.out.print(arr1[node.idx1]+arr2[node.idx2]);
+                first=false;
+            }else{
+                System.out.print(" "+(arr1[node.idx1]+arr2[node.idx2]));
+            }
+            if(node.idx1>0 && !visited[node.idx1-1][node.idx2]){
+                pq.offer(new Node(node.idx1-1,node.idx2));
+                visited[node.idx1-1][node.idx2]=true;
+            }
+            if(node.idx2>0 && !visited[node.idx1][node.idx2-1]){
+                pq.offer(new Node(node.idx1,node.idx2-1));
+                visited[node.idx1][node.idx2-1]=true;
+            }
+        }
+    }
+    
+    private static class Node{
+        int idx1,idx2;
+        
+        private Node(int idx1,int idx2){
+            this.idx1=idx1;
+            this.idx2=idx2;
+        }
+    }
+}
