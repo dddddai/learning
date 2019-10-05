@@ -1,0 +1,40 @@
+给定一个非负整数，你至多可以交换一次数字中的任意两位。返回你能得到的最大值。
+
+示例 1 :
+
+输入: 2736
+输出: 7236
+解释: 交换数字2和数字7。
+示例 2 :
+
+输入: 9973
+输出: 9973
+解释: 不需要交换。
+
+
+
+
+
+class Solution {
+    public int maximumSwap(int num) {
+        char[] arr=String.valueOf(num).toCharArray();
+        int[] lastIdx=new int[10];
+        int cnt=0;
+        for(int i=arr.length-1;cnt<10 && i>0;--i){
+            if(lastIdx[arr[i]-'0']==0){
+                lastIdx[arr[i]-'0']=i;
+                ++cnt;
+            }
+        }
+        for(int i=0;i<arr.length;++i){
+            for(int n=9;n>arr[i]-'0';--n){
+                if(lastIdx[n]>i){
+                    arr[lastIdx[n]]=arr[i];
+                    arr[i]=(char)(n+'0');
+                    return Integer.valueOf(new String(arr));
+                }
+            }
+        }
+        return num;
+    }
+}
