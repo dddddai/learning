@@ -33,12 +33,11 @@ class Solution {
             while(!dq.isEmpty() && num>dq.peekLast().val){
                 node.left=dq.pollLast();
             }
-            if(!dq.isEmpty() && dq.peekLast().val>num){
+            if(!dq.isEmpty()){
                 dq.peekLast().right=node;
             }
             dq.offer(node);
         }
         return dq.peekFirst();
     }
-    
 }
