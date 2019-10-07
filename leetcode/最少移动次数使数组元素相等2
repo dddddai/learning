@@ -1,0 +1,67 @@
+给定一个非空整数数组，找到使所有数组元素相等所需的最小移动数，其中每次移动可将选定的一个元素加1或减1。
+您可以假设数组的长度最多为10000。
+
+例如:
+
+输入:
+[1,2,3]
+
+输出:
+2
+
+说明：
+只有两个动作是必要的（记得每一步仅可使其中一个元素加1或减1）： 
+
+[1,2,3]  =>  [2,2,3]  =>  [2,2,2]
+
+
+
+
+
+
+class Solution {
+    public int minMoves2(int[] nums) {
+        int median=func(nums,0,nums.length-1,(nums.length+1)>>1);
+        int result=0;
+        for(int num:nums){
+            result+=Math.abs(num-median);
+        }
+        return result;
+    }
+    
+    private int func(int[] arr,int start,int end,int k){
+        if(start>=end){
+            return arr[start];
+        }
+        int mid=(start+end)>>1;
+        int median=Math.max(Math.min(arr[start],arr[mid]),
+                            Math.min(Math.max(arr[start],arr[mid]),arr[end]));
+        if(median!=arr[start]){
+            if(median==arr[mid]){
+                arr[mid]=arr[start];
+            }else{
+                arr[end]=arr[start];
+            }
+            arr[start]=median;
+        }
+        int l=start,r=end;
+        int pivot=arr[start];
+        while(l<r){
+            while(l<r && arr[r]>=pivot){
+                --r;
+            }
+            arr[l]=arr[r];
+            while(l<r && arr[l]<pivot){
+                ++l;
+            }
+            arr[r]=arr[l];
+        }
+        arr[l]=pivot;
+        if(l>k-1){
+            return func(arr,start,l-1,k);
+        }else if(l<k-1){
+            return func(arr,l+1,end,k);
+        }
+        return pivot;
+    }
+}
