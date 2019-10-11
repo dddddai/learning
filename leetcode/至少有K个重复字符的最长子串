@@ -40,7 +40,7 @@ class Solution {
     }
     
     private int func(String s,int start,int end,int k){
-        if(start>=end){
+        if(end-start<k){
             return 0;
         }
         for(List<Integer> arr:map){
