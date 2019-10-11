@@ -26,16 +26,13 @@
 
 
 
-
-
 class Solution {
     public int maximumSum(int[] arr) {
         int maxSum=arr[0],removedMaxSum=0;
         int result=arr[0];
         for(int i=1;i<arr.length;++i){
-            int tmp=Math.max(maxSum+arr[i],arr[i]);
-            removedMaxSum=Math.max(maxSum,removedMaxSum+arr[i]);    //记录子数组删除过一个数后的最大值
-            maxSum=tmp;
+            removedMaxSum=Math.max(maxSum,removedMaxSum+arr[i]);        //记录子数组删除过一个数后的最大值
+            maxSum=Math.max(maxSum+arr[i],arr[i]);
             result=Math.max(result,Math.max(maxSum,removedMaxSum));
         }
         return result;
