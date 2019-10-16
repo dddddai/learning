@@ -1,0 +1,74 @@
+返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
+
+如果没有和至少为 K 的非空子数组，返回 -1 。
+
+ 
+
+示例 1：
+
+输入：A = [1], K = 1
+输出：1
+示例 2：
+
+输入：A = [1,2], K = 4
+输出：-1
+示例 3：
+
+输入：A = [2,-1,2], K = 3
+输出：3
+ 
+
+提示：
+
+1 <= A.length <= 50000
+-10 ^ 5 <= A[i] <= 10 ^ 5
+1 <= K <= 10 ^ 9
+
+
+
+
+
+class Solution {
+    public int shortestSubarray(int[] A, int K) {
+        List<Node> arr=new ArrayList<>(A.length+1);
+        arr.add(new Node(-1,0));
+        int result=50001;
+        int sum=0;
+        for(int i=0;i<A.length;++i){
+            sum+=A[i];
+            while(!arr.isEmpty() && sum<=arr.get(arr.size()-1).val){
+                arr.remove(arr.size()-1);
+            }
+            result=Math.min(result,i-getIdx(arr,sum-K));
+            arr.add(new Node(i,sum));
+        }
+        return result==50001 ? -1:result;
+    }
+    
+    private int getIdx(List<Node> arr,int num){
+        if(arr.isEmpty() || num<arr.get(0).val){
+            return -50001;
+        }
+        int l=0,r=arr.size()-1;
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(num<arr.get(mid).val){
+                r=mid;
+            }else if(num>arr.get(mid).val){
+                l=mid+1;
+            }else{
+                return arr.get(mid).idx;
+            }
+        }
+        return arr.get(l).val>num ? arr.get(l-1).idx : arr.get(l).idx;
+    }
+    
+    private class Node{
+        int idx,val;
+        
+        private Node(int idx,int val){
+            this.idx=idx;
+            this.val=val;
+        }
+    }
+}
