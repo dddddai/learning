@@ -32,27 +32,21 @@ public class Main{
         int[] arr=new int[n];
         List<Node> tmp=new ArrayList<>(n);
         tmp.add(new Node(-1,0));
-        int sum=0;
         int maxSum=0;
+        int sum=0;
+        int result=0;
         for(int i=0;i<n;++i){
-            arr[i]=sc.nextInt();
-            sum+=arr[i];
+            sum+=sc.nextInt();
             if(sum>maxSum){
                 maxSum=sum;
                 tmp.add(new Node(i,sum));
             }
-        }
-        sc.close();
-        sum=0;
-        int result=0;
-        for(int i=0;i<n;++i){
-            sum+=arr[i];
             result=Math.max(result,i-getIdx(tmp,sum-k));
         }
+        sc.close();
         System.out.print(result);
     }
     
-    //获得大于等于num的idx
     private static int getIdx(List<Node> tmp,int num){
         int l=0,r=tmp.size()-1;
         while(l<r){
