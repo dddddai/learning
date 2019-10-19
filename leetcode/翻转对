@@ -1,0 +1,80 @@
+给定一个数组 nums ，如果 i < j 且 nums[i] > 2*nums[j] 我们就将 (i, j) 称作一个重要翻转对。
+
+你需要返回给定数组中的重要翻转对的数量。
+
+示例 1:
+
+输入: [1,3,2,3,1]
+输出: 2
+示例 2:
+
+输入: [2,4,3,5,1]
+输出: 3
+注意:
+
+给定数组的长度不会超过50000。
+输入数组中的所有数字都在32位整数的表示范围内。
+
+
+
+
+
+class Solution {
+    public int reversePairs(int[] nums) {
+        return mergeSort(nums,new int[nums.length],0,nums.length-1);
+    }
+    
+    private int mergeSort(int[] arr,int[] tmp,int start,int end){
+        if(start>=end){
+            return 0;
+        }
+        int mid=(start+end)>>1;
+        int leftSum=mergeSort(arr,tmp,start,mid);
+        int rightSum=mergeSort(arr,tmp,mid+1,end);
+        return leftSum+rightSum+merge(arr,tmp,start,mid+1,end);
+    }
+    
+    private int merge(int[] arr,int[] tmp,int leftStart,int rightStart,int rightEnd){
+        int idx=leftStart;
+        int l=leftStart,r=rightStart;
+        int cnt=0;
+        while(l<rightStart && r<=rightEnd){
+            if(arr[l]<=arr[r]){
+                tmp[idx++]=arr[l++];
+            }else{
+                cnt+=rightStart-getIdx(arr,leftStart,rightStart-1,((long)arr[r]<<1)+1);
+                tmp[idx++]=arr[r++];
+            }
+        }
+        while(l<rightStart){
+            tmp[idx++]=arr[l++];
+        }
+        while(r<=rightEnd){
+            cnt+=rightStart-getIdx(arr,leftStart,rightStart-1,((long)arr[r]<<1)+1);
+            tmp[idx++]=arr[r++];
+        }
+        for(int i=leftStart;i<=rightEnd;++i){
+            arr[i]=tmp[i];
+        }
+        return cnt;
+    }
+    
+    private int getIdx(int[] arr,int start,int end,long target){
+        if(arr[end]<target){
+            return end+1;
+        }
+        if(arr[start]>=target){
+            return start;
+        }
+        int l=start,r=end;
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(target<=arr[mid]){
+                r=mid;
+            }else{
+                l=mid+1;
+            }
+        }
+        return l;
+    }
+}
