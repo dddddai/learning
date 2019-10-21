@@ -1,0 +1,39 @@
+给你一个有根节点的二叉树，找到它最深的叶节点的最近公共祖先。
+
+提示：
+
+给你的树中将有 1 到 1000 个节点。
+树中每个节点的值都在 1 到 1000 之间。
+
+
+
+
+
+
+class Solution {
+    private Map<TreeNode,Integer> map=new HashMap<>((int)(1000/0.75)+1);
+    
+    public TreeNode lcaDeepestLeaves(TreeNode root) {
+        int left=getDepth(root.left);
+        int right=getDepth(root.right);
+        if(left<right){
+            return lcaDeepestLeaves(root.right);
+        }else if(left>right){
+            return lcaDeepestLeaves(root.left);
+        }
+        return root;
+    }
+    
+    private int getDepth(TreeNode root){
+        if(root==null){
+            return 0;
+        }
+        Integer depth=map.get(root);
+        if(depth!=null){
+            return depth;
+        }
+        depth=1+Math.max(getDepth(root.left),getDepth(root.right));
+        map.put(root,depth);
+        return depth;
+    }
+}
