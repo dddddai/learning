@@ -73,3 +73,61 @@ public class Main{
         }
     }
 }
+
+
+
+
+
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+struct Consumer{
+    int cnt,expense;
+};
+
+bool cmp(Consumer a,Consumer b){
+	if(a.expense==b.expense){
+            return a.cnt<b.cnt;
+    }
+    return a.expense>b.expense;
+}
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    map<int,int> capacity;
+    for(int i=0;i<n;++i){
+		int idx;
+		cin>>idx;
+        ++capacity[idx];
+    }
+    vector<Consumer> group(m);
+    for(int i=0;i<m;++i){
+		cin>>group[i].cnt>>group[i].expense;
+    }
+	sort(group.begin(),group.end(),cmp);
+    long result=0;
+    for(int i=0;i<m;++i){
+        auto table=capacity.find(group[i].cnt);
+        if(table==capacity.end()){
+            table=capacity.upper_bound(group[i].cnt);
+            if(table==capacity.end()){
+                continue;
+            }
+        }
+        if(table->second==1){
+            capacity.erase(table);
+        }else{
+            --table->second;
+        }
+        result+=group[i].expense;
+        if(capacity.empty()){
+            break;
+        }
+    }
+    cout<<result;
+    return 0;
+}
