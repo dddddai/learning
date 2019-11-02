@@ -1,6 +1,6 @@
 给定一个字符串，找出不含有重复字符的最长子串的长度。
 
-python:
+
 
 class Solution(object):
     def lengthOfLongestSubstring(self, s):
@@ -14,7 +14,8 @@ class Solution(object):
             t[s[i]]=i
         return result
 
-java:
+
+
 
 import java.util.HashMap;
 
@@ -32,3 +33,24 @@ class Solution {
         return result;
     }
 }
+
+
+
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char,int> map(s.length());
+        int result=0;
+        int start=0;
+        for(int i=0;i<s.length();++i){
+            auto search=map.find(s.at(i));
+            if(search!=map.end() && search->second>=start){
+                start=search->second+1;
+            }
+            result=max(result,i-start+1);
+            map[s.at(i)]=i;
+        }
+        return result;
+    }
+};
