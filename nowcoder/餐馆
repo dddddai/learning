@@ -89,8 +89,8 @@ struct Consumer{
 };
 
 bool cmp(Consumer a,Consumer b){
-	if(a.expense==b.expense){
-            return a.cnt<b.cnt;
+    if(a.expense==b.expense){
+    	return a.cnt<b.cnt;
     }
     return a.expense>b.expense;
 }
@@ -106,9 +106,9 @@ int main(){
     }
     vector<Consumer> group(m);
     for(int i=0;i<m;++i){
-		cin>>group[i].cnt>>group[i].expense;
+	cin>>group[i].cnt>>group[i].expense;
     }
-	sort(group.begin(),group.end(),cmp);
+    sort(group.begin(),group.end(),cmp);
     long result=0;
     for(int i=0;i<m;++i){
         auto table=capacity.find(group[i].cnt);
