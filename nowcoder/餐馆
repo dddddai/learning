@@ -100,8 +100,8 @@ int main(){
     cin>>n>>m;
     map<int,int> capacity;
     for(int i=0;i<n;++i){
-		int idx;
-		cin>>idx;
+	int idx;
+	cin>>idx;
         ++capacity[idx];
     }
     vector<Consumer> group(m);
