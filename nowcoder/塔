@@ -69,3 +69,67 @@ public class Main{
         }
     }
 }
+
+
+
+
+
+#include<iostream>
+#include<queue>
+using namespace std;
+
+struct tower{
+    int height,idx;
+    
+    tower(int a,int b){
+        height=a;
+        idx=b;
+    }
+
+	bool operator < (tower t) const{
+		return height<t.height;
+	}
+
+	bool operator > (tower t) const{
+		return height>t.height;
+	}
+};
+
+int main(){
+    int n,k;
+    cin>>n>>k;
+    priority_queue<tower,vector<tower>,greater<tower>> minHeap;
+    priority_queue<tower> maxHeap;
+    queue<int> log;
+    for(int i=1;i<=n;++i){
+        int h;
+        cin>>h;
+        tower t(h,i);
+        minHeap.push(t);
+        maxHeap.push(t);
+    }
+    int cnt=0;
+    while(cnt<k){
+		if(minHeap.top().height==maxHeap.top().height){
+            break;
+        }
+        log.push(maxHeap.top().idx);
+        log.push(minHeap.top().idx);
+		tower t1(maxHeap.top().height-1,maxHeap.top().idx);
+		tower t2(minHeap.top().height+1,minHeap.top().idx);
+        maxHeap.push(t1);
+        minHeap.push(t2);
+        maxHeap.pop();
+        minHeap.pop();
+        ++cnt;
+    }
+    cout<<maxHeap.top().height-minHeap.top().height<<" "<<cnt<<endl;
+    while(!log.empty()){
+        int from=log.front();
+        log.pop();
+        int to=log.front();
+        log.pop();
+        cout<<from<<" "<<to<<endl;
+    }
+    return 0;
+}
