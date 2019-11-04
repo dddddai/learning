@@ -71,3 +71,57 @@ public class Main{
         }
     }
 }
+
+
+
+
+
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+void func(string a,string b){
+    if(a.length()<b.length()){
+        func(b,a);
+        return;
+    }
+    string result;
+    int dp[b.length()+1];
+    int last=b.length()+1;
+    for(int i=1;i<=a.length();++i){
+        int cur=b.length()+1;
+        int upperLeft=0;
+        for(int j=1;j<=b.length();++j){
+            int upper=dp[j];
+            if(a[i-1]==b[j-1]){
+                if(cur>b.length() && upperLeft+1>=dp[b.length()]){
+                    cur=j;
+                }
+                dp[j]=upperLeft+1;
+            }else{
+                dp[j]=max(upper,dp[j-1]);
+            }
+            upperLeft=upper;
+        }
+        if(dp[b.length()]>upperLeft){
+            result.push_back(a[i-1]);
+            last=cur;
+        }else if(cur<last){
+            result[result.length()-1]=a[i-1];
+            last=cur;
+        }
+    }
+    if(dp[b.length()]==0){
+        cout<<-1;
+    }else{
+        cout<<result;
+    }
+}
+
+int main(){
+    string a,b;
+    cin>>a>>b;
+    func(a,b);
+    return 0;
+}
