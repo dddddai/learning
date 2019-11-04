@@ -87,3 +87,65 @@ public class Main{
         }
     }
 }
+
+
+
+
+
+
+#include<iostream>
+#include<stack>
+using namespace std;
+
+struct mountain{
+    int height,cnt;
+    
+    mountain(int h){
+        height=h;
+        cnt=1;
+    }
+};
+
+int main(){
+    int n;
+    cin>>n;
+    stack<mountain> stk;
+    int result=0;
+    int pivot=0;
+    int arr[n];
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
+        if(arr[i]>arr[pivot]){
+            pivot=i;
+        }
+    }
+    mountain highest(arr[pivot]);
+    stk.push(highest);
+    for(int i=1;i<n;++i){
+        int idx=(pivot+i)%n;
+        while(arr[idx]>stk.top().height){
+            int cnt=stk.top().cnt;
+            stk.pop();
+            result+=(cnt-1)*cnt/2+2*cnt;
+        }
+        if(arr[idx]==stk.top().height){
+            ++stk.top().cnt;
+        }else{
+            mountain m(arr[idx]);
+            stk.push(m);
+        }
+    }
+    while(stk.size()>2){
+        int cnt=stk.top().cnt;
+        stk.pop();
+        result+=(cnt-1)*cnt/2+2*cnt;
+    }
+    if(stk.size()==2){
+        int cnt=stk.top().cnt;
+        stk.pop();
+        result+=(cnt-1)*cnt/2+(stk.top().cnt==1 ? cnt:2*cnt);
+    }
+    int cnt=stk.top().cnt;
+    result+=(cnt-1)*cnt/2;
+    cout<<result;
+}
