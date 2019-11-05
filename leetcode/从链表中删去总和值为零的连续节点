@@ -56,3 +56,34 @@ class Solution {
         return dummy.next;
     }
 }
+
+
+
+
+
+class Solution {
+public:
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        unordered_map<int,forward_list<ListNode*>> map(int(1000/0.75)+1);
+        ListNode dummy(0);
+        dummy.next=head;
+        ListNode* p=&dummy;
+        int sum=0;
+        while(p){
+            sum+=p->val;
+            auto search=map.find(sum);
+            if(search==map.end()){
+                forward_list<ListNode*> list;
+                list.push_front(p);
+                map[sum]=list;
+            }else{
+                for(ListNode* pre:search->second){
+                    pre->next=p->next;
+                }
+                search->second.push_front(p);
+            }
+            p=p->next;
+        }
+        return dummy.next;
+    }
+};
