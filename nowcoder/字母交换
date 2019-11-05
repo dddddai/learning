@@ -59,3 +59,44 @@ public class Main{
         System.out.print(result);
     }
 }
+
+
+
+
+
+
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+int main(){
+    string s;
+    int m;
+    cin>>s>>m;
+    vector<vector<int>> map;
+    map.resize(26);
+    for(int i=0;i<s.length();++i){
+        map[s[i]-'a'].push_back(i);
+    }
+    int result=1;
+    for(vector<int>& row:map){
+        vector<vector<int>> dp(row.size());
+        for(vector<int>& v:dp){
+            v.resize(row.size());
+        }
+        for(int len=2;len<=row.size();++len){
+            int cnt=1000001;
+            for(int i=0;i+len<=row.size();++i){
+                dp[i][i+len-1]=dp[i+1][i+len-2]+row[i+len-1]-row[i]-len+1;
+                cnt=min(cnt,dp[i][i+len-1]);
+            }
+            if(cnt>m){
+                break;
+            }
+            result=max(result,len);
+        }
+    }
+    cout<<result;
+    return 0;
+}
