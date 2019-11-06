@@ -37,3 +37,44 @@ class Solution {
         return depth;
     }
 }
+
+
+
+
+
+
+
+class Solution {
+private:
+    unordered_map<TreeNode*,int> map;
+    
+    int getDepth(TreeNode* root){
+        if(!root){
+            return 0;
+        }
+        auto search=map.find(root);
+        if(search!=map.end()){
+            return search->second;
+        }
+        int depth=1+max(getDepth(root->left),getDepth(root->right));
+        map[root]=depth;
+        return depth;
+    }
+    
+public:
+    Solution(){
+        map.reserve(int(1000/0.75)+1);
+    }
+    
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        int left=getDepth(root->left);
+        int right=getDepth(root->right);
+        if(left<right){
+            return lcaDeepestLeaves(root->right);
+        }else if(left>right){
+            return lcaDeepestLeaves(root->left);
+        }else{
+            return root;
+        }
+    }
+};
