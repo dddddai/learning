@@ -59,3 +59,35 @@ class Solution {
         return true;
     }
 }
+
+
+
+
+
+class Solution {
+public:
+    bool possibleBipartition(int N, vector<vector<int>>& dislikes) {
+        vector<int> group;
+        group.resize(N+1);
+        int tmp=1;
+        for(vector<int>& v:dislikes){
+            int a=v[0],b=v[1];
+            if(group[a]==0){
+                if(group[b]==0){
+                    group[a]=tmp;
+                    group[b]=tmp+1;
+                    tmp+=2;
+                }else{
+                    group[a]=(group[b]&1)==1 ? group[b]+1 : group[b]-1;
+                }
+            }else{
+                if(group[b]==0){
+                    group[b]=(group[a]&1)==1 ? group[a]+1 : group[a]-1;
+                }else if(group[a]==group[b]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
