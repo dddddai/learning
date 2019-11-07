@@ -38,3 +38,34 @@ class Solution {
         return num;
     }
 }
+
+
+
+
+
+
+class Solution {
+public:
+    int maximumSwap(int num) {
+        string s=to_string(num);
+        vector<int> lastIdx;
+        lastIdx.resize(10);
+        int cnt=0;
+        for(int i=s.length()-1;cnt<10 && i>=0;--i){
+            if(lastIdx[s[i]-'0']==0){
+                lastIdx[s[i]-'0']=i;
+                ++cnt;
+            }
+        }
+        for(int i=0;i<s.length()-1;++i){
+            for(int j=9;j>s[i]-'0';--j){
+                if(lastIdx[j]>i){
+                    s[lastIdx[j]]=s[i];
+                    s[i]=j+'0';
+                    return stoi(s);
+                }
+            }
+        }
+        return num;
+    }
+};
