@@ -78,3 +78,61 @@ public class Main{
         return -1;
     }
 }
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int bfs(vector<forward_list<int>>& graph,int n){
+    int cnt=0;
+    queue<int> q;
+    q.push(1);
+    vector<bool> visited(graph.size(),false);
+    visited[1]=true;
+    while(!q.empty()){
+        ++cnt;
+        int size=q.size();
+        for(int i=0;i<size;++i){
+            int node=q.front();
+            q.pop();
+            for(int& next:graph[node]){
+                if(visited[next]){
+                    continue;
+                }
+                if(next==n){
+                    return cnt;
+                }
+                q.push(next);
+                visited[next]=true;
+            }
+        }
+    }
+    return -1;
+}
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    vector<forward_list<int>> graph;
+    graph.resize(n+m+1);
+    for(auto& bucket:graph){
+        forward_list<int> list;
+        bucket=list;
+    }
+    for(int i=1;i<=m;++i){
+        int t;
+        cin>>t;
+        for(int j=0;j<t;++j){
+            int station;
+            cin>>station;
+            graph[station].push_front(n+i);
+            graph[n+i].push_front(station);
+        }
+    }
+    cout<<(bfs(graph,n)>>1);
+    return 0;
+}
