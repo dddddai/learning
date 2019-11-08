@@ -33,16 +33,13 @@ public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         int n=sc.nextInt(),m=sc.nextInt();
-        int[] a=new int[n];
-        for(int i=0;i<n;++i){
-            a[i]=sc.nextInt();
-        }
-        sc.close();
         TrieTree root=new TrieTree();
-        for(int num:a){
+        for(int i=0;i<n;++i){
+            int num=sc.nextInt();
+            func(root,num,m);
             TrieTree cur=root;
-            for(int i=31;i>=0;--i){
-                int digit=(num>>i)&1;
+            for(int j=31;j>=0;--j){
+                int digit=(num>>j)&1;
                 if(cur.children[digit]==null){
                     cur.children[digit]=new TrieTree();
                 }else{
@@ -51,10 +48,8 @@ public class Main{
                 cur=cur.children[digit];
             }
         }
-        for(int num:a){
-            func(root,num,m);
-        }
-        System.out.print(sum>>1);
+        sc.close();
+        System.out.print(sum);
     }
     
     private static void func(TrieTree root,int num,int m){
@@ -84,4 +79,61 @@ public class Main{
         TrieTree[] children=new TrieTree[2];
         int cnt=1;
     }
+}
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+long result=0;
+
+struct TrieTree{
+    TrieTree* children[2]={nullptr,nullptr};
+    int cnt;
+    
+    TrieTree(){
+        cnt=1;
+    }
+};
+
+void func(TrieTree* root,int num,int m){
+    TrieTree* cur=root;
+    for(int i=31;cur && i>=0;--i){
+        int x=(num>>i)&1;
+        int y=(m>>i)&1;
+        if(y==0){
+            if(cur->children[x^1]){
+                result+=cur->children[x^1]->cnt;
+            }
+            cur=cur->children[x];
+        }else{
+            cur=cur->children[x^1];
+        }
+    }
+}
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    TrieTree root;
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        func(&root,num,m);
+        TrieTree* cur=&root;
+        for(int j=31;j>=0;--j){
+            int bit=(num>>j)&1;
+            if(cur->children[bit]){
+                ++cur->children[bit]->cnt;
+            }else{
+                cur->children[bit]=new TrieTree();
+            }
+            cur=cur->children[bit];
+        }
+    }
+    cout<<result;
 }
