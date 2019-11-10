@@ -65,3 +65,45 @@ public class Main{
         System.out.print(sb);
     }
 }
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string s;
+    cin>>s;
+    vector<int> cnt(26);
+    for(char c:s){
+        ++cnt[c-'a'];
+    }
+    string result;
+    result.reserve(s.length());
+    int cur=0;
+    while(cnt[cur]==0){
+        ++cur;
+    }
+    for(char c:s){
+        if(c-'a'==cur){
+            cnt[cur]=0;
+            result.push_back(c);
+            while(cur<26 && cnt[cur]==0){
+                ++cur;
+            }
+            if(cur==26){
+                break;
+            }
+        }else{
+            if(cnt[c-'a']==1){
+                result.push_back(c);
+            }
+            --cnt[c-'a'];
+        }
+    }
+    cout<<result;
+    return 0;
+}
