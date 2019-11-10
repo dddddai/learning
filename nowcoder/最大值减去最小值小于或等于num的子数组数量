@@ -68,3 +68,49 @@ public class Main{
         System.out.print(result);
     }
 }
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,num;
+    cin>>n>>num;
+    vector<int> arr(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
+    }
+    deque<int> dq1;
+    deque<int> dq2;
+    int i=0,j=0;
+    int result=0;
+    while(i<n){
+        while(j<n){
+            while(!dq1.empty() && arr[j]>=arr[dq1.back()]){
+                dq1.pop_back();
+            }
+            dq1.push_back(j);
+            while(!dq2.empty() && arr[j]<=arr[dq2.back()]){
+                dq2.pop_back();
+            }
+            dq2.push_back(j);
+            if(arr[dq1.front()]-arr[dq2.front()]>num){
+                break;
+            }
+            ++j;
+        }
+        result+=j-i;
+        if(dq1.front()==i){
+            dq1.pop_front();
+        }
+        if(dq2.front()==i){
+            dq2.pop_front();
+        }
+        ++i;
+    }
+    cout<<result;
+    return 0;
+}
