@@ -98,3 +98,55 @@ public class Main{
         }
     }
 }
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string str,match;
+    cin>>str>>match;
+    unordered_map<char,int> map((int)(match.length()/0.75)+1);
+    for(int i=0;i<match.length();++i){
+        map[match[i]]=i;
+    }
+    bool first=true;
+    for(int i=0;i+match.length()<=str.length();){
+        bool flag=true;
+        for(int j=0;j<match.length();++j){
+            if(str[i+j]!=match[j]){
+                flag=false;
+                if(i+match.length()<str.length()){
+                    auto search=map.find(str[i+match.length()]);
+                    if(search==map.end()){
+                        i+=match.length()+1;
+                    }else{
+                        i+=match.length()-search->second;
+                    }
+                }else{
+                    if(first){
+                        cout<<-1;
+                    }
+                    return 0;
+                }
+                break;
+            }
+        }
+        if(flag){
+            if(first){
+                cout<<i++;
+                first=false;
+            }else{
+                cout<<" "+to_string(i++);
+            }
+        }
+    }
+    if(first){
+        cout<<-1;
+    }
+    return 0;
+}
