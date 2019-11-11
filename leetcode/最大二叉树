@@ -41,3 +41,26 @@ class Solution {
         return dq.peekFirst();
     }
 }
+
+
+
+
+
+class Solution {
+public:
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        list<TreeNode*> dq;
+        for(int num:nums){
+            TreeNode* node=new TreeNode(num);
+            while(!dq.empty() && num>dq.back()->val){
+                node->left=dq.back();
+                dq.pop_back();
+            }
+            if(!dq.empty()){
+                dq.back()->right=node;
+            }
+            dq.push_back(node);
+        }
+        return dq.front();
+    }
+};
