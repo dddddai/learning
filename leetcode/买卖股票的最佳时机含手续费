@@ -29,3 +29,20 @@ class Solution {
         return profit;
     }
 }
+
+
+
+
+
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+        int profit=0,hold=-prices[0];
+        for(int p:prices){
+            profit=max(profit,hold+p-fee);
+            hold=max(hold,profit-p);
+        }
+        return profit;
+    }
+};
