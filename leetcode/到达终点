@@ -61,3 +61,41 @@ class Solution {
         return false;
     }
 }
+
+
+
+
+
+
+class Solution {
+public:
+    bool reachingPoints(int sx, int sy, int tx, int ty) {
+        while(1){
+            if(sx==tx && sy==ty){
+                return sy==ty;
+            }
+            if(tx<sx || ty<sy){
+                return false;
+            }
+            if(tx>ty){
+                if(sx<ty){
+                    tx%=ty;
+                }else{
+                    if((tx-sx)%ty!=0 || tx==sx){
+                        return false;
+                    }
+                    tx=sx;
+                }
+            }else{
+                if(sy<tx){
+                    ty%=tx;
+                }else{
+                    if((ty-sy)%tx!=0 || ty==sy){
+                        return false;
+                    }
+                    ty=sy;
+                }
+            }
+        }
+    }
+};
