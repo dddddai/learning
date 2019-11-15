@@ -30,7 +30,54 @@ Sample Output
 3 2 1.5 1 2.9 0 3.2
 
 
-有一个测试样例没有通过！！
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int k1;
+    cin>>k1;
+    map<int,double> m;
+    for(int i=0;i<k1;++i){
+        int n;
+        cin>>n;
+        double a;
+        cin>>a;
+        m.insert({n,a});
+    }
+    int k2;
+    cin>>k2;
+    for(int i=0;i<k2;++i){
+        int n;
+        cin>>n;
+        double a;
+        cin>>a;
+        auto search=m.find(n);
+        if(search==m.end()){
+            m.insert({n,a});
+        }else{
+            m[n]+=a;
+        }
+    }
+    int cnt=0;
+    for(auto& x:m){
+        if(x.second!=0){
+            ++cnt;
+        }
+    }
+    cout<<cnt;
+    for(auto p=m.rbegin();p!=m.rend();++p){
+        if(p->second!=0){
+            printf(" %d %.1f",p->first,p->second);
+        }
+    }
+    return 0;
+}
+
+
+
 
 
 import java.util.*;
