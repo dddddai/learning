@@ -40,6 +40,66 @@ Dijkstra算法！！！
 
 
 
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,m,c1,c2;
+    cin>>n>>m>>c1>>c2;
+    vector<int> teamNum(n);
+    for(int i=0;i<n;++i){
+        cin>>teamNum[i];
+    }
+    vector<vector<int>> graph(n,vector<int>(n,-1));
+    for(int i=0;i<m;++i){
+        int a,b,l;
+        cin>>a>>b>>l;
+        graph[a][b]=graph[b][a]=l;
+    }
+    vector<int> dist(n,INT_MAX);
+    dist[c1]=0;
+    vector<bool> visited(n,false);
+    vector<int> teamGathered(n);
+    teamGathered[c1]=teamNum[c1];
+    vector<int> differentPath(n);
+    differentPath[c1]=1;
+    while(1){
+        int next;
+        int minDist=INT_MAX;
+        for(int i=0;i<n;++i){
+            if(!visited[i] && dist[i]<minDist){
+                minDist=dist[i];
+                next=i;
+            }
+        }
+        if(next==c2){
+            break;
+        }
+        visited[next]=true;
+        for(int i=0;i<n;++i){
+            if(!visited[i] && graph[next][i]!=-1){
+                if(minDist+graph[next][i]<dist[i]){
+                    dist[i]=minDist+graph[next][i];
+                    teamGathered[i]=teamGathered[next]+teamNum[i];
+                    differentPath[i]=differentPath[next];
+                }else if(minDist+graph[next][i]==dist[i]){
+                    teamGathered[i]=max(teamGathered[i],teamGathered[next]+teamNum[i]);
+                    differentPath[i]+=differentPath[next];
+                }
+            } 
+        }
+    }
+    cout<<differentPath[c2]<<" "<<teamGathered[c2];
+    return 0;
+}
+
+
+
+
+
+
 import java.util.*;
 
 public class Main{
