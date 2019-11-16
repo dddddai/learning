@@ -30,70 +30,50 @@ Sample Output:
 10 1 4
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main {
-    public static void main(String args[]) throws Exception{
-        Reader.init(System.in);
-        int len=Reader.nextInt();
-        int max=-1,curSum=0;
-        int start=0,end=0;
-        int curStart=0;
-        boolean flag=true;
-        int[] arr=new int[len];
-        for(int i=0;i<len;++i){
-            arr[i]=Reader.nextInt();
-            if(flag){
-              flag=arr[i]<0;
-            }
-            curSum+=arr[i];
-            if(curSum<0) {
-                curSum = 0;
-                curStart = i + 1;
-            }else if(curSum>max){
-                max=curSum;
-                start=curStart;
-                end=i;
-            }
-        }
-        if(flag){
-            System.out.print("0 "+arr[0]+" "+arr[len-1]);
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int k;
+    cin>>k;
+    int first;
+    cin>>first;
+    int curSum=first;
+    int maxSum=first;
+    int a=first,start=first,end=first;
+    for(int i=1;i<k-1;++i){
+        int num;
+        cin>>num;
+        if(curSum<0){
+            curSum=a=num;
         }else{
-            System.out.print(max+" "+arr[start]+" "+arr[end]);
+            curSum+=num;
+        }
+        if(curSum>maxSum){
+            maxSum=curSum;
+            start=a;
+            end=num;
         }
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    int last;
+    cin>>last;
+    if(curSum<0){
+        curSum=a=last;
+    }else{
+        curSum+=last;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            //TODO add check for eof if necessary
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
+    if(curSum>maxSum){
+        maxSum=curSum;
+        start=a;
+        end=last;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    if(maxSum<0){
+        cout<<"0 "<<first<<" "<<last;
+    }else{
+        cout<<maxSum<<" "<<start<<" "<<end;
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
