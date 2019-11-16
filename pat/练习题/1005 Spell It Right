@@ -20,21 +20,22 @@ one five
 
 
 
-import java.util.*;
 
-public class Main {
-    public static void main(String args[]){
-        Scanner sc=new Scanner(System.in);
-        String num=sc.nextLine();
-        int sum=0;
-        for(int i=0;i<num.length();++i){
-            sum+=num.charAt(i)-48;
-        }
-        String[] map=new String[]{"zero","one","two","three","four","five","six","seven","eight","nine"};
-        String s=String.valueOf(sum);
-        System.out.print(map[s.charAt(0)-48]);
-        for(int i=1;i<s.length();++i){
-            System.out.print(" "+map[s.charAt(i)-48]);
-        }
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string s;
+    cin>>s;
+    int sum=0;
+    for(char c:s){
+        sum+=c-'0';
     }
+    string book[10]={"zero","one","two","three","four","five","six","seven","eight","nine"};
+    string result=to_string(sum);
+    cout<<book[result[0]-'0'];
+    for(int i=1;i<result.length();++i){
+        cout<<" "<<book[result[i]-'0'];
+    }
+    return 0;
 }
