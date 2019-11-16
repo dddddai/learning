@@ -28,48 +28,47 @@ Sample Output
 
 
 
-import java.util.*;
 
-public class Main {
-    public static void main(String args[]){
-        Solution s=new Solution();
-        s.func();
-        System.out.print(s.level[0]);         //要在主方法里print，否则通不过
-        for(int i=1;i<=s.maxDepth;++i){
-            System.out.print(" "+s.level[i]);
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    if(n==1){
+        cout<<1;
+        return 0;
+    }
+    vector<forward_list<int>> children(100);
+    for(int i=0;i<m;++i){
+        int idx,k;
+        cin>>idx>>k;
+        for(int j=0;j<k;++j){
+            int child;
+            cin>>child;
+            children[idx].push_front(child);
         }
     }
-}
-
-class Solution{
-    public int[] level=new int[100];
-    public List<List<Integer>> children;
-    public int maxDepth=-1;
-
-    public void func(){
-        Scanner sc=new Scanner(System.in);
-        int nodeNum=sc.nextInt();
-        int nonLeafNum=sc.nextInt();
-        children=new ArrayList<>(nodeNum+1);
-        for(int i=0;i<=nodeNum;++i){
-            children.add(new ArrayList<>());
-        }
-        for(int i=0;i<nonLeafNum;++i){
-            int idx=sc.nextInt(),cnt=sc.nextInt();
-            for(int j=0;j<cnt;++j){
-                children.get(idx).add(sc.nextInt());
+    queue<int> q;
+    for(int child:children[1]){
+        q.push(child);
+    }
+    cout<<0;
+    while(!q.empty()){
+        int size=q.size();
+        int cnt=0;
+        for(int i=0;i<size;++i){
+            int idx=q.front();
+            q.pop();
+            if(children[idx].empty()){
+                ++cnt;
+            }else{
+                for(int child:children[idx]){
+                    q.push(child);
+                }
             }
         }
-        dfs(1,0);
+        cout<<" "<<cnt;
     }
-    private void dfs(int idx,int depth){
-        if(children.get(idx).isEmpty()){
-            ++level[depth];
-            maxDepth=Math.max(maxDepth,depth);
-            return;
-        }
-        for(int i=0;i<children.get(idx).size();++i){
-            dfs(children.get(idx).get(i),depth+1);
-        }
-    }
+    return 0;
 }
