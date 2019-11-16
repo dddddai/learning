@@ -28,24 +28,26 @@ Sample Output:
 
 
 
-import java.util.*;
- 
- public class Main {
-    public static void main(String args[]) throws Exception{
-        Scanner sc=new Scanner(System.in);
-        int cnt=sc.nextInt();
-        int t0=cnt*5;
-        int cur=0;
-        int t1=0;
-        for(int i=0;i<cnt;++i){
-            int nxt=sc.nextInt();
-            if(nxt>cur){
-                t1+=(nxt-cur)*6;
-            }else{
-                t1+=(cur-nxt)*4;
-            }
-            cur=nxt;
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    int cur=0;
+    int result=0;
+    for(int i=0;i<n;++i){
+        int next;
+        cin>>next;
+        if(next>cur){
+            result+=(next-cur)*6;
+        }else{
+            result+=(cur-next)*4;
         }
-        System.out.print(t0+t1);
+        cur=next;
+        result+=5;
     }
+    cout<<result;
+    return 0;
 }
