@@ -57,98 +57,74 @@ Sample Output
 Sorry
 
 
-3个样例没通过！why？？
 
 
-import java.text.DecimalFormat;
-import java.util.*;
-import java.io.*;
+注意只要是在17:00前开始的都算！！！并不是一定要在17:00前完成才算！！！
+否则有3个测试样例不通过！！！
 
-public class Main{
-    static class Node{
-        int popTime=0,endTime=0;
-        Queue<Integer> queue=new LinkedList<>();
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,m,k,q;
+    cin>>n>>m>>k>>q;
+    vector<int> t(k+1);
+    for(int i=1;i<=k;++i){
+        cin>>t[i];
     }
-    private static DecimalFormat df=new DecimalFormat("00");
-
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),m=Reader.nextInt(),k=Reader.nextInt(),q=Reader.nextInt();
-        int[] time=new int[k+1];
-        for(int i=1;i<=k;++i){
-            time[i]=Reader.nextInt();
+    vector<queue<int>> windows(n);
+    vector<int> nextServiceTime(n,480);
+    auto cmp=[&nextServiceTime](int a,int b){
+        if(nextServiceTime[a]==nextServiceTime[b]){
+            return a>b;
         }
-        int[] result=new int[k+1];
-        Node[] arr=new Node[n+1];
-        for(int i=1;i<=n;++i){
-            arr[i]=new Node();
+        return nextServiceTime[a]>nextServiceTime[b];
+    };
+    vector<int> tmp;
+    tmp.reserve(n);
+    priority_queue<int,vector<int>,decltype(cmp)> pq(cmp,tmp);
+    vector<int> finishTime(k+1);
+    int idx=1;
+    for(int j=0;j<n && idx<=k;++j){
+        windows[j].push(idx);
+        nextServiceTime[j]+=t[idx++];
+    }
+    for(int i=1;i<m && idx<=k;++i){
+        for(int j=0;j<n && idx<=k;++j){
+            windows[j].push(idx++);
         }
-        int idx=1;
-        for(int i=1;i<=m;++i){
-            for(int j=1;j<=n;++j){
-                arr[j].queue.offer(time[idx]);
-                arr[j].endTime+=time[idx];
-                if(i==1){
-                    arr[j].popTime=arr[j].endTime;
-                }
-                result[idx++]=arr[j].endTime;
+    }
+    for(int i=0;i<n;++i){
+        pq.push(i);
+    }
+    while(idx<=k){
+        int chosen=pq.top();
+        pq.pop();
+        finishTime[windows[chosen].front()]=nextServiceTime[chosen];
+        windows[chosen].pop();
+        windows[chosen].push(idx++);
+        nextServiceTime[chosen]+=t[windows[chosen].front()];
+        pq.push(chosen);
+    }
+    for(int i=0;i<n;++i){
+        while(!windows[i].empty()){
+            finishTime[windows[i].front()]=nextServiceTime[i];
+            windows[i].pop();
+            if(!windows[i].empty()){
+                nextServiceTime[i]+=t[windows[i].front()];
             }
         }
-        while(idx<=k){
-            int nxt=1,min=arr[1].popTime;
-            for(int i=2;i<=n;++i){
-                if(arr[i].popTime<min){
-                    min=arr[i].popTime;
-                    nxt=i;
-                }
-            }
-            arr[nxt].queue.poll();
-            arr[nxt].popTime+=arr[nxt].queue.peek();
-            arr[nxt].queue.offer(time[idx]);
-            arr[nxt].endTime+=time[idx];
-            result[idx++]=arr[nxt].endTime;
+    }
+    for(int i=0;i<q;++i){
+        cin>>idx;
+        if(finishTime[idx]-t[idx]>=17*60){
+            cout<<"Sorry"<<endl;
+            continue;
         }
-        for(int i=0;i<q;++i){
-            int id=Reader.nextInt();
-            if(result[id]-time[id]>=540){
-                System.out.println("Sorry");
-            }else{
-                int minutes=result[id]+480;
-                System.out.println(df.format(minutes/60)+":"+df.format(minutes%60));
-            }
-        }
+        int hour=finishTime[idx]/60,minutes=finishTime[idx]%60;
+        printf("%02d:%02d\n",hour,minutes);
     }
-}
-
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
