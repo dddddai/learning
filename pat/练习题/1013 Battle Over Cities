@@ -34,81 +34,52 @@ Sample Output
 0
 
 
+
 思路：求去除了某个节点后剩余部分的连通分量数，需修的道路数=连通分量数-1
 
 一个测试样例超时
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int m=Reader.nextInt();
-        int k=Reader.nextInt();
-        boolean[][] graph=new boolean[n+1][n+1];
-        boolean[] visited=new boolean[n+1];
-        for(int i=0;i<m;++i){
-            int a=Reader.nextInt(),b=Reader.nextInt();
-            graph[a][b]=graph[b][a]=true;
-        }
-        for(int i=0;i<k;++k){
-            Arrays.fill(visited,false);
-            int start=Reader.nextInt();
-            visited[start]=true;
-            int cnt=0;
-            for(int j=1;j<=n;++j){
-                if(!visited[j]){
-                    dfs(graph,j,visited);
-                    ++cnt;
-                }
-            }
-            System.out.println(cnt-1);
-        }
-    }
-    private static void dfs(boolean[][] graph,int i,boolean[] visited){
-        visited[i]=true;
-        for(int j=1;j<graph.length;++j){
-            if(graph[i][j] && !visited[j]){
-                dfs(graph,j,visited);
-            }
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<bool> visited;
+
+void dfs(vector<forward_list<int>>& graph,int idx){
+    visited[idx]=true;
+    for(int next:graph[idx]){
+        if(!visited[next]){
+            dfs(graph,next);
         }
     }
 }
 
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int n,m,k;
+    cin>>n>>m>>k;
+    vector<forward_list<int>> graph(n+1);
+    for(int i=0;i<m;++i){
+        int a,b;
+        cin>>a>>b;
+        graph[a].push_front(b);
+        graph[b].push_front(a);
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            //TODO add check for eof if necessary
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    visited.resize(n+1);
+    for(int i=0;i<k;++i){
+        fill(visited.begin(),visited.end(),false);
+        int occupied;
+        cin>>occupied;
+        visited[occupied]=true;
+        int cnt=0;
+        for(int j=1;j<=n;++j){
+            if(!visited[j]){
+                dfs(graph,j);
+                ++cnt;
+            }
         }
-        return tokenizer.nextToken();
+        cout<<cnt-1<<endl;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
