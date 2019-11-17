@@ -94,3 +94,35 @@ class Solution {
         return result;
     }
 }
+
+
+
+
+
+
+class Solution {
+public:
+    int scheduleCourse(vector<vector<int>>& courses) {
+        sort(courses.begin(),courses.end(),[](vector<int>& a,vector<int>& b){
+           return a[1]<b[1];
+        });
+        vector<int> tmp;
+        tmp.reserve(courses.size());
+        priority_queue<int> pq(less<int>(),tmp);
+        int now=0;
+        int result=0;
+        pq.push(-1);
+        for(vector<int>& row:courses){
+            if(now+row[0]<=row[1]){
+                ++result;
+                now+=row[0];
+                pq.push(row[0]);
+            }else if(row[0]<pq.top() && now-pq.top()+row[0]<=row[1]){
+                now+=row[0]-pq.top();
+                pq.pop();
+                pq.push(row[0]);
+            }
+        }
+        return result;
+    }
+};
