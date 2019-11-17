@@ -28,62 +28,48 @@ Yes
 No
 
 
-又有一个样例没通过QAQ
+
+注意1不是质数！！！
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n;
-        while((n=Reader.nextInt())>=0){
-            int radix=Reader.nextInt();
-            int reversed=Integer.parseInt(new StringBuilder(Integer.toString(n,radix)).reverse().toString(),radix);
-            System.out.println(isPrime(n) && isPrime(reversed)?"Yes":"No");
+#include<bits/stdc++.h>
+using namespace std;
+
+bool isPrime(int num){
+    if(num==1){
+        return false;
+    }
+    for(int i=2;i*i<=num;++i){
+        if(num%i==0){
+            return false;
         }
     }
-    private static boolean isPrime(int num){
-        double boundary=Math.sqrt(num);
-        for(int i=2;i<=boundary;++i){
-            if(num%i==0){
-                return false;
-            }
-        }
-        return true;
-    }
+    return true;
 }
 
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+string convert(int num,int radix){
+    string result;
+    while(num){
+        result.push_back(num%radix+'0');
+        num/=radix;
     }
+    return result;
+}
 
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+int main(){
+    int n,d;
+    while(cin>>n>>d){
+        string converted=convert(n,d);
+        if(!isPrime(n)){
+            cout<<"No"<<endl;
+            continue;
         }
-        return tokenizer.nextToken();
+        int reversed=0;
+        for(int i=0;i<converted.length();++i){
+            reversed+=(converted[i]-'0')*pow(d,converted.length()-1-i);
+        }
+        cout<<(isPrime(reversed) ? "Yes":"No")<<endl;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
