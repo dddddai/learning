@@ -72,13 +72,12 @@ Total amount: $638.80
 
 
 
-2个测试样例不通过QAQ why
+注意没有有效bill的用户不能输出！！！巨坑
 
 
 
 
 
-#include<bits/stdc++.h>
 using namespace std;
 
 struct Record{
@@ -116,9 +115,21 @@ int main(){
         sort(arr.begin(),arr.end(),[](Record a,Record b){
             return a.time<b.time;
         });
-        cout<<p.first<<" "<<monthMap[p.first]<<endl;
         int idx=0,end=arr.size()-1;
         int sum=0;
+        bool valid=false;
+        while(idx<end){
+            if(arr[idx].onLine && !arr[idx+1].onLine){
+                valid=true;
+                break;
+            }
+            ++idx;
+        }
+        if(!valid){
+            continue;
+        }
+        cout<<p.first<<" "<<monthMap[p.first]<<endl;
+        idx=0;
         while(idx<end){
             if(!(arr[idx].onLine && !arr[idx+1].onLine)){
                 ++idx;
