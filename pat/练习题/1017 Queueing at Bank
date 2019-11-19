@@ -1,0 +1,102 @@
+Suppose a bank has K windows open for service.
+There is a yellow line in front of the windows which devides the waiting area into two parts.
+All the customers have to wait in line behind the yellow line,
+until it is his/her turn to be served and there is a window available.
+It is assumed that no window can be occupied by a single customer for more than 1 hour.
+
+Now given the arriving time T and the processing time P of each customer, 
+you are supposed to tell the average waiting time of all the customers.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains 2 numbers:
+N (<=10000) – the total number of customers, and K (<=100) – the number of windows.
+Then N lines follow, each contains 2 times: HH:MM:SS – the arriving time, 
+and P – the processing time in minutes of a customer. Here HH is in the range [00, 23],
+MM and SS are both in [00, 59]. It is assumed that no two customers arrives at the same time.
+
+Notice that the bank opens from 08:00 to 17:00. 
+Anyone arrives early will have to wait in line till 08:00, 
+and anyone comes too late (at or after 17:00:01) will not be served nor counted into the average.
+
+Output Specification:
+
+For each test case, print in one line the average waiting time of all the customers, 
+in minutes and accurate up to 1 decimal place.
+
+
+Sample Input:
+7 3
+07:55:00 16
+17:00:01 2
+07:59:59 15
+08:01:00 60
+08:00:00 30
+08:00:02 2
+08:03:00 10
+
+Sample Output:
+8.2
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Customer{
+    int arrivingTime,processingTime;
+    
+    Customer(int a,int p){
+        arrivingTime=a;
+        processingTime=p;
+    }
+};
+
+int main(){
+    int n,k;
+    cin>>n>>k;
+    vector<int> v;
+    v.reserve(k);
+    auto cmp=[](int a,int b){return a>b;};
+    priority_queue<int,vector<int>,decltype(cmp)> pq(cmp,v);
+    vector<Customer> arr;
+    arr.reserve(n);
+    for(int i=0;i<n;++i){
+        string s;
+        int processingTime;
+        cin>>s>>processingTime;
+        int arrivingTime=stoi(s.substr(0,2))*3600+stoi(s.substr(3,2))*60+stoi(s.substr(6,2));
+        if(arrivingTime<=17*3600){
+            Customer c(arrivingTime,min(processingTime,60)*60);
+            arr.push_back(c);
+        }
+    }
+    if(arr.empty()){
+        cout<<"0.0";
+        return 0;
+    }
+    sort(arr.begin(),arr.end(),[](Customer a ,Customer b){return a.arrivingTime<b.arrivingTime;});
+    int sum=0;
+    for(Customer c:arr){
+        if(c.arrivingTime>=8*3600){
+            break;
+        }else{
+            sum+=8*3600-c.arrivingTime;
+        }
+    }
+    int i;
+    for(i=0;i<k && i<arr.size();++i){
+        pq.push(max(8*3600,arr[i].arrivingTime)+arr[i].processingTime);
+    }
+    while(i<arr.size()){
+        int finishTime=pq.top();
+        pq.pop();
+        sum+=max(0,finishTime-arr[i].arrivingTime);
+        pq.push(max(finishTime,arr[i].arrivingTime)+arr[i++].processingTime);
+    }
+    printf("%.1f",sum/60.0/arr.size());
+    return 0;
+}
