@@ -40,71 +40,31 @@ No
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),radix=Reader.nextInt();
-        List<Integer> converted=convert(n,radix);
-        int l=0,r=converted.size()-1;
-        while(l<=r){
-            if(converted.get(l++)!=converted.get(r--)){
-                System.out.println("No");
-                System.out.print(converted.get(converted.size()-1));
-                for(int i=converted.size()-2;i>=0;--i){
-                    System.out.print(" "+converted.get(i));
-                }
-                return;
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,base;
+    cin>>n>>base;
+    vector<int> arr;
+    while(n){
+        arr.push_back(n%base);
+        n/=base;
+    }
+    int l=0,r=arr.size()-1;
+    while(l<r){
+        if(arr[l++]!=arr[r--]){
+            cout<<"No"<<endl<<arr[arr.size()-1];
+            for(int i=arr.size()-2;i>=0;--i){
+                cout<<" "<<arr[i];
             }
-        }
-        System.out.println("Yes");
-        System.out.print(converted.get(converted.size()-1));
-        for(int i=converted.size()-2;i>=0;--i){
-            System.out.print(" "+converted.get(i));
+            return 0;
         }
     }
-
-    private static List<Integer> convert(int n,int radix){
-        List<Integer> result=new ArrayList<>();
-        while(n!=0){
-            result.add(n%radix);
-            n/=radix;
-        }
-        return result;
+    cout<<"Yes"<<endl<<arr[arr.size()-1];
+    for(int i=arr.size()-2;i>=0;--i){
+        cout<<" "<<arr[i];
     }
-}
-
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
