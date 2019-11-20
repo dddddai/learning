@@ -1,0 +1,43 @@
+给定一个字符串s，找到其中最长的回文子序列。可以假设s的最大长度为1000。
+
+示例 1:
+输入:
+
+"bbbab"
+输出:
+
+4
+一个可能的最长回文子序列为 "bbbb"。
+
+示例 2:
+输入:
+
+"cbbd"
+输出:
+
+2
+一个可能的最长回文子序列为 "bb"。
+
+
+
+
+
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        int[] dp=new int[s.length()];
+        for(int i=s.length()-1;i>=0;--i){
+            int bottomLeft=dp[i];
+            dp[i]=1;
+            for(int j=i+1;j<s.length();++j){
+                int bottom=dp[j];
+                if(s.charAt(i)==s.charAt(j)){
+                    dp[j]=bottomLeft+2;
+                }else{
+                    dp[j]=Math.max(bottom,dp[j-1]);
+                }
+                bottomLeft=bottom;
+            }
+        }
+        return dp[s.length()-1];
+    }
+}
