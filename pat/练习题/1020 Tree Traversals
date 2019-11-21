@@ -27,76 +27,45 @@ Sample Output:
 
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    private static int[] post,in;
-    private static SortedMap<Integer,Integer> result;
+map<int,int> m;
+vector<int> post;
+unordered_map<int,int> in;
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        post=new int[n];
-        in=new int[n];
-        result=new TreeMap<>();
-        int i;
-        for (i=0;i<n;++i){
-            post[i]=Reader.nextInt();
-        }
-        for (i=0;i<n;++i){
-            in[i]=Reader.nextInt();
-        }
-        func(n-1,0,n-1,1);
-        Iterator<Integer> it=result.values().iterator();
-        System.out.print(it.next());
-        while(it.hasNext()){
-            System.out.print(" "+it.next());
-        }
+void func(int k,int start,int end,int idx){
+    if(start>end){
+        return;
     }
-    private static void func(int root,int start,int end,int idx){
-        if(start>end){
-            return;
-        }
-        int j=start;
-        while (j<=end && post[root]!=in[j]){
-            ++j;
-        }
-        result.put(idx,post[root]);
-        func(root-1-end+j,start,j-1,idx<<1);
-        func(root-1,j+1,end,(idx<<1)+1);
-    }
+    int i=in[post[k]];
+    m.insert({idx,post[k]});
+    func(k-1-end+i,start,i-1,idx<<1);
+    func(k-1,i+1,end,(idx<<1)+1);
 }
 
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int n;
+    cin>>n;
+    post.resize(n);
+    in.reserve(int(n/0.75)+1);
+    for(int i=0;i<n;++i){
+        cin>>post[i];
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    for(int i=0;i<n;++i){
+        int val;
+        cin>>val;
+        in.insert({val,i});
+    }
+    func(n-1,0,n-1,1);
+    bool flag=true;
+    for(auto p:m){
+        if(flag){
+            cout<<p.second;
+            flag=false;
+        }else{
+            cout<<" "<<p.second;
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
