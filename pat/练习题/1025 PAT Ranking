@@ -48,98 +48,71 @@ Sample Output:
 1234567890011 9 2 4
 
 
-一个没通过一个超时QAQ
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int sum=0;
-        int[] localRank=new int[n+1];
-        int[] lastLocal=new int[n+1];
-        int[] localNxt=new int[n+1];
-        Arrays.fill(localNxt,1);
-        PriorityQueue<Testee> pq=new PriorityQueue<>(100);
-        for (int i=1;i<=n;++i){
-            int cnt=Reader.nextInt();
-            sum+=cnt;
-            for (int j=0;j<cnt;++j){
-                pq.add(new Testee(i,Reader.next(),Reader.nextInt()));
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Testee{
+    string id;
+    int score,location,localRank;
+
+    Testee(string i,int s,int l){
+        id=i;
+        score=s;
+        location=l;
+    }
+};
+
+int main(){
+    int n;
+    cin>>n;
+    auto cmp=[](Testee a,Testee b){
+        if(a.score==b.score){
+            return a.id<b.id;
+        }
+        return a.score>b.score;
+    };
+    vector<vector<Testee>> arr(n+1);
+    vector<Testee> ranklist;
+    ranklist.reserve(30000);
+    int sum=0;
+    for(int i=1;i<=n;++i){
+        int k;
+        cin>>k;
+        sum+=k;
+        arr[i].reserve(k);
+        for(int j=0;j<k;++j){
+            string id;
+            int score;
+            cin>>id>>score;
+            Testee t(id,score,i);
+            arr[i].push_back(t);
+        }
+        sort(arr[i].begin(),arr[i].end(),cmp);
+        for(int j=0;j<k;++j){
+            if(j && arr[i][j].score==arr[i][j-1].score){
+                arr[i][j].localRank=arr[i][j-1].localRank;
+            }else{
+                arr[i][j].localRank=j+1;
             }
-        }
-        System.out.println(sum);
-        int rank=1;
-        int last=pq.peek().score;
-        int nxt=1;
-        while (!pq.isEmpty()){
-            Testee tmp=pq.poll();
-            if (last!=tmp.score){
-                rank=nxt;
-            }
-
-            if (lastLocal[tmp.location]!=tmp.score){
-                localRank[tmp.location]=localNxt[tmp.location];
-            }
-
-            System.out.println(tmp.number+" "+rank+" "+tmp.location+" "+localRank[tmp.location]);
-            last=lastLocal[tmp.location]=tmp.score;
-            ++nxt;
-            ++localNxt[tmp.location];
+            ranklist.push_back(arr[i][j]);
         }
     }
-}
-class Testee implements Comparable<Testee>{
-    public int location;
-    public String number;
-    public Integer score;
-
-    public Testee(int location,String number, Integer score) {
-        this.location=location;
-        this.number = number;
-        this.score = score;
-    }
-
-    @Override
-    public int compareTo(Testee o) {
-        if (score.equals(o.score)){
-            return number.compareTo(o.number);
+    sort(ranklist.begin(),ranklist.end(),cmp);
+    cout<<sum<<endl;
+    int last=1;
+    for(int i=0;i<ranklist.size();++i){
+        int rank;
+        if(i && ranklist[i].score==ranklist[i-1].score){
+            rank=last;
+        }else{
+            rank=i+1;
+            last=rank;
         }
-        return o.score.compareTo(score);
+        cout<<ranklist[i].id<<" "<<rank<<" "<<ranklist[i].location<<" "<<ranklist[i].localRank<<endl;
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
