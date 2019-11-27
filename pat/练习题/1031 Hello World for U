@@ -28,57 +28,25 @@ lowor
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        String s=Reader.next();
-        int l=0,r=s.length()-1;
-        int row=(s.length()+2)/3-1;
-        int cnt=row+(s.length()+2)%3-1;
-        StringBuilder space=new StringBuilder();
-        for (int i=0;i<cnt;++i){
-            space.append(" ");
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string s;
+    cin>>s;
+    int row=(s.length()+2)/3;
+    int cnt=s.length()-row*2;
+    int l=0,r=s.length()-1;
+    for(int i=0;i<row-1;++i){
+        cout<<s[l++];
+        for(int j=0;j<cnt;++j){
+            cout<<" ";
         }
-        for (int i=0;i<row;++i){
-            System.out.print(s.charAt(l++));
-            System.out.print(space);
-            System.out.println(s.charAt(r--));
-        }
-        System.out.println(s.substring(l,r+1));
+        cout<<s[r--]<<endl;
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    for(int i=l;i<=r;++i){
+        cout<<s[i];
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
