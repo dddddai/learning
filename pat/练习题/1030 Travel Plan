@@ -34,96 +34,72 @@ Sample Output
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),m=Reader.nextInt(),s=Reader.nextInt(),d=Reader.nextInt();
-        int[][] graph=new int[n][n];
-        int[][] costs=new int[m][m];
-        boolean[] visited=new boolean[n];
-        int[] dist=new int[n];
-        int[] path=new int[n];
-        int[] minCosts=new int[n];
-        Arrays.fill(dist,Integer.MAX_VALUE);
-        Arrays.fill(minCosts,Integer.MAX_VALUE);
-        for (int i=0;i<m;++i){
-            int a=Reader.nextInt(),b=Reader.nextInt(),distance=Reader.nextInt(),cost=Reader.nextInt();
-            graph[a][b]=graph[b][a]=distance;
-            costs[a][b]=costs[b][a]=cost;
-        }
-        dist[s]=minCosts[s]=0;
-        while (true){
-            int idx=-1,minDist=Integer.MAX_VALUE;
-            for (int i=0;i<n;++i){
-                if (!visited[i] && dist[i]<minDist){
-                    idx=i;
-                    minDist=dist[i];
-                }
-            }
-            if (idx==-1){
-                break;
-            }
-            visited[idx]=true;
-            for (int i=0;i<n;++i){
-                if (graph[idx][i]!=0 && !visited[i]) {
-                    if (dist[idx] + graph[idx][i] < dist[i]) {
-                        dist[i] = dist[idx] + graph[idx][i];
-                        minCosts[i] = minCosts[idx] + costs[idx][i];
-                        path[i] = idx;
-                    } else if (dist[idx] + graph[idx][i] == dist[i]){
-                        if (minCosts[idx]+costs[idx][i]<minCosts[i]){
-                            minCosts[i]=minCosts[idx]+costs[idx][i];
-                            path[i]=idx;
-                        }
-                    }
-                }
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Edge{
+    int dist,cost,next;
+
+    Edge(int d,int c,int n){
+        dist=d;
+        cost=c;
+        next=n;
+    }
+};
+
+int main(){
+    int n,m,s,d;
+    cin>>n>>m>>s>>d;
+    vector<forward_list<Edge>> graph(n);
+    for(int i=0;i<m;++i){
+        int a,b,dist,cost;
+        cin>>a>>b>>dist>>cost;
+        Edge e1(dist,cost,b);
+        Edge e2(dist,cost,a);
+        graph[a].push_front(e1);
+        graph[b].push_front(e2);
+    }
+    vector<int> dist(n,INT_MAX);
+    vector<int> cost(n,INT_MAX);
+    vector<bool> visited(n);
+    vector<int> pre(n);
+    dist[s]=cost[s]=0;
+    while(1){
+        int minDist=INT_MAX;
+        int idx=-1;
+        for(int i=0;i<n;++i){
+            if(!visited[i] && dist[i]<minDist){
+                idx=i;
+                minDist=dist[i];
             }
         }
-        StringBuilder tmp=new StringBuilder();
-        int cur=d;
-        while (cur!=s){
-            tmp.append(" ");
-            tmp.append(cur);
-            cur=path[cur];
+        if(idx==d){
+            break;
         }
-        tmp.append(" ");
-        System.out.print(s);
-        System.out.print(tmp.reverse());
-        System.out.print(dist[d]+" "+minCosts[d]);
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+        visited[idx]=true;
+        for(Edge e:graph[idx]){
+            if(minDist+e.dist<dist[e.next]){
+                dist[e.next]=dist[idx]+e.dist;
+                cost[e.next]=cost[idx]+e.cost;
+                pre[e.next]=idx;
+            }else if(minDist+e.dist==dist[e.next] && cost[idx]+e.cost<cost[e.next]){
+                cost[e.next]=cost[idx]+e.cost;
+                pre[e.next]=idx;
+            }
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    forward_list<int> path;
+    int cur=d;
+    while(pre[cur]!=s){
+        path.push_front(pre[cur]);
+        cur=pre[cur];
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
+    cout<<s;
+    for(int x:path){
+        cout<<" "<<x;
     }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<" "<<d<<" "<<dist[d]<<" "<<cost[d];
+    return 0;
 }
