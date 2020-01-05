@@ -48,103 +48,75 @@ The maximum travel distance = 1200.00
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        double capacity=Reader.nextDouble(),target=Reader.nextDouble(),avg=Reader.nextDouble();
-        int n=Reader.nextInt();
-        Station[] arr=new Station[n+1];
-        for(int i=0;i<n;++i){
-            arr[i]=new Station(Reader.nextDouble(),Reader.nextDouble());
-        }
-        arr[n]=new Station(-1,target);    //终点也作为一个station，方便处理
-        Arrays.sort(arr);
-        if(arr[0].dist!=0){
-            System.out.print("The maximum travel distance = 0.00");
-            return;
-        }
-        int idx=0;
-        double maxDist=capacity*avg;
-        double cost=0,position=0,leftDist=0,curPrice=arr[0].price;
-        while(position<target){
-            boolean flag=true;
-            double minPrice=Double.MAX_VALUE,minPriceDist=-1;
-            for(int i=idx+1;i<=n && arr[i].dist<=position+maxDist;++i){
-                if(arr[i].price<curPrice){
-                    cost+=(arr[i].dist-position-leftDist)/avg*curPrice;
-                    leftDist=0;
-                    curPrice=arr[i].price;
-                    position=arr[i].dist;
-                    flag=false;
-                    idx=i;
-                    break;
-                }
-                if(arr[i].price<minPrice){
-                    minPrice=arr[i].price;
-                    minPriceDist=arr[i].dist;
-                    idx=i;
-                }
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Station{
+    double price,dist;
+
+    Station(double p,double d){
+        price=p;
+        dist=d;
+    }
+};
+
+int main(){
+    double capacity,target,avg;
+    int n;
+    cin>>capacity>>target>>avg>>n;
+    vector<Station> arr;
+    arr.reserve(n+1);
+    for(int i=0;i<n;++i){
+        double price,dist;
+        cin>>price>>dist;
+        Station s(price,dist);
+        arr.push_back(s);
+    }
+    Station s(-1,target);
+    arr.push_back(s);
+    sort(arr.begin(),arr.end(),[](Station a,Station b){return a.dist<b.dist;});
+    if(arr[0].dist){
+        cout<<"The maximum travel distance = 0.00";
+        return 0;
+    }
+    int idx=0;
+    double curPrice=arr[0].price;
+    double position=0;
+    double leftDist=0;
+    double maxDist=avg*capacity;
+    double cost=0;
+    while(position<target){
+        bool flag=true;
+        double minPrice=999999,minPriceDist=-1;
+        for(int i=idx+1;i<=n && position+maxDist>=arr[i].dist;++i){
+            if(arr[i].price<curPrice){
+                flag=false;
+                cost+=(arr[i].dist-position-leftDist)/avg*curPrice;
+                leftDist=0;
+                curPrice=arr[i].price;
+                position=arr[i].dist;
+                idx=i;
+                break;
             }
-            if(flag){
-                if(minPriceDist==-1){
-                    System.out.format("The maximum travel distance = %.2f",position+maxDist);
-                    return;
-                }
-                cost+=(capacity-leftDist/avg)*curPrice;
-                leftDist=maxDist-minPriceDist+position;
-                curPrice=minPrice;
-                position=minPriceDist;
+            if(arr[i].price<minPrice){
+                minPrice=arr[i].price;
+                minPriceDist=arr[i].dist;
+                idx=i;
             }
         }
-        System.out.format("%.2f",cost);
-    }
-}
-class Station implements Comparable<Station>{
-    double price;
-    Double dist;
-
-    public Station(double price,Double dist) {
-        this.price = price;
-        this.dist = dist;
-    }
-
-    @Override
-    public int compareTo(Station o) {
-        return dist.compareTo(o.dist);
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+        if(flag){
+            if(minPriceDist==-1){
+                printf("The maximum travel distance = %.2f",position+maxDist);
+                return 0;
+            }
+            cost+=(maxDist-leftDist)/avg*curPrice;
+            leftDist=maxDist-minPriceDist+position;
+            curPrice=minPrice;
+            position=minPriceDist;
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    printf("%.2f",cost);
+    return 0;
 }
