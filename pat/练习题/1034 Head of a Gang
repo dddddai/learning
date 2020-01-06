@@ -58,108 +58,77 @@ Sample Output 2:
 
 
 
-一个样例不通过
 
+#include<bits/stdc++.h>
+using namespace std;
 
+struct Edge{
+    string pointTo;
+    int time;
 
-import java.util.*;
-import java.io.*;
-
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),k=Reader.nextInt();
-        List<Gang> gangs=new ArrayList<>(8);
-
-        for(int i=0;i<n;++i){
-            Gang theGang=null;
-            String a=Reader.next(),b=Reader.next();
-            int time=Reader.nextInt();
-            for(Gang g:gangs){
-                if(g.members.containsKey(a) || g.members.containsKey(b)){
-                    theGang=g;
-                    break;
-                }
-            }
-            if(theGang==null){
-                theGang=new Gang(0,new HashMap<>(n>>1));
-                gangs.add(theGang);
-            }
-            theGang.totalWeight+=time;
-            theGang.members.put(a,theGang.members.getOrDefault(a,0)+time);
-            theGang.members.put(b,theGang.members.getOrDefault(b,0)+time);
-        }
-        for(int i=0;i<gangs.size();){
-            if(gangs.get(i).totalWeight<=k || gangs.get(i).members.size()<=2){
-                gangs.set(i,gangs.get(gangs.size()-1));
-                gangs.remove(gangs.size()-1);
-            }else{
-                ++i;
-            }
-        }
-        System.out.println(gangs.size());
-
-        for(Gang g:gangs){
-            int maxWeight=0;
-            String name=null;
-            for(Map.Entry<String,Integer> e:g.members.entrySet()){
-                if(e.getValue()>maxWeight){
-                    maxWeight=e.getValue();
-                    name=e.getKey();
-                }
-            }
-            g.headName = name;
-        }
-        Collections.sort(gangs);
-        for(Gang g:gangs){
-            System.out.println(g.headName+" "+g.members.size());
-        }
+    Edge(string p,int t){
+        pointTo=p;
+        time=t;
     }
-}
-class Gang implements Comparable<Gang>{
-    int totalWeight;
-    Map<String,Integer> members;
-    String headName;
+};
 
-    public Gang(int totalWeight, Map<String, Integer> members) {
-        this.totalWeight = totalWeight;
-        this.members = members;
-    }
+unordered_map<string,forward_list<Edge>> m;
+unordered_set<string> visited;
+unordered_map<string,int> weight;
+map<string,int> gang;
+string head;
+int maxWeight;
+int size;
 
-    @Override
-    public int compareTo(Gang o) {
-        return headName.compareTo(o.headName);
+int dfs(string key){
+    if(visited.find(key)!=visited.end()){
+        return 0;
     }
+    int result=0;
+    visited.insert(key);
+    ++size;
+    if(weight[key]>maxWeight){
+        maxWeight=weight[key];
+        head=key;
+    }
+    for(Edge e:m[key]){
+        result+=e.time+dfs(e.pointTo);
+    }
+    return result;
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int n,k;
+    cin>>n>>k;
+    m.reserve(int(n/0.75)+1);
+    weight.reserve(int(n/0.75)+1);
+    for(int i=0;i<n;++i){
+        string a,b;
+        int time;
+        cin>>a>>b>>time;
+        Edge e1(b,time);
+        Edge e2(a,time);
+        m[a].push_front(e1);
+        m[b].push_front(e2);
+        weight[a]+=time;
+        weight[b]+=time;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    visited.reserve(int(n/0.75)+1);
+    int cnt=0;
+    for(auto& p:m){
+        maxWeight=-1;
+        size=0;
+        int total=dfs(p.first);
+        if(total/2>k && size>2){
+            ++cnt;
+            gang[head]=size;
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    cout<<cnt<<endl;
+    if(cnt){
+        for(auto p:gang){
+            cout<<p.first<<" "<<p.second<<endl;
+        }
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
