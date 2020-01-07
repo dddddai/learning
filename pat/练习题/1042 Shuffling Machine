@@ -1,6 +1,7 @@
 Shuffling is a procedure used to randomize a deck of playing cards. 
 Because standard shuffling techniques are seen as weak, and in order to avoid “inside jobs” 
-where employees collaborate with gamblers by performing inadequate shuffles, many casinos employ automatic shuffling machines.
+where employees collaborate with gamblers by performing inadequate shuffles, 
+many casinos employ automatic shuffling machines.
 Your task is to simulate a shuffling machine.
 
 The machine shuffles a deck of 54 cards according to a given random order and repeats for a given number of times.
@@ -36,60 +37,45 @@ S7 C11 C10 C12 S1 H7 H8 H9 D8 D9 S11 S12 S13 D10 D11 D12 S3 S4 S6 S10 H1 H2 C13 
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int k=Reader.nextInt();
-        int[] tmp=new int[55],order=new int[55],result=new int[55];
-        for(int i=1;i<=54;++i){
-            order[i]=Reader.nextInt();
-            result[i]=i;
-        }
-        for(int i=0;i<k;++i){
-            System.arraycopy(result,1,tmp,1,54);
-            for(int j=1;j<=54;++j){
-                result[order[j]]=tmp[j];
-            }
-        }
-        char[] arr={'S','H','C','D','J'};
-        System.out.format("%c%d",arr[--result[1]/13],result[1]%13+1);
-        for(int i=2;i<=54;++i){
-            System.out.format(" %c%d",arr[--result[i]/13],result[i]%13+1);
-        }
+#include<bits/stdc++.h>
+using namespace std;
+
+void shuffle(vector<string>& deck,vector<int>& order){
+    vector<string> tmp(deck);
+    for(int i=1;i<=54;++i){
+        deck[order[i]]=tmp[i];
     }
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int k;
+    cin>>k;
+    vector<string> deck(55);
+    for(int i=1;i<=13;++i){
+        deck[i]="S"+to_string(i);
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
+    for(int i=1;i<=13;++i){
+        deck[13+i]="H"+to_string(i);
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    for(int i=1;i<=13;++i){
+        deck[26+i]="C"+to_string(i);
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
+    for(int i=1;i<=13;++i){
+        deck[39+i]="D"+to_string(i);
     }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
+    deck[53]="J1";
+    deck[54]="J2";
+    vector<int> order(55);
+    for(int i=1;i<=54;++i){
+        cin>>order[i];
     }
+    for(int i=0;i<k;++i){
+        shuffle(deck,order);
+    }
+    cout<<deck[1];
+    for(int i=2;i<=54;++i){
+        cout<<" "<<deck[i];
+    }
+    return 0;
 }
