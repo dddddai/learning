@@ -27,60 +27,26 @@ Sample Output 2:
 None
 
 
-两个样例超时
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int[] freq=new int[10001];
-        int[] nums=new int[n];
-        for (int i=0;i<n;++i){
-            int num=Reader.nextInt();
-            nums[i]=num;
-            ++freq[num];
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    unordered_map<int,int> m(int(n/0.75)+1);
+    vector<int> arr(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
+        ++m[arr[i]];
+    }
+    for(int num:arr){
+        if(m[num]==1){
+            cout<<num;
+            return 0;
         }
-        for (int i=0;i<n;++i){
-            if (freq[nums[i]]==1){
-                System.out.println(nums[i]);
-                return;
-            }
-        }
-        System.out.println("None");
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<"None";
+    return 0;
 }
