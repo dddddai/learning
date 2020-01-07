@@ -41,67 +41,38 @@ NA
 
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int max=0,min=100;
-        String femaleName,femaleId,maleName,maleId;
-        femaleName=femaleId=maleName=maleId=null;
-        for(int i=0;i<n;++i){
-            String name=Reader.next(),gender=Reader.next(),id=Reader.next();
-            int grade=Reader.nextInt();
-            if(gender.equals("M")){
-                if(grade<min){
-                    min=grade;
-                    maleName=name;
-                    maleId=id;
-                }
-            }else{
-                if(grade>max){
-                    max=grade;
-                    femaleName=name;
-                    femaleId=id;
-                }
+int main(){
+    int n;
+    cin>>n;
+    string mname,fname,mid,fid;
+    int mgrade=101;
+    int fgrade=-1;
+    for(int i=0;i<n;++i){
+        string name,id;
+        char gender;
+        int grade;
+        cin>>name>>gender>>id>>grade;
+        if(gender=='M'){
+            if(grade<mgrade){
+                mgrade=grade;
+                mname=name;
+                mid=id;
             }
+        }else if(grade>fgrade){
+            fgrade=grade;
+            fname=name;
+            fid=id;
         }
-        System.out.println(femaleId==null ? "Absent":femaleName+" "+femaleId);
-        System.out.println(maleId==null ? "Absent":maleName+" "+maleId);
-        System.out.println(femaleId==null || maleId==null ? "NA":max-min);
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    if(mgrade==101){
+        cout<<fname<<" "<<fid<<endl<<"Absent"<<endl<<"NA";
+    }else if(fgrade==-1){
+        cout<<"Absent"<<endl<<mname<<" "<<mid<<endl<<"NA";
+    }else{
+        cout<<fname<<" "<<fid<<endl<<mname<<" "<<mid<<endl<<fgrade-mgrade;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
