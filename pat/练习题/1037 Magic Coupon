@@ -35,66 +35,55 @@ Sample Output:
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int nc=Reader.nextInt();
-        int[] coupons=new int[nc];
-        for(int i=0;i<nc;++i){
-            coupons[i]=Reader.nextInt();
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<int> pos_coupon;
+    vector<int> neg_coupon;
+    vector<int> pos_product;
+    vector<int> neg_product;
+    pos_coupon.reserve(n);
+    neg_coupon.reserve(n);
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        if(num>0){
+            pos_coupon.push_back(num);
+        }else{
+            neg_coupon.push_back(num);
         }
-        int np=Reader.nextInt();
-        int[] values=new int[np];
-        for(int i=0;i<np;++i){
-            values[i]=Reader.nextInt();
+    }
+    int m;
+    cin>>m;
+    pos_product.reserve(m);
+    neg_product.reserve(m);
+    for(int i=0;i<m;++i){
+        int num;
+        cin>>num;
+        if(num>0){
+            pos_product.push_back(num);
+        }else{
+            neg_product.push_back(num);
         }
-        Arrays.sort(coupons);
-        Arrays.sort(values);
-        int i=0,j=0;
-        int result=0;
-        while(i<nc && j<np && coupons[i]<0 && values[j]<0){
-            result+=coupons[i++]*values[j++];
-        }
-        i=nc-1;
-        j=np-1;
-        while(i>=0 && j>=0 && coupons[i]>0 && values[j]>0){
-            result+=coupons[i--]*values[j--];
-        }
-        System.out.println(result);
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    sort(pos_coupon.begin(),pos_coupon.end(),greater<int>());
+    sort(neg_coupon.begin(),neg_coupon.end());
+    sort(pos_product.begin(),pos_product.end(),greater<int>());
+    sort(neg_product.begin(),neg_product.end());
+    n=min(pos_coupon.size(),pos_product.size());
+    m=min(neg_coupon.size(),neg_product.size());
+    long result=0;
+    for(int i=0;i<n;++i){
+        result+=pos_coupon[i]*pos_product[i];
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
+    for(int i=0;i<m;++i){
+        result+=neg_coupon[i]*neg_product[i];
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<result;
+    return 0;
 }
