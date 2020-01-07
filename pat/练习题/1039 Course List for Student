@@ -1,4 +1,5 @@
-Zhejiang University has 40000 students and provides 2500 courses.Now given the student name lists of all the courses, 
+Zhejiang University has 40000 students and provides 2500 courses.
+Now given the student name lists of all the courses, 
 you are supposed to output the registered course list for each studentwho comes for a query.
 
 Input Specification:
@@ -6,8 +7,9 @@ Input Specification:
 Each input file contains one test case. For each case, the first line contains 2 positive integers:
 N (<=40000), the number of students who look for their course lists, and K (<=2500), the total number of courses. 
 Then the student name lists are given for the courses (numbered from 1 to K) in the following format: 
-for each course i, first the course index i and the number of registered students Ni (<= 200) are given in a line. 
-Then in the next line, Ni student names are given. A student name consists of 3 capital English letters plus a one-digit number.
+for each course i, first the course index i and the number of registered students Ni (<= 200) are given in a line.
+Then in the next line, Ni student names are given. 
+A student name consists of 3 capital English letters plus a one-digit number.
 Finally the last line contains the N names of students who come for a query. 
 All the names and numbers in a line are separated by a space.
 
@@ -15,7 +17,8 @@ Output Specification:
 
 For each test case, print your results in N lines. Each line corresponds to one student, in the following format: 
 first print the student’s name, then the total number of registered courses of that student, 
-and finally the indices of the courses in increasing order. The query results must be printed in the same order as input. 
+and finally the indices of the courses in increasing order. 
+The query results must be printed in the same order as input. 
 All the data in a line must be separated by a space, with no extra space at the end of the line.
 
 
@@ -47,71 +50,38 @@ LOR6 4 1 2 4 5
 NON9 0
 
 
-一个样例内存超限
 
 
-import java.util.*;
-import java.io.*;
+用cin会超时，要用scanf！！！wtf？！
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),k=Reader.nextInt();
-        Map<String,List<Integer>> map=new HashMap<>(n);
-        for(int i=0;i<k;++i){
-            int idx=Reader.nextInt(),cnt=Reader.nextInt();
-            for(int j=0;j<cnt;++j){
-                String name=Reader.next();
-                map.putIfAbsent(name,new ArrayList<>(k));
-                map.get(name).add(idx);
-            }
-        }
-        for(int i=0;i<n;++i){
-            String name=Reader.next();
-            List<Integer> courses=map.get(name);
-            System.out.print(name+" ");
-            if(courses==null){
-                System.out.println(0);
-                continue;
-            }
-            Collections.sort(courses);
-            System.out.print(courses.size());
-            for(int idx:courses){
-                System.out.print(" "+idx);
-            }
-            System.out.println();
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,k;
+    cin>>n>>k;
+    unordered_map<string,vector<int>> m(int(n/0.75)+1);
+    for(int i=0;i<k;++i){
+        int idx,cnt;
+        scanf("%d %d",&idx,&cnt);
+        for(int j=0;j<cnt;++j){
+            string name;
+            cin>>name;
+            m[name].push_back(idx);
         }
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    for(int i=0;i<n;++i){
+        string name;
+        cin>>name;
+        vector<int>* v=&m[name];
+        sort(v->begin(),v->end());
+        cout<<name<<" "<<v->size();
+        for(int idx:*v){
+            cout<<" "<<idx;
         }
-        return tokenizer.nextToken();
+        cout<<endl;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
