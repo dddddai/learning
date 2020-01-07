@@ -18,35 +18,33 @@ Sample Output:
 
 
 
-import java.util.*;
+懒得写manacher
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Scanner sc=new Scanner(System.in);
-        char[] arr=sc.nextLine().toCharArray();
-        StringBuilder s=new StringBuilder();
-        s.append('#');
-        for(char c:arr){
-            s.append(c);
-            s.append('#');
+
+#include<bits/stdc++.h>
+using namespace std;
+
+bool isSymmetric(string s,int start,int end){
+    int l=start,r=end;
+    while(l<r){
+        if(s[l++]!=s[r--]){
+            return false;
         }
-        int maxLen=0,boundary=0,axis=0;
-        int[] r=new int[s.length()];
-        for(int i=0;i<s.length();++i){
-            if(i<boundary) {
-                r[i] = Math.min(r[(axis << 1) - i], boundary - i + 1);
-            }else{
-                r[i]=1;
-            }
-            while(i+r[i]<s.length() && i-r[i]>=0 && s.charAt(i+r[i])==s.charAt(i-r[i])){
-                ++r[i];
-            }
-            maxLen=Math.max(maxLen,r[i]-1);
-            if(i+r[i]-1>boundary){
-                boundary=i+r[i]-1;
-                axis=i;
-            }
-        }
-        System.out.print(maxLen);
     }
+    return true;
+}
+
+int main(){
+    string s;
+    getline(cin,s);
+    int result=1;
+    for(int l=0;l<s.length()-1;++l){
+        for(int r=l+1;r<s.length();++r){
+            if(isSymmetric(s,l,r)){
+                result=max(result,r-l+1);
+            }
+        }
+    }
+    cout<<result;
+    return 0;
 }
