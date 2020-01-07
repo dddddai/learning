@@ -18,7 +18,7 @@ Sample Output:
 
 
 
-懒得写manacher
+懒得写manacher，暴力就完事了嗷
 
 
 #include<bits/stdc++.h>
