@@ -19,65 +19,34 @@ Sample Output:
 22932132143287
 
 
-一个样例超时
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        List<String> arr=new ArrayList<>(n);
-        int i;
-        for(i=0;i<n;++i){
-            arr.add(Reader.next());
-        }
-        Collections.sort(arr, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return (o1+o2).compareTo((o2+o1));
-            }
-        });
-        String result=String.join("",arr);
-        for(i=0;i<result.length() && result.charAt(i)=='0';++i);
-        if(i==result.length()){
-            System.out.print(0);
-        }else {
-            System.out.print(result.substring(i));
-        }
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<string> arr(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    sort(arr.begin(),arr.end(),[](string a,string b){
+        return stol(a+b)<stol(b+a);
+    });
+    string result="";
+    for(string s:arr){
+        result+=s;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
+    int idx=0;
+    while(idx<result.length() && result[idx]=='0'){
+        ++idx;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    if(idx==result.length()){
+        cout<<0;
+    }else{
+        cout<<result.substr(idx);
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
