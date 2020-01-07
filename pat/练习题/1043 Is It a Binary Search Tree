@@ -48,96 +48,69 @@ NO
 
 
 
-import java.util.*;
-import java.io.*;
+思路参考
+https://github.com/dddddai/learning/blob/master/nowcoder/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97
 
 
-public class Main{
-    private static List<Integer> post;
-    private static int[] pre;
-    private static boolean isMirror;
+#include<bits/stdc++.h>
+using namespace std;
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        post=new ArrayList<>(n);
-        pre=new int[n];
-        for(int i=0;i<n;++i){
-            pre[i]=Reader.nextInt();
+vector<int> post;
+bool isMirror=false;
+
+void getPost(vector<int>& pre,int rootIdx,int end){
+    if(rootIdx>=end){
+        return;
+    }
+    int idx=rootIdx+1;
+    int right;
+    if(isMirror){
+        while(idx<end && pre[idx]>=pre[rootIdx]){
+            ++idx;
         }
-        getPost(0,n);
-        if(post.size()!=n){
-            isMirror=true;
-            post.clear();
-            getPost(0,n);
-        }
-        if(post.size()==n){
-            System.out.println("YES");
-            System.out.print(post.get(0));
-            for(int i=1;i<n;++i){
-                System.out.print(" "+post.get(i));
+        right=idx;
+        while(idx<end){
+            if(pre[idx++]>=pre[rootIdx]){
+                return;
             }
-        }else{
-            System.out.println("NO");
+        }
+    }else{
+        while(idx<end && pre[idx]<pre[rootIdx]){
+            ++idx;
+        }
+        right=idx;
+        while(idx<end){
+            if(pre[idx++]<pre[rootIdx]){
+                return;
+            }
         }
     }
-    private static void getPost(int root,int end){
-        if(root>=end){
-            return;
-        }
-        int l=root+1,r=end-1;
-        if(isMirror){
-            while(l<end && pre[root]<=pre[l]){
-                ++l;
-            }
-            while(r>root && pre[root]>pre[r]){
-                --r;
-            }
-        }else{
-            while(l<end && pre[root]>pre[l]){
-                ++l;
-            }
-            while(r>root && pre[root]<=pre[r]){
-                --r;
-            }
-        }
-        if(l!=r+1){
-            return;
-        }
-        getPost(root+1,l);
-        getPost(l,end);
-        post.add(pre[root]);
-    }
+    getPost(pre,rootIdx+1,right);
+    getPost(pre,right,end);
+    post.push_back(pre[rootIdx]);
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int n;
+    cin>>n;
+    vector<int> pre(n);
+    post.reserve(n);
+    for(int i=0;i<n;++i){
+        cin>>pre[i];
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    getPost(pre,0,n);
+    if(post.size()<n){
+        isMirror=true;
+        getPost(pre,0,n);
+    }
+    if(post.size()==n){
+        cout<<"YES"<<endl;
+        cout<<post[0];
+        for(int i=1;i<n;++i){
+            cout<<" "<<post[i];
         }
-        return tokenizer.nextToken();
+    }else{
+        cout<<"NO";
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
