@@ -38,81 +38,45 @@ Sample Output:
 
 
 
-记录favorite order的顺序，从第三行中筛选出favorite order中的值，用数组存放对应的顺序
-问题就转化为了求最长不递减子序列
+#include<bits/stdc++.h>
+using namespace std;
 
-
-import java.util.*;
-import java.io.*;
-
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int m=Reader.nextInt();
-        int[] idxOfColor=new int[n+1];
-        for(int i=1;i<=m;++i){
-            int color=Reader.nextInt();
-            idxOfColor[color]=i;
+int main(){
+    int n;
+    cin>>n;
+    cin>>n;
+    unordered_map<int,int> order(int(n/0.75)+1);
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        order[num]=i;
+    }
+    int m;
+    cin>>m;
+    vector<int> arr;
+    arr.reserve(m);
+    for(int i=0;i<m;++i){
+        int color;
+        cin>>color;
+        if(order.find(color)==order.end()){
+            continue;
         }
-        int len=Reader.nextInt();
-        int[] stripe=new int[len];
-        int size=0;
-        for(int i=0;i<len;++i){
-            int color=Reader.nextInt();
-            if(idxOfColor[color]!=0){
-                stripe[size++]=idxOfColor[color];
-            }
-        }
-        List<Integer> result=new ArrayList<>();
-        for(int i=0;i<size;++i){
-            int l=0,r=result.size()-1;
-            while(l<=r){
-                int mid=(l+r)>>1;
-                if(stripe[i]<result.get(mid)){
-                    r=mid-1;
-                }else{
-                    l=mid+1;
-                }
-            }
-            if(l>=result.size()){
-                result.add(stripe[i]);
+        int l=0;
+        int r=arr.size()-1;
+        while(l<=r){
+            int mid=(l+r)>>1;
+            if(order[color]>=order[arr[mid]]){
+                l=mid+1;
             }else{
-                result.set(l,stripe[i]);
+                r=mid-1;
             }
         }
-        System.out.print(result.size());
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+        if(l==arr.size()){
+            arr.push_back(color);
+        }else{
+            arr[l]=color;
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<arr.size();
+    return 0;
 }
