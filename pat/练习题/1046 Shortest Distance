@@ -7,11 +7,13 @@ Each input file contains one test case. For each case, the first line contains a
 followed by N integer distances D1 D2 … DN, where Di is the distance between the i-th and the (i+1)-st exits, 
 and DN is between the N-th and the 1st exits. All the numbers in a line are separated by a space. 
 The second line gives a positive integer M (<=104), with M lines follow, each contains a pair of exit numbers, 
-provided that the exits are numbered from 1 to N. It is guaranteed that the total round trip distance is no more than 107.
+provided that the exits are numbered from 1 to N. 
+It is guaranteed that the total round trip distance is no more than 107.
 
 Output Specification:
 
-For each test case, print your results in M lines, each contains the shortest distance between the corresponding given pair of exits.
+For each test case, print your results in M lines, 
+each contains the shortest distance between the corresponding given pair of exits.
 
 Sample Input:
 5 1 2 4 14 9
@@ -25,59 +27,33 @@ Sample Output:
 7
 
 
-一个样例超时
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int[] dist=new int[n+1];
-        int sum=0;
-        for(int i=1;i<=n;++i){
-            dist[i]=sum;
-            sum+=Reader.nextInt();
+int main(){
+    int n;
+    cin>>n;
+    vector<int> arr(n+1);
+    int sum=0;
+    for(int i=1;i<=n;++i){
+        int num;
+        cin>>num;
+        sum+=num;
+        arr[i]=sum;
+    }
+    int m;
+    cin>>m;
+    for(int i=0;i<m;++i){
+        int a,b;
+        cin>>a>>b;
+        if(b<a){
+            int tmp=a;
+            a=b;
+            b=tmp;
         }
-        int k=Reader.nextInt();
-        for(int i=0;i<k;++i){
-            int a=Reader.nextInt(),b=Reader.nextInt();
-            int tmp=Math.abs(dist[a]-dist[b]);
-            System.out.println(Math.min(tmp,sum-tmp));
-        }
+        cout<<min(arr[b-1]-arr[a-1],sum-arr[b-1]+arr[a-1])<<endl;
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
