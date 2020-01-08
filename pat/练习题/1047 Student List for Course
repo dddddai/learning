@@ -1,19 +1,23 @@
 Zhejiang University has 40000 students and provides 2500 courses. 
-Now given the registered course list of each student, you are supposed to output the student name lists of all the courses.
+Now given the registered course list of each student, 
+you are supposed to output the student name lists of all the courses.
 
 Input Specification:
 
 Each input file contains one test case. For each case, the first line contains 2 numbers:
 N (<=40000), the total number of students, and K (<=2500), the total number of courses. 
 Then N lines follow, each contains a student’s name (3 capital English letters plus a one-digit number), 
-a positive number C (<=20) which is the number of courses that this student has registered, and then followed by C course numbers. 
+a positive number C (<=20) which is the number of courses that this student has registered, 
+and then followed by C course numbers. 
 For the sake of simplicity, the courses are numbered from 1 to K.
 
 Output Specification:
 
 For each test case, print the student name lists of all the courses in increasing order of the course numbers. 
-For each course, first print in one line the course number and the number of registered students, separated by a space. 
+For each course, first print in one line the course number and the number of registered students,
+separated by a space. 
 Then output the students’ names in alphabetical order. Each name occupies a line.
+
 
 Sample Input:
 10 5
@@ -65,65 +69,39 @@ ZOE1
 
 
 
-一个错误一个超时
+
+又双叒叕因为cin和cout超时，瞎jb改成scanf和printf
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        Reader.init(System.in);
-        int n=Reader.nextInt(),k=Reader.nextInt();
-        List<String>[] map=new ArrayList[k+1];
-        for(int i=0;i<n;++i){
-            String name=Reader.next();
-            int cnt=Reader.nextInt();
-            for(int j=0;j<cnt;++j){
-                int course=Reader.nextInt();
-                if(map[course]==null){
-                    map[course]=new ArrayList<>(n);
-                }
-                map[course].add(name);
-            }
-        }
-        for(int i=1;i<=k;++i){
-            List<String> students=map[i];
-            Collections.sort(students);
-            System.out.println(i+" "+students.size());
-            students.forEach(System.out::println);
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,k;
+    cin>>n>>k;
+    vector<vector<string>> arr(k+1);
+    for(auto& row:arr){
+        row.reserve(n>>1);
+    }
+    for(int i=0;i<n;++i){
+        char name[4];
+        int c;
+        scanf("%s",name);
+        scanf("%d",&c);
+        string s(name);
+        for(int j=0;j<c;++j){
+            int idx;
+            scanf("%d",&idx);
+            arr[idx].push_back(s);
         }
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    for(int i=1;i<=k;++i){
+        printf("%d %d\n",i,arr[i].size());
+        sort(arr[i].begin(),arr[i].end());
+        for(string s:arr[i]){
+            printf("%s\n",s.data());
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
