@@ -51,87 +51,48 @@ Sample Output 2:
 
 
 
-一个样例超时
+
+用cin又超时了...改成scanf
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),amount=Reader.nextInt();
-        int[] diamonds=new int[n+1];
-        for(int i=1;i<=n;++i){
-            diamonds[i]=Reader.nextInt();
+int main(){
+    int n,m;
+    cin>>n>>m;
+    map<int,int,greater<int>> mp;
+    int sum=0;
+    vector<pair<int,int>> result;
+    mp[0]=0;
+    for(int i=1;i<=n;++i){
+        int num;
+        scanf("%d",&num);
+        sum+=num;
+        auto search=mp.find(sum-m);
+        if(search!=mp.end()){
+            result.push_back({search->second+1,i});
         }
-        int l=1;
-        int curSum=0;
-        Chains result=new Chains(Integer.MAX_VALUE);
-        for(int r=1;r<=n;++r){
-            curSum+=diamonds[r];
-            if(curSum<amount){
-                continue;
+        mp[sum]=i;
+    }
+    int minLost=INT_MAX;
+    if(result.empty()){
+        for(auto p:mp){
+            auto search=mp.upper_bound(p.first-m);
+            if(search!=mp.end()){
+                if(p.first-search->first<minLost){
+                    minLost=p.first-search->first;
+                    result.clear();
+                    result.push_back({search->second+1,p.second});
+                }else if(p.first-search->first==minLost){
+                    result.push_back({search->second+1,p.second});
+                }
             }
-            while(curSum-diamonds[l]>=amount){
-                curSum-=diamonds[l++];
-            }
-            if(curSum>result.value){
-                continue;
-            }
-            if(curSum<result.value){
-                result=new Chains(curSum);
-                result.start.add(l);
-                result.end.add(r);
-            }else{
-                result.start.add(l);
-                result.end.add(r);
-            }
-        }
-        for(int i=0;i<result.start.size();++i){
-            System.out.println(result.start.get(i)+"-"+result.end.get(i));
         }
     }
-}
-
-class Chains{
-    int value;
-    List<Integer> start=new ArrayList<>();
-    List<Integer> end=new ArrayList<>();
-
-    public Chains(int value) {
-        this.value = value;
+    sort(result.begin(),result.end());
+    for(auto p:result){
+        cout<<p.first<<"-"<<p.second<<endl;
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
