@@ -17,54 +17,23 @@ Sample Output:
 5
 
 
-import java.util.*;
-import java.io.*;
 
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int result=0;
-        for(int div=1;div<=n;div*=10){
-            int a=n/div,b=n%div;
-            result+=(a+8)/10*div;
-            if(a%10==1){
-                result+=b+1;
-            }
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    int result=0;
+    for(int div=1;div<=n;div*=10){
+        int a=n/div;
+        int b=n%div;
+        result+=(a+8)/10*div;
+        if(a%10==1){
+            result+=b+1;
         }
-        System.out.println(result);
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<result;
+    return 0;
 }
