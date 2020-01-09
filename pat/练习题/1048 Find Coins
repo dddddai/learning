@@ -1,6 +1,7 @@
 Eva loves to collect coins from all over the universe, including some other planets like Mars. 
 One day she visited a universal shopping mall which could accept all kinds of coins as payments. 
-However, there was a special requirement of the payment: for each bill, she could only use exactly two coins to pay the exact amount. 
+However, there was a special requirement of the payment: for each bill, 
+she could only use exactly two coins to pay the exact amount. 
 Since she has as many as 105 coins with her, she definitely needs your help. 
 You are supposed to tell her, for any given amount of money, whether or not she can find two coins to pay for it.
 
@@ -15,7 +16,8 @@ Output Specification:
 
 For each test case, 
 print in one line the two face values V1 and V2 (separated by a space) such that V1 + V2 = M and V1 <= V2. 
-If such a solution is not unique, output the one with the smallest V1. If there is no solution, output “No Solution” instead.
+If such a solution is not unique, output the one with the smallest V1. 
+If there is no solution, output “No Solution” instead.
 
 
 Sample Input 1:
@@ -34,70 +36,36 @@ Sample Output 2:
 No Solution
 
 
-两个样例超时
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n = Reader.nextInt(),m=Reader.nextInt();
-        Set<Integer> set=new HashSet<>();
-        int[] result=new int[0];
-        for(int i=0;i<n;++i){
-            int value=Reader.nextInt();
-            if(set.contains(m-value)){
-                if(m-value<value) {
-                    if(result.length==0 || m-value<result[0]){
-                        result=new int[]{m-value,value};
-                    }
-                }else{
-                    if(result.length==0 || value<result[0]){
-                        result=new int[]{value,m-value};
-                    }
+int main(){
+    int n,m;
+    cin>>n>>m;
+    unordered_set<int> s(int(n/0.75)+1);
+    pair<int,int> p(501,501);
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        if(s.find(m-num)!=s.end()){
+            if(num<m-num){
+                if(num<p.first){
+                    p.first=num;
+                    p.second=m-num;
                 }
-
+            }else if(m-num<p.first){
+                p.first=m-num;
+                p.second=num;
             }
-            set.add(value);
         }
-        if(result.length==0){
-            System.out.print("No Solution");
-        }else {
-            System.out.print(result[0]+" "+result[1]);
-        }
+        s.insert(num);
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    if(p.first==501){
+        cout<<"No Solution";
+    }else{
+        cout<<p.first<<" "<<p.second;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
