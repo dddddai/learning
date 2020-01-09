@@ -32,68 +32,31 @@ NO
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int m=Reader.nextInt(),n=Reader.nextInt(),k=Reader.nextInt();
+#include<bits/stdc++.h>
+using namespace std;
 
-        for(int i=0;i<k;++i){
-            Stack<Integer> stack=new Stack<>();
-            int[] popSequence=new int[n];
-            for(int j=0;j<n;++j){
-                popSequence[j]=Reader.nextInt();
+int main(){
+    int m,n,k;
+    cin>>m>>n>>k;
+    for(int i=0;i<k;++i){
+        stack<int> stk;
+        vector<int> arr(n);
+        for(int j=0;j<n;++j){
+            cin>>arr[j];
+        }
+        int idx=0;
+        for(int j=1;j<=n;++j){
+            stk.push(j);
+            if(stk.size()>m){
+                break;
             }
-            int next=0;
-            for(int j=1;j<=n;++j){
-                stack.push(j);
-                if(stack.size()>m){
-                    break;
-                }
-                while(!stack.isEmpty() && next<n && stack.peek()==popSequence[next]){
-                    stack.pop();
-                    ++next;
-                }
-            }
-            if(stack.isEmpty()){
-                System.out.println("YES");
-            }else{
-                System.out.println("NO");
+            while(!stk.empty() && stk.top()==arr[idx]){
+                stk.pop();
+                ++idx;
             }
         }
+        cout<<(stk.empty() ? "YES":"NO")<<endl;
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
