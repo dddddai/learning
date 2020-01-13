@@ -51,102 +51,101 @@ Invalid
 Invalid
 
 
-三个超时
 
 
-import java.util.*;
-import java.io.*;
+注意multiset的erase(const key_type& key)是删除所有等于key的元素，
+所以必须用erase(iterator pos)，要先find
+为什么不用priority_queue？priority_queue只让删除顶部元素
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        Stack<Integer> stack=new Stack<>();
-        Queue<Integer> minHeap=new PriorityQueue<>();
-        minHeap.add(Integer.MAX_VALUE);
-        Queue<Integer> maxHeap=new PriorityQueue<>(Collections.reverseOrder());
-        maxHeap.add(Integer.MIN_VALUE);
-        for(int i=0;i<n;++i){
-            String command=Reader.next();
-            switch (command) {
-                case "Push":
-                    int num = Reader.nextInt();
-                    if((stack.size() & 1) == 1) {
-                        if(maxHeap.peek() > num) {
-                            minHeap.add(maxHeap.poll());
-                            maxHeap.add(num);
-                        }else{
-                            minHeap.add(num);
-                        }
-                    } else {
-                        if(minHeap.peek() < num) {
-                            maxHeap.add(minHeap.poll());
-                            minHeap.add(num);
-                        }else{
-                            maxHeap.add(num);
-                        }
-                    }
-                    stack.push(num);
-                    break;
-                case "Pop":
-                    if(stack.isEmpty()) {
-                        System.out.println("Invalid");
-                    } else {
-                        int key = stack.pop();
-                        if(key > maxHeap.peek()) {
-                            minHeap.remove(key);
-                            if(maxHeap.size()-minHeap.size()>1){
-                                minHeap.add(maxHeap.poll());
-                            }
-                        } else {
-                            maxHeap.remove(key);
-                            if(maxHeap.size()<minHeap.size()){
-                                maxHeap.add(minHeap.poll());
-                            }
-                        }
-                        System.out.println(key);
-                    }
-                    break;
-                default:
-                    if(stack.isEmpty()) {
-                        System.out.println("Invalid");
-                    }else{
-                        System.out.println(maxHeap.peek());
-                    }
-                    break;
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct MyStack{
+    stack<int> stk;
+    multiset<int,greater<int>> maxHeap;
+    multiset<int> minHeap;
+    
+    MyStack(){
+        maxHeap.insert(INT_MIN);
+        minHeap.insert(INT_MAX);
+    }
+
+    void push(int num){
+        if(stk.size()&1){
+            int top=*maxHeap.begin();
+            if(num>=top){
+                minHeap.insert(num);
+            }else{
+                minHeap.insert(top);
+                maxHeap.erase(maxHeap.begin());
+                maxHeap.insert(num);
+            }
+        }else{
+            int top=*minHeap.begin();
+            if(num<=top){
+                maxHeap.insert(num);
+            }else{
+                maxHeap.insert(top);
+                minHeap.erase(minHeap.begin());
+                minHeap.insert(num);
             }
         }
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+        stk.push(num);
     }
 
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    int pop(){
+        int num=stk.top();
+        stk.pop();
+        if(num>*maxHeap.begin()){
+            minHeap.erase(minHeap.find(num));
+            if(minHeap.size()<maxHeap.size()-1){
+                minHeap.insert(*maxHeap.begin());
+                maxHeap.erase(maxHeap.begin());
+            }
+        }else{
+            maxHeap.erase(maxHeap.find(num));
+            if(maxHeap.size()<minHeap.size()){
+                maxHeap.insert(*minHeap.begin());
+                minHeap.erase(minHeap.begin());
+            }
         }
-        return tokenizer.nextToken();
+        return num;
     }
 
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    int peekMedian(){
+        return *maxHeap.begin();
     }
+};
 
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
+int main(){
+    int n;
+    cin>>n;
+    MyStack myStack;
+    for(int i=0;i<n;++i){
+        string command;
+        cin>>command;
+        switch(command[1]){
+            case 'u':
+                int num;
+                cin>>num;
+                myStack.push(num);
+                break;
+            case 'o':
+                if(myStack.stk.empty()){
+                    cout<<"Invalid"<<endl;
+                }else{
+                    cout<<myStack.pop()<<endl;
+                }
+                break;
+            case 'e':
+                if(myStack.stk.empty()){
+                    cout<<"Invalid"<<endl;
+                }else{
+                    cout<<myStack.peekMedian()<<endl;
+                }
+        }
     }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
