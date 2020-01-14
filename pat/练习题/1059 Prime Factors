@@ -18,42 +18,48 @@ Sample Output:
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        long num=new Scanner(System.in).nextLong();
-        boolean[] map=new boolean[9999999];
-        for(int i=2;i*i<500000;++i){
-            for(int j=2;i*j<500000;++j){
-                map[i*j]=true;
-            }
-        }
-        System.out.print(num+"=");
-        if(num==1){
-            System.out.print(1);
-            return;
-        }
-        for(int i=2;num>=2;++i){
-            if(map[i]){
-                continue;
-            }
-            int cnt=0;
-            while(num%i==0){
-                num/=i;
-                ++cnt;
-            }
-            if(cnt!=0){
-                if(cnt==1){
-                    System.out.print(i);
-                }else {
-                    System.out.print(i + "^" + cnt);
-                }
-                if(num!=1) {
-                    System.out.print('*');
-                }
-            }
+1不是质数啊，为什么还有1=1的情况
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    long n;
+    cin>>n;
+    if(n==1){
+        cout<<"1=1";
+        return 0;
+    }
+    cout<<n<<'=';
+    vector<bool> isPrime(1000*1000+1,true);
+    for(int i=2;i<=1000;++i){
+        for(int j=i;j<=1000;++j){
+            isPrime[i*j]=false;
         }
     }
+    bool first=true;
+    int factor=2;
+    while(n!=1){
+        while(!isPrime[factor] || n%factor){
+            ++factor;
+        }
+        int cnt=0;
+        while(n!=1 && n%factor==0){
+            n/=factor;
+            ++cnt;
+        }
+        if(first){
+            first=false;
+        }else{
+            cout<<'*';
+        }
+        cout<<factor;
+        if(cnt>1){
+            cout<<'^'<<cnt;
+        }
+    }
+    return 0;
 }
