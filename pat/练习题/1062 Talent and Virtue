@@ -1,9 +1,12 @@
-About 900 years ago, a Chinese philosopher Sima Guang wrote a history book in which he talked about people’s talent and virtue. 
+About 900 years ago, a Chinese philosopher Sima Guang wrote a history book 
+in which he talked about people’s talent and virtue. 
 According to his theory, a man being outstanding in both talent and virtue must be a “sage（圣人）”;
 being less excellent but with one’s virtue outweighs talent can be called a “nobleman（君子）”;
-being good in neither is a “fool man（愚人）”; yet a fool man is better than a “small man（小人）” who prefers talent than virtue.
+being good in neither is a “fool man（愚人）”; yet a fool man is better than a “small man（小人）”
+who prefers talent than virtue.
 
-Now given the grades of talent and virtue of a group of people, you are supposed to rank them according to Sima Guang’s theory.
+Now given the grades of talent and virtue of a group of people, 
+you are supposed to rank them according to Sima Guang’s theory.
 
 Input Specification:
 
@@ -15,7 +18,8 @@ and H (<100), the higher line of qualification
 — that is, those with both grades not below this line are considered as the “sages”, 
 and will be ranked in non-increasing order according to their total grades. 
 Those with talent grades below H but virtue grades not are cosidered as the “noblemen”, 
-and are also ranked in non-increasing order according to their total grades,but they are listed after the “sages”. 
+and are also ranked in non-increasing order according to their total grades,
+but they are listed after the “sages”. 
 Those with both grades below H, but with virtue not lower than talent are considered as the “fool men”.
 They are ranked in the same way but after the “noblemen”. 
 The rest of people whose grades both pass the L line are ranked after the “fool men”.
@@ -23,13 +27,16 @@ The rest of people whose grades both pass the L line are ranked after the “foo
 Then N lines follow, each gives the information of a person in the format:
 
 ID_Number Virtue_Grade Talent_Grade
-where ID_Number is an 8-digit number, and both grades are integers in [0, 100]. All the numbers are separated by a space.
+where ID_Number is an 8-digit number, and both grades are integers in [0, 100]. 
+All the numbers are separated by a space.
 
 Output Specification:
 
 The first line of output must give M (<=N), the total number of people that are actually ranked. 
-Then M lines follow, each gives the information of a person in the same format as the input, according to the ranking rules. 
-If there is a tie of the total grade, they must be ranked with respect to their virtue grades in non-increasing order. 
+Then M lines follow, each gives the information of a person in the same format as the input, 
+according to the ranking rules. 
+If there is a tie of the total grade, 
+they must be ranked with respect to their virtue grades in non-increasing order. 
 If there is still a tie, then output in increasing order of their ID’s.
 
 
@@ -67,113 +74,77 @@ Sample Output:
 
 
 
-三个超时
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        Reader.init(System.in);
-        int n=Reader.nextInt(),low=Reader.nextInt(),line=Reader.nextInt();
-        List<Person> sage=new ArrayList<>(n);
-        List<Person> nobleman=new ArrayList<>(n);
-        List<Person> foolMan=new ArrayList<>(n);
-        List<Person> smallMan=new ArrayList<>(n);
-        for(int i=0;i<n;++i){
-            String id=Reader.next();
-            int virtue=Reader.nextInt(),talent=Reader.nextInt();
-            if(virtue<low || talent<low){
-                continue;
-            }
-            if(virtue<line){
-                if(talent<=virtue) {
-                    foolMan.add(new Person(id, virtue, talent));
-                }else{
-                    smallMan.add(new Person(id,virtue,talent));
-                }
-            }else{
-                if(talent<line){
-                    nobleman.add(new Person(id,virtue,talent));
-                }else{
-                    sage.add(new Person(id,virtue,talent));
-                }
-            }
-        }
-        Collections.sort(sage);
-        Collections.sort(nobleman);
-        Collections.sort(foolMan);
-        Collections.sort(smallMan);
-        System.out.println(sage.size()+nobleman.size()+foolMan.size()+smallMan.size());
-        for(Person p:sage){
-            System.out.println(p);
-        }
-        for(Person p:nobleman){
-            System.out.println(p);
-        }
-        for(Person p:foolMan){
-            System.out.println(p);
-        }
-        for(Person p:smallMan){
-            System.out.println(p);
-        }
-    }
-}
-class Person implements Comparable<Person>{
-    String id;
+struct Person{
+    string id;
     int virtue,talent;
 
-    public Person(String id, int virtue, int talent) {
-        this.id = id;
-        this.virtue = virtue;
-        this.talent = talent;
+    Person(string i,int v,int t){
+        id=i;
+        virtue=v;
+        talent=t;
     }
+};
 
-    @Override
-    public int compareTo(Person o) {
-        if(virtue+talent==o.virtue+o.talent){
-            if(virtue==o.virtue){
-                return id.compareTo(o.id);
+int main(){
+    int n,l,h;
+    cin>>n>>l>>h;
+    vector<Person> sage,nobleman,foolman,smallman;
+    sage.reserve(n);
+    nobleman.reserve(n);
+    foolman.reserve(n);
+    smallman.reserve(n);
+    for(int i=0;i<n;++i){
+        string id;
+        int virtue,talent;
+        cin>>id;
+        scanf("%d %d",&virtue,&talent);
+        Person p(id,virtue,talent);
+        if(virtue>=l && talent>=l){
+            if(virtue>=h){
+                if(talent>=h){
+                    sage.push_back(p);
+                }else{
+                    nobleman.push_back(p);
+                }
+            }else{
+                if(virtue>=talent){
+                    foolman.push_back(p);
+                }else{
+                    smallman.push_back(p);
+                }
             }
-            return o.virtue-virtue;
         }
-        return o.virtue+o.talent-virtue-talent;
     }
-
-    @Override
-    public String toString() {
-        return id+" "+virtue+" "+talent;
-    }
-}
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    auto cmp=[](Person& a,Person& b){
+        if(a.virtue+a.talent==b.virtue+b.talent){
+            if(a.virtue==b.virtue){
+                return a.id<b.id;
+            }
+            return a.virtue>b.virtue;
         }
-        return tokenizer.nextToken();
+        return a.virtue+a.talent>b.virtue+b.talent;
+    };
+    sort(sage.begin(),sage.end(),cmp);
+    sort(nobleman.begin(),nobleman.end(),cmp);
+    sort(foolman.begin(),foolman.end(),cmp);
+    sort(smallman.begin(),smallman.end(),cmp);
+    cout<<sage.size()+nobleman.size()+foolman.size()+smallman.size()<<endl;
+    for(Person& p:sage){
+        cout<<p.id<<' '<<p.virtue<<' '<<p.talent<<endl;
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+    for(Person& p:nobleman){
+        cout<<p.id<<' '<<p.virtue<<' '<<p.talent<<endl;
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
+    for(Person& p:foolman){
+        cout<<p.id<<' '<<p.virtue<<' '<<p.talent<<endl;
     }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
+    for(Person& p:smallman){
+        cout<<p.id<<' '<<p.virtue<<' '<<p.talent<<endl;
     }
+    return 0;
 }
