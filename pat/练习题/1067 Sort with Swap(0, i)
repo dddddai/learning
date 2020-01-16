@@ -6,7 +6,8 @@ Swap(0, 1) => {4, 1, 2, 0, 3}
 Swap(0, 3) => {4, 1, 2, 3, 0}
 Swap(0, 4) => {0, 1, 2, 3, 4}
 
-Now you are asked to find the minimum number of swaps need to sort the given permutation of the first N nonnegative integers.
+Now you are asked to find the minimum number of swaps need to sort the given permutation
+of the first N nonnegative integers.
 
 Input Specification:
 Each input file contains one test case, 
@@ -24,70 +25,36 @@ Sample Output:
 
 
 
-一个超时
 
 
+#include<bits/stdc++.h>
+using namespace std;
 
-import java.util.*;
-import java.io.*;
-
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        int[] idxOf=new int[n];
-        int cnt=0;
-        for(int i=0;i<n;++i){
-            idxOf[Reader.nextInt()]=i;
-        }
-        for(int i=1;i<n;++i){
-            if(idxOf[i]!=i){
-                while(idxOf[0]!=0){
-                    int tmp=idxOf[0];
-                    idxOf[0]=idxOf[tmp];
-                    idxOf[tmp]=tmp;
-                    ++cnt;
-                }
-                if(idxOf[i]!=i){
-                    int tmp=idxOf[0];
-                    idxOf[0]=idxOf[i];
-                    idxOf[i]=tmp;
-                    ++cnt;
-                }
+int main(){
+    int n;
+    cin>>n;
+    vector<int> idx(n);
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        idx[num]=i;
+    }
+    int cnt=0;
+    for(int i=1;i<n;++i){
+        while(idx[i]!=i){
+            while(idx[0]){
+                int tmp=idx[0];
+                idx[0]=idx[tmp];
+                idx[tmp]=tmp;
+                ++cnt;
+            }
+            if(idx[i]!=i){
+                idx[0]=idx[i];
+                idx[i]=0;
+                ++cnt;
             }
         }
-        System.out.print(cnt);
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<cnt;
+    return 0;
 }
