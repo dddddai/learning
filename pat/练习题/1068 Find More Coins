@@ -36,80 +36,56 @@ Sample Output 2:
 No Solution
 
 
-一个错误一个超时
+
+一定要去重，否则一个样例会超时
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    private static List<Integer> result;
-    
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),m=Reader.nextInt();
-        int[] coins=new int[n];
-        for(int i=0;i<n;++i){
-            coins[i]=Reader.nextInt();
-        }
-        Arrays.sort(coins);
-        func(coins,0,m,new ArrayList<>(n));
-        if(result==null){
-            System.out.print("No solution");
-        }else {
-            System.out.print(result.get(0));
-            for(int i = 1; i < result.size(); ++i) {
-                System.out.print(" " + result.get(i));
-            }
-        }
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int> result;
+vector<int> tmp;
+bool stop=false;
+
+void func(vector<int>& arr,int start,int target){
+    if(stop){
+        return;
     }
-    private static void func(int[] coins,int start,int target,List<Integer> candidates){
-        if(target==0){
-            result=new ArrayList<>(candidates);
-            return;
+    if(target==0){
+        result=tmp;
+        stop=true;
+        return;
+    }
+    for(int i=start;i<arr.size();++i){
+        if(i!=start && arr[i]==arr[i-1]){
+            continue;      //去重
         }
-        for(int i=start;i<coins.length;++i){
-            if(coins[i]>target){
-                break;
-            }
-            candidates.add(coins[i]);
-            func(coins,i+1,target-coins[i],candidates);
-            if(result!=null){
-                break;
-            }
-            candidates.remove(candidates.size()-1);
+        if(arr[i]>target){
+            break;
         }
+        tmp.push_back(arr[i]);
+        func(arr,i+1,target-arr[i]);
+        tmp.pop_back();
     }
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int n,m;
+    cin>>n>>m;
+    vector<int> arr(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    sort(arr.begin(),arr.end());
+    func(arr,0,m);
+    if(result.empty()){
+        cout<<"No Solution";
+    }else{
+        cout<<result[0];
+        for(int i=1;i<result.size();++i){
+            cout<<' '<<result[i];
         }
-        return tokenizer.nextToken();
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
