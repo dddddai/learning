@@ -31,101 +31,77 @@ Sample Output 2:
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        Node root=null;
-        for(int i=0;i<n;++i){
-            root=insert(root,Reader.nextInt());
-        }
-        System.out.print(root.val);
-    }
-    private static Node insert(Node root,int val){
-        if(root==null){
-            root=new Node(val);
-        }else if(val<root.val) {
-            root.left = insert(root.left, val);
-            if(getHeight(root.left) - getHeight(root.right) == 2) {
-                root = val < root.left.val ? rotateRight(root) : rotateLeftRight(root);
-            }
-        }
-        else {
-            root.right = insert(root.right, val);
-            if(getHeight(root.right) - getHeight(root.left) == 2) {
-                root = val > root.right.val ? rotateLeft(root) : rotateRightLeft(root);
-            }
-        }
-        return root;
-    }
-    private static int getHeight(Node node){
-        if(node==null){
-            return 0;
-        }
-        return Math.max(getHeight(node.left),getHeight(node.right))+1;
-    }
-    private static Node rotateLeft(Node root){
-        Node newRoot=root.right;
-        root.right=newRoot.left;
-        newRoot.left=root;
-        return newRoot;
-    }
-    private static Node rotateRight(Node root){
-        Node newRoot=root.left;
-        root.left=newRoot.right;
-        newRoot.right=root;
-        return newRoot;
-    }
-    private static Node rotateLeftRight(Node root){
-        root.left=rotateLeft(root.left);
-        return rotateRight(root);
-    }
-    private static Node rotateRightLeft(Node root){
-        root.right=rotateRight(root.right);
-        return rotateLeft(root);
-    }
-}
+#include<bits/stdc++.h>
+using namespace std;
 
-class Node{
+struct Node{
+    Node* left;
+    Node* right;
     int val;
-    Node left,right;
 
-    public Node(int val) {
-        this.val = val;
+    Node(int v){
+        val=v;
     }
+};
+
+int getDepth(Node* root){
+    if(root==nullptr){
+        return 0;
+    }
+    return max(getDepth(root->left),getDepth(root->right))+1;
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
+Node* rotateLeft(Node* root){
+    Node* newRoot=root->right;
+    root->right=root->right->left;
+    newRoot->left=root;
+    return newRoot;
+}
 
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+Node* rotateRight(Node* root){
+    Node* newRoot=root->left;
+    root->left=root->left->right;
+    newRoot->right=root;
+    return newRoot;
+}
+
+Node* rotateLeftRight(Node* root){
+    root->left=rotateLeft(root->left);
+    return rotateRight(root);
+}
+
+Node* rotateRightLeft(Node* root){
+    root->right=rotateRight(root->right);
+    return rotateLeft(root);
+}
+
+Node* insert(Node* root,int num){
+    if(root==nullptr){
+        return new Node(num);
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    if(num<root->val){
+        root->left=insert(root->left,num);
+        if(getDepth(root->left)>getDepth(root->right)+1){
+            root=(num<root->left->val) ? rotateRight(root) : rotateLeftRight(root);
         }
-        return tokenizer.nextToken();
+    }else{
+        root->right=insert(root->right,num);
+        if(getDepth(root->right)>getDepth(root->left)+1){
+            root=(num>root->right->val) ? rotateLeft(root) : rotateRightLeft(root);
+        }
     }
+    return root;
+}
 
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+int main(){
+    int n,num;
+    cin>>n>>num;
+    Node* root=new Node(num);
+    for(int i=1;i<n;++i){
+        cin>>num;
+        root=insert(root,num);
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<root->val;
+    return 0;
 }
