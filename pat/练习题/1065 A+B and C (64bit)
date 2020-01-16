@@ -3,7 +3,8 @@ Given three integers A, B and C in [-263, 263], you are supposed to tell whether
 Input Specification:
 
 The first line of the input gives the positive number of test cases, T (<=10). 
-Then T test cases follow, each consists of a single line containing three integers A, B and C, separated by single spaces.
+Then T test cases follow, each consists of a single line containing three integers A, B and C, 
+separated by single spaces.
 
 Output Specification:
 
@@ -23,47 +24,21 @@ Case #3: false
 
 
 
-import java.util.*;
-import java.io.*;
-import java.math.BigInteger;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        for(int i=1;i<=n;++i){
-            System.out.format("Case #%d: %b\n",i,new BigInteger(Reader.next()).add(new BigInteger(Reader.next())).compareTo(new BigInteger(Reader.next()))>0);
-        }
-    }
-}
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
+double不行，改成long double AC了......
 
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
 
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
+#include<bits/stdc++.h>
+using namespace std;
 
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
+int main(){
+    int t;
+    cin>>t;
+    for(int i=1;i<=t;++i){
+        printf("Case #%d: ",i);
+        long double a,b,c;
+        cin>>a>>b>>c;
+        cout<<(a+b>c ? "true":"false")<<endl;
     }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
