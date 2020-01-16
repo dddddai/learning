@@ -42,58 +42,40 @@ Sample Output 2:
 
 
 
-import java.text.DecimalFormat;
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    private static DecimalFormat df=new DecimalFormat("0000");
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        char[] arr=df.format(Reader.nextInt()).toCharArray();
-        int result=-1;
-        while(result!=6174 && result!=0){
-            Arrays.sort(arr);
-            String a=new String(arr);
-            String b=new StringBuilder(a).reverse().toString();
-            result=Integer.valueOf(b)-Integer.valueOf(a);
-            System.out.format("%s - %s = ",b,a);
-            String s=df.format(result);
-            System.out.println(s);
-            arr=s.toCharArray();
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    string s;
+    cin>>s;
+    char num[4]={'0','0','0','0'};
+    int idx=3;
+    for(int i=s.length()-1;i>=0;--i){
+        num[idx--]=s[i];
+    }
+    if(num[0]==num[1] && num[1]==num[2] && num[2]==num[3]){
+        cout<<s<<" - "<<s<<" = 0000";
+        return 0;
+    }
+    while(1){
+        sort(num,num+4);
+        int b=stoi(string(num));
+        reverse(num,num+4);
+        int a=stoi(string(num));
+        printf("%04d - %04d = %04d\n",a,b,a-b);
+        if(a-b==6174){
+            break;
+        }
+        s=to_string(a-b);
+        idx=3;
+        for(int i=s.length()-1;i>=0;--i){
+            num[idx--]=s[i];
+        }
+        while(idx>=0){
+            num[idx--]='0';
         }
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
