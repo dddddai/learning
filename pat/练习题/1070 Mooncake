@@ -1,12 +1,14 @@
 Mooncake is a Chinese bakery product traditionally eaten during the Mid-Autumn Festival.
 Many types of fillings and crusts can be found in traditional mooncakes according to the regions culture. 
 Now given the inventory amounts and the prices of all kinds of the mooncakes, 
-together with the maximum total demand of the market, you are supposed to tell the maximum profit that can be made.
+together with the maximum total demand of the market, 
+you are supposed to tell the maximum profit that can be made.
 
 Note: partial inventory storage can be taken. The sample shows the following situation: 
 given three kinds of mooncakes with inventory amounts being 180, 150, and 100 thousand tons, 
 and the prices being 7.5, 7.2, and 4.5 billion yuans. If the market demand can be at most 200 thousand tons,
-the best we can do is to sell 150 thousand tons of the second kind of mooncake, and 50 thousand tons of the third kind.
+the best we can do is to sell 150 thousand tons of the second kind of mooncake,
+and 50 thousand tons of the third kind.
 Hence the total profit is 7.2 + 4.5/2 = 9.45 (billion yuans).
 
 Input Specification:
@@ -29,77 +31,31 @@ Sample Output:
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        double d=Reader.nextDouble();
-        Mooncake[] arr=new Mooncake[n];
-        for(int i=0;i<n;++i){
-            arr[i]=new Mooncake(Reader.nextDouble());
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,d;
+    cin>>n>>d;
+    vector<pair<double,double>> arr(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i].second;
+    }
+    for(int i=0;i<n;++i){
+        cin>>arr[i].first;
+    }
+    sort(arr.begin(),arr.end(),[](pair<double,double>& a,pair<double,double>& b){return a.first/a.second>b.first/b.second;});
+    double result=0;
+    for(pair<double,double>& p:arr){
+        if(p.second<=d){
+            result+=p.first;
+            d-=p.second;
+        }else{
+            result+=d*p.first/p.second;
+            break;
         }
-        for(int i=0;i<n;++i){
-            arr[i].price=Reader.nextDouble();
-        }
-        Arrays.sort(arr);
-        double profit=0;
-        for(int i=0;i<n;++i){
-            if(arr[i].amounts>=d){
-                profit+=arr[i].price*d/arr[i].amounts;
-                break;
-            }
-            profit+=arr[i].price;
-            d-=arr[i].amounts;
-        }
-        System.out.format("%.2f",profit);
     }
-}
-
-class Mooncake implements Comparable<Mooncake>{
-    double amounts;
-    double price;
-
-    public Mooncake(double amounts) {
-        this.amounts = amounts;
-    }
-
-    @Override
-    public int compareTo(Mooncake o) {
-        return Double.compare(o.price/o.amounts,price/amounts);
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    printf("%.2f",result);
+    return 0;
 }
