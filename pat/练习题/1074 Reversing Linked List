@@ -1,5 +1,6 @@
 Given a constant K and a singly linked list L, you are supposed to reverse the links of every K elements on L. 
-For example, given L being 1→2→3→4→5→6, if K = 3, then you must output 3→2→1→6→5→4; if K = 4, you must output 4→3→2→1→5→6.
+For example, given L being 1→2→3→4→5→6, if K = 3, then you must output 3→2→1→6→5→4; 
+if K = 4, you must output 4→3→2→1→5→6.
 
 Input Specification:
 
@@ -36,86 +37,38 @@ Sample Output:
 
 
 
-一个错误一个超时
 
 
 
-import java.util.*;
-import java.io.*;
+#include<bits/stdc++.h>
+using namespace std;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        String head=Reader.next();
-        int n=Reader.nextInt(),k=Reader.nextInt();
-        Map<String,Node> map=new HashMap<>(n<<1);
-        for(int i=0;i<n;++i){
-            String address=Reader.next();
-            map.put(address,new Node(address,Reader.nextInt(),Reader.next()));
-        }
-        map.put("-1",null);
-        Node p=map.get(head);
-        while(p!=null){
-            Node[] arr=new Node[k];
-            for(int i=0;i<k;++i){
-                arr[i]=p;
-                p=map.get(p.next);
-                if(p==null){
-                    break;
-                }
-            }
-            if(arr[k-1]!=null){
-                for(int i = k - 1; i > 0; --i) {
-                    System.out.format("%s %d %s\n", arr[i].address, arr[i].val, arr[i - 1].address);
-                }
-                System.out.format("%s %d %s\n", arr[0].address, arr[0].val,p==null? "-1":p.address);
-            }else{
-                for(int i=0;arr[i]!=null;++i){
-                    System.out.format("%s %d %s\n",arr[i].address,arr[i].val,arr[i].next);
-                }
-            }
-        }
+int main(){
+    int head,n,k;
+    cin>>head>>n>>k;
+    unordered_map<int,int> memory(int(n/0.75)+1),next(int(n/0.75)+1);
+    for(int i=0;i<n;++i){
+        int a,data,nxt;
+        cin>>a>>data>>nxt;
+        memory[a]=data;
+        next[a]=nxt;
     }
-}
-class Node{
-    String address;
-    int val;
-    String next;
-
-    public Node(String address,int val, String next) {
-        this.address=address;
-        this.val = val;
-        this.next = next;
+    int p=head;
+    vector<pair<int,int>> arr;
+    arr.reserve(n);
+    while(p!=-1){
+        arr.push_back({p,memory[p]});
+        p=next[p];
     }
-}
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    int idx=0;
+    while(idx+k<=arr.size()){
+        reverse(arr.begin()+idx,arr.begin()+idx+k);
+        idx+=k;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
+    printf("%05d %d",arr[0].first,arr[0].second);
+    for(int i=1;i<arr.size();++i){
+        printf(" %05d\n%05d %d",arr[i].first,arr[i].first,arr[i].second);
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    cout<<" -1";
+    return 0;
 }
