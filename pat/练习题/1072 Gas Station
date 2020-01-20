@@ -4,7 +4,7 @@ However it must guarantee that all the houses are in its service range.
 
 Now given the map of the city and several candidate locations for the gas station, you are supposed to give the best recommendation. 
 If there are more than one solution, output the one with the smallest average distance to all the houses.
-If such a solution is still not unique, output the one with the smallest index number.
+If such a solution is still not unique, output the one with the smallest index number
 
 Input Specification:
 
@@ -55,126 +55,75 @@ No Solution
 
 
 
-import java.util.*;
-import java.io.*;
+不能用-'0'！！！一定要stoi，因为有可能是两位数，这里卡了好久好久，我哭了
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),m=Reader.nextInt(),k=Reader.nextInt(),range=Reader.nextInt();
-        int[][] graph=new int[n+m+1][n+m+1];
-        boolean[] visited=new boolean[n+m+1];
-        int[] dist=new int[n+m+1];
-        int resultId=-1,resultMin=Integer.MIN_VALUE;
-        double resultAvg=-1;
-        for(int[] row:graph){
-            Arrays.fill(row,-1);
-        }
-        for(int i=0;i<k;++i){
-            String p1=Reader.next(),p2=Reader.next();
-            int d=Reader.nextInt();
-            int a,b;
-            if(p1.charAt(0)=='G'){
-                a=n+p1.charAt(1)-'0';
-            }else{
-                a=Integer.valueOf(p1);
-            }
-            if(p2.charAt(0)=='G'){
-                b=n+p2.charAt(1)-'0';
-            }else{
-                b=Integer.valueOf(p2);
-            }
-            graph[a][b]=graph[b][a]=d;
-        }
-        for(int i=n+1;i<=n+m;++i){
-            Arrays.fill(visited,false);
-            Arrays.fill(dist,Integer.MAX_VALUE);
-            dist[i]=0;
-            int j;
-            for(j=0;j<n+m;++j){
-                int min=Integer.MAX_VALUE,idx=-1;
-                for(int x=1;x<=n+m;++x){
-                    if(!visited[x] && dist[x]<min){
-                        min=dist[x];
-                        idx=x;
-                    }
-                }
-                if(idx==-1){
-                    break;
-                }
-                visited[idx]=true;
-                for(int x=1;x<=n+m;++x){
-                    if(!visited[x] && graph[idx][x]!=-1 && dist[idx]+graph[idx][x]<dist[x]){
-                        dist[x]=dist[idx]+graph[idx][x];
-                    }
-                }
-            }
-            if(j!=n+m){
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,m,k,d;
+    cin>>n>>m>>k>>d;
+    vector<forward_list<pair<int,int>>> graph(n+m+1);
+    for(int i=0;i<k;++i){
+        string p1,p2;
+        int dist;
+        cin>>p1>>p2>>dist;
+        int a=p1[0]=='G' ? stoi(p1.substr(1))+n : stoi(p1);
+        int b=p2[0]=='G' ? stoi(p2.substr(1))+n : stoi(p2);
+        graph[a].push_front({b,dist});
+        graph[b].push_front({a,dist});
+    }
+    int minDist=-1;
+    int totalDist=INT_MAX;
+    int candidate;
+    for(int i=n+1;i<=n+m;++i){
+        vector<int> dist(n+m+1,INT_MAX);
+        auto cmp=[](pair<int,int> a,pair<int,int> b){return a.second>b.second;};
+        priority_queue<pair<int,int>,vector<pair<int,int>>,decltype(cmp)> pq(cmp);
+        dist[i]=0;
+        pq.push({i,0});
+        while(!pq.empty()){
+            pair<int,int> p=pq.top();
+            pq.pop();
+            if(dist[p.first]<p.second){
                 continue;
             }
-            int minDist=Integer.MAX_VALUE;
-            double avg=0;
-            for(j=1;j<=n;++j){
-                if(dist[j]>range){
-                    minDist=-1;
-                    break;
+            for(pair<int,int> edge:graph[p.first]){
+                if(p.second+edge.second<dist[edge.first]){
+                    dist[edge.first]=p.second+edge.second;
+                    pq.push({edge.first,dist[edge.first]});
                 }
-                if(dist[j]<minDist){
-                    minDist=dist[j];
-                }
-                avg+=dist[j];
-            }
-            if(minDist==-1){
-                continue;
-            }
-            avg/=n;
-            if(minDist>resultMin){
-                resultMin=minDist;
-                resultId=i;
-                resultAvg=avg;
-            }else if(minDist==resultMin && avg<resultAvg){
-                resultId=i;
-                resultAvg=avg;
             }
         }
-        if(resultId==-1){
-            System.out.println("No Solution");
-        }else{
-            System.out.print('G');
-            System.out.println(resultId-n);
-            System.out.format("%.1f %.1f",(double)resultMin,resultAvg);
+        bool invalid=false;
+        int sum=0;
+        int curMinDist=INT_MAX;
+        for(int j=1;j<=n;++j){
+            if(dist[j]>d){
+                invalid=true;
+                break;
+            }
+            sum+=dist[j];
+            curMinDist=min(curMinDist,dist[j]);
+        }
+        if(invalid){
+            continue;
+        }
+        if(curMinDist>minDist){
+            minDist=curMinDist;
+            totalDist=sum;
+            candidate=i-n;
+        }else if(curMinDist==minDist && sum<totalDist){
+            totalDist=sum;
+            candidate=i-n;
         }
     }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+    if(minDist==-1){
+        cout<<"No Solution";
+    }else{
+        printf("G%d\n%d.0 %.1f",candidate,minDist,totalDist/double(n));
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
