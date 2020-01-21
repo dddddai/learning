@@ -6,8 +6,10 @@ Input Specification:
 Each input file contains one test case. For each case, the first line contains 3 positive integers, 
 N (<=104), the total number of users, K (<=5), the total number of problems, 
 and M (<=105), the total number of submittions. 
-It is then assumed that the user id’s are 5-digit numbers from 00001 to N, and the problem id’s are from 1 to K.
-The next line contains K positive integers p[i] (i=1, …, K), where p[i] corresponds to the full mark of the i-th problem. 
+It is then assumed that the user id’s are 5-digit numbers from 00001 to N, 
+and the problem id’s are from 1 to K.
+The next line contains K positive integers p[i] (i=1, …, K),
+where p[i] corresponds to the full mark of the i-th problem. 
 Then M lines follow, each gives the information of a submittion in the following format:
 
 user_id problem_id partial_score_obtained
@@ -21,13 +23,15 @@ For each test case, you are supposed to output the ranklist in the following for
 
 rank user_id total_score s[1] … s[K]
 
-where rank is calculated according to the total_score, and all the users with the same total_score obtain the same rank; 
+where rank is calculated according to the total_score,
+and all the users with the same total_score obtain the same rank; 
 and s[i] is the partial score obtained for the i-th problem.
 If a user has never submitted a solution for a problem, then “-” must be printed at the corresponding position. 
 If a user has submitted several solutions to solve one problem, then the highest score will be counted.
 
 The ranklist must be printed in non-decreasing order of the ranks. 
-For those who have the same rank, users must be sorted in nonincreasing order according to the number of perfectly solved problems. 
+For those who have the same rank, users must be sorted 
+in nonincreasing order according to the number of perfectly solved problems. 
 And if there is still a tie, then they must be printed in increasing order of their id’s. 
 For those who has never submitted any solution that can pass the compiler, or has never submitted any solution, 
 they must NOT be shown on the ranklist. It is guaranteed that at least one user can be shown on the ranklist.
@@ -65,119 +69,88 @@ Sample Output:
 
 
 
-两个超时
+
+坑点：一定要初始化学号(有的学生一次都没有提交)，否则在排序的时候判断uid会出错
 
 
-import java.text.DecimalFormat;
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    private static int k;
-    private static DecimalFormat df=new DecimalFormat("00000");
+#include<bits/stdc++.h>
+using namespace std;
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        k=Reader.nextInt();
-        int m=Reader.nextInt();
-        int[] p=new int[k+1];
-        for(int i=1;i<=k;++i){
-            p[i]=Reader.nextInt();
+int k;
+
+struct User{
+    int uid;
+    vector<int> score;
+    int cnt=0; 
+    int sum=0;
+    
+    User(){
+        score=vector<int>(k,-2);
+    }
+};
+
+int main(){
+    int n,m;
+    cin>>n>>k>>m;
+    vector<int> p(k);
+    vector<User> arr(n+1);
+    for(int i=0;i<k;++i){
+        cin>>p[i];
+    }
+    for(int i=0;i<m;++i){
+        int u,pid,s;
+        cin>>u>>pid>>s;
+        if(s>arr[u].score[pid-1]){
+            arr[u].score[pid-1]=s;
         }
-        User[] arr=new User[n];
-        for(int i=1;i<=n;++i){
-            arr[i-1]=new User(df.format(i));
+    }
+    for(int i=1;i<=n;++i){
+        arr[i].uid=i;
+        for(int j=0;j<k;++j){
+            if(arr[i].score[j]==p[j]){
+                ++arr[i].cnt;
+            }
+            if(arr[i].score[j]>0){
+                arr[i].sum+=arr[i].score[j];
+            }
         }
-        for(int i=0;i<m;++i){
-            int idx=Integer.valueOf(Reader.next())-1;
-            int problemId=Reader.nextInt();
-            int score=Reader.nextInt();
-            if(score==-1){
-                score=0;
+    }
+    sort(arr.begin()+1,arr.end(),[](User& a,User& b){
+        if(a.sum==b.sum){
+            if(a.cnt==b.cnt){
+                return a.uid<b.uid;
+            }
+            return a.cnt>b.cnt;
+        }
+        return a.sum>b.sum;
+    });
+    int last=arr[1].sum;
+    int rank=1;
+    for(int i=1;i<=n;++i){
+        int tmp=-2;
+        for(int s:arr[i].score){
+            tmp=max(tmp,s);
+        }
+        if(tmp<0){
+            break;
+        }
+        if(arr[i].sum!=last){
+            rank=i;
+        }
+        printf("%d %05d %d",rank,arr[i].uid,arr[i].sum);
+        for(int s:arr[i].score){
+            cout<<' ';
+            if(s==-1){
+                cout<<0;
+            }else if(s==-2){
+                cout<<'-';
             }else{
-                arr[idx].flag=true;
-                if(score==p[problemId]) {
-                    ++arr[idx].perfectCnt;
-                }
-            }
-            if(score>arr[idx].grades[problemId]){
-                if(arr[idx].grades[problemId]==-1){
-                    arr[idx].sum+=score;
-                }else{
-                    arr[idx].sum+=score-arr[idx].grades[problemId];
-                }
-                arr[idx].grades[problemId]=score;
+                cout<<s;
             }
         }
-        Arrays.sort(arr);
-        int last=arr[0].sum;
-        int rank=1;
-        for(int i=0;i<n && arr[i].flag;++i){
-            if(arr[i].sum!=last){
-                rank=i+1;
-            }
-            System.out.format("%d %s %d",rank,arr[i].id,arr[i].sum);
-            for(int j=1;j<=k;++j){
-                System.out.print(" "+(arr[i].grades[j]==-1 ? "-":arr[i].grades[j]));
-            }
-            System.out.println();
-            last=arr[i].sum;
-        }
+        cout<<endl;
+        last=arr[i].sum;
     }
-    static class User implements Comparable<User>{
-        String id;
-        int[] grades=new int[k+1];
-        boolean flag=false;
-        int sum=0;
-        int perfectCnt=0;
-
-        public User(String id) {
-            this.id = id;
-            Arrays.fill(grades,-1);
-        }
-
-        @Override
-        public int compareTo(User o) {
-            if(sum==o.sum){
-                if(perfectCnt==o.perfectCnt){
-                    return id.compareTo(o.id);
-                }
-                return o.perfectCnt-perfectCnt;
-            }
-            return o.sum-sum;
-        }
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
