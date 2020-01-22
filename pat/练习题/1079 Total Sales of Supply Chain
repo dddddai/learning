@@ -3,7 +3,8 @@ and suppliers（供应商）– everyone involved in moving a product from suppl
 
 Starting from one root supplier,everyone on the chain buys products from one’s supplier in a price P 
 and sell or distribute them in a price that is r% higher than P. Only the retailers will face the customers. 
-It is assumed that each member in the supply chain has exactly one supplier except the root supplier, and there is no supply cycle.
+It is assumed that each member in the supply chain has exactly one supplier except the root supplier,
+and there is no supply cycle.
 
 Now given a supply chain, you are supposed to tell the total sales from all the retailers.
 
@@ -18,15 +19,19 @@ Then N lines follow, each describes a distributor or retailer in the following f
 
 Ki ID[1] ID[2] … ID[Ki]
 
-where in the i-th line, Ki is the total number of distributors or retailers who receive products from supplier i, 
+where in the i-th line,
+Ki is the total number of distributors or retailers who receive products from supplier i, 
 and is then followed by the ID’s of these distributors or retailers. 
-Kj being 0 means that the j-th member is a retailer, then instead the total amount of the product will be given after Kj. 
+Kj being 0 means that the j-th member is a retailer,
+then instead the total amount of the product will be given after Kj. 
 All the numbers in a line are separated by a space.
 
 Output Specification:
 
-For each test case, print in one line the total sales we can expect from all the retailers, accurate up to 1 decimal place. 
+For each test case, print in one line the total sales we can expect from all the retailers, 
+accurate up to 1 decimal place. 
 It is guaranteed that the number will not exceed 1010.
+
 
 Sample Input:
 10 1.80 1.00
@@ -45,78 +50,51 @@ Sample Output:
 42.4
 
 
-4个超时
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    private static double p,r,result;
+#include<bits/stdc++.h>
+using namespace std;
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        p=Reader.nextDouble();
-        r=Reader.nextDouble()/100;
-        result=0;
-        List<List<Integer>> tree=new ArrayList<>(n);
-        boolean[] isRetailer=new boolean[n];
-        for(int i=0;i<n;++i){
-            tree.add(new ArrayList<>(n>>1));
-            int k=Reader.nextInt();
-            if(k==0){
-                isRetailer[i]=true;
-                tree.get(i).add(Reader.nextInt());
-                continue;
+int main(){
+    int n;
+    double p,r;
+    cin>>n>>p>>r;
+    vector<forward_list<int>> graph(n);
+    vector<int> amount(n);
+    for(int i=0;i<n;++i){
+        int k;
+        cin>>k;
+        if(k==0){
+            int num;
+            cin>>num;
+            amount[i]=num;
+        }
+        for(int j=0;j<k;++j){
+            int idx;
+            cin>>idx;
+            graph[i].push_front(idx);
+        }
+    }
+    queue<int> q;
+    q.push(0);
+    double result=0;
+    while(!q.empty()){
+        int size=q.size();
+        for(int i=0;i<size;++i){
+            int idx=q.front();
+            q.pop();
+            if(amount[idx]){
+                result+=amount[idx]*p;
+            }else{
+                for(int next:graph[idx]){
+                    q.push(next);
+                }
             }
-            for(int j=0;j<k;++j){
-                tree.get(i).add(Reader.nextInt());
-            }
         }
-        dfs(tree,0,0,isRetailer);
-        System.out.format("%.1f",result);
+        p*=(1+r/100);
     }
-    private static void dfs(List<List<Integer>> tree,int root,int depth,boolean[] isRetailer){
-        if(isRetailer[root]){
-            result+=p*Math.pow(1+r,depth)*tree.get(root).get(0);
-            return;
-        }
-        for(int idx:tree.get(root)){
-            dfs(tree,idx,depth+1,isRetailer);
-        }
-    }
-}
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    printf("%.1f",result);
+    return 0;
 }
