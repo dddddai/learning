@@ -36,30 +36,41 @@ nai
 
 
 
-一个超时
 
 
+#include<bits/stdc++.h>
+using namespace std;
 
-import java.util.*;
-
-public class Main{
-    public static void main(String[] args){
-        Scanner sc=new Scanner(System.in);
-        int n=sc.nextInt();
-        sc.nextLine();
-        String tmp=sc.nextLine();
-        int start=0;
-        for(int i=1;i<n;++i){
-            String s=sc.nextLine();
-            for(int j=tmp.length()-1;j>=start;--j){
-                int idx=s.length()-tmp.length()+j;
-                if(idx<0 || tmp.charAt(j)!=s.charAt(idx)){
-                    start=j+1;
-                    break;
-                }
+int main(){
+    int n;
+    cin>>n;
+    string tmp;
+    getline(cin,tmp);
+    vector<string> arr(n);
+    int len=INT_MAX;
+    for(int i=0;i<n;++i){
+        getline(cin,arr[i]);
+        len=min(len,(int)arr[i].length());
+    }
+    int i=0;
+    tmp=arr[0];
+    bool flag=true;
+    while(i<len){
+        for(string s:arr){
+            if(s[s.length()-1-i]!=tmp[tmp.length()-1-i]){
+                flag=false;
+                break;
             }
         }
-        sc.close();
-        System.out.println(start==tmp.length() ? "nai":tmp.substring(start));
+        if(!flag){
+            break;
+        }
+        ++i;
     }
+    if(i){
+        cout<<tmp.substr(tmp.length()-i);
+    }else{
+        cout<<"nai";
+    }
+    return 0;
 }
