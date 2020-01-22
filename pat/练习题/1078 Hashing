@@ -27,81 +27,53 @@ Sample Output:
 
 
 
-import java.util.*;
-import java.io.*;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int size=Reader.nextInt(),n=Reader.nextInt();
-        while(!isPrime(size)){
-            ++size;
-        }
-        boolean[] used=new boolean[size];
-        int num=Reader.nextInt();
-        int idx=num%size;
-        used[idx]=true;
-        System.out.print(idx);
+坑点：1不是质数！！！
 
-        for(int i=1;i<n;++i){
-            num=Reader.nextInt();
-            int start=num%size;
-            int step;
-            for(step=0;step<size;++step){       //step增加到size时就说明无法插入
-                idx=(start+step*step)%size;
-                if(!used[idx]){
-                    System.out.print(" "+idx);
-                    used[idx]=true;
-                    break;
-                }
-            }
-            if(step==size){
-                System.out.print(" -");
-            }
-        }
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+bool isPrime(int num){
+    if(num==1){
+        return false;
     }
-    private static boolean isPrime(int num){
-        if(num==1){
+    for(int i=2;i*i<=num;++i){
+        if(num%i==0){
             return false;
         }
-        double max=Math.sqrt(num);
-        for(int i=2;i<=max;++i){
-            if(num%i==0){
-                return false;
-            }
-        }
-        return true;
     }
+    return true;
 }
 
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
+int main(){
+    int m,n;
+    cin>>m>>n;
+    while(!isPrime(m)){
+        ++m;
     }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
+    vector<bool> used(m);
+    for(int i=0;i<n;++i){
+        int num;
+        cin>>num;
+        int start=num%m;
+        int idx=start;
+        int step=1;
+        while(used[idx] && step<m){
+            idx=(start+step*step)%m;
+            ++step;
         }
-        return tokenizer.nextToken();
+        if(i){
+            cout<<' ';
+        }
+        if(used[idx]){
+            cout<<'-';
+        }else{
+            cout<<idx;
+            used[idx]=true;
+        }
     }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
