@@ -1,0 +1,103 @@
+Given N rational numbers in the form numerator/denominator, you are supposed to calculate their sum.
+
+Input Specification:
+
+Each input file contains one test case. Each case starts with a positive integer N (≤100), 
+followed in the next line N rational numbers a1/b1 a2/b2 ... 
+where all the numerators and denominators are in the range of long int. 
+If there is a negative number, then the sign must appear in front of the numerator.
+
+Output Specification:
+
+For each test case, output the sum in the simplest form integer numerator/denominator 
+where integer is the integer part of the sum, numerator <denominator, 
+and the numerator and the denominator have no common factor. 
+You must output only the fractional part if the integer part is 0.
+
+
+
+Sample Input 1:
+1
+2
+5
+2/5 4/15 1/30 -2/60 8/3
+
+Sample Output 1:
+1
+3 1/3
+
+
+Sample Input 2:
+1
+2
+2
+4/3 2/3
+
+Sample Output 2:
+1
+2
+
+
+Sample Input 3:
+1
+2
+3
+1/3 -1/6 1/8
+
+Sample Output 3:
+1
+7/24
+
+
+
+
+坑点：要边加边通分，不能先通分再一起加，否则会溢出long long的范围
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<long long> numerator(n);
+    vector<long long> denominator(n);
+    for(int i=0;i<n;++i){
+        string s;
+        cin>>s;
+        int idx=s.find('/');
+        numerator[i]=stoll(s.substr(0,idx));
+        denominator[i]=stoll(s.substr(idx+1));
+    }
+    long long sum=numerator[0];
+    long long deno=denominator[0];
+    for(int i=1;i<n;++i){
+        int k=2;
+        long long tmp=deno;
+        while(deno%denominator[i]){
+            deno=tmp*k++;
+        }
+        sum*=k-1;
+        sum+=numerator[i]*deno/denominator[i];
+        long long a=sum;
+        long long b=deno;
+        while(b){
+            long long tmp=a%b;
+            a=b;
+            b=tmp;
+        }
+        sum/=a;
+        deno/=a;
+    }
+    long long integer=sum/deno;
+    long long num=sum%deno;
+    if(num==0){
+        cout<<integer;
+        return 0;
+    }
+    if(integer){
+        cout<<integer<<' ';
+    }
+    cout<<num<<'/'<<deno;
+    return 0;
+}
