@@ -1,10 +1,12 @@
-It is said that in 2013, there were about 100 graduate schools ready to proceed over 40,000 applications in Zhejiang Province. 
+It is said that in 2013,
+there were about 100 graduate schools ready to proceed over 40,000 applications in Zhejiang Province. 
 It would help a lot if you could write a program to automate the admission procedure.
 
 Each applicant will have to provide two grades: the national entrance exam grade GE, and the interview grade GI.
 The final grade of an applicant is (GE + GI) / 2. The admission rules are:
 
-The applicants are ranked according to their final grades, and will be admitted one by one from the top of the rank list.
+The applicants are ranked according to their final grades, 
+and will be admitted one by one from the top of the rank list.
 If there is a tied final grade, the applicants will be ranked according to their national entrance exam grade GE. 
 If still tied, their ranks must be the same.
 
@@ -27,8 +29,10 @@ In the next line, separated by a space, there are M positive integers.
 The i-th integer is the quota of the i-th graduate school respectively.
 
 Then N lines follow, each contains 2+K integers separated by a space. 
-The first 2 integers are the applicant’s GE and GI, respectively. The next K integers represent the preferred schools. 
-For the sake of simplicity, we assume that the schools are numbered from 0 to M-1, and the applicants are numbered from 0 to N-1.
+The first 2 integers are the applicant’s GE and GI, respectively. 
+The next K integers represent the preferred schools. 
+For the sake of simplicity, we assume that the schools are numbered from 0 to M-1,
+and the applicants are numbered from 0 to N-1.
 
 Output Specification:
 
@@ -63,112 +67,66 @@ Sample Output:
 
 
 
-一个超时
 
+#include<bits/stdc++.h>
+using namespace std;
 
+int k;
 
-import java.util.*;
-import java.io.*;
+struct Applicant{
+    int ge,gi,id;
+    vector<int> preference;
 
-public class Main{
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt(),m=Reader.nextInt(),k=Reader.nextInt();
-        int[] quota=new int[m];
-        int[][] preferred=new int[n][k];
-        Applicant[] applicants=new Applicant[n];
-        List<List<Applicant>> result=new ArrayList<>(m);
-        for(int i=0;i<m;++i){
-            result.add(new ArrayList<>(k+5));
+    Applicant(){}
+
+    Applicant(int a,int b,int i){
+        ge=a;
+        gi=b;
+        id=i;
+        preference.resize(k);
+    }
+};
+
+int main(){
+    int n,m;
+    cin>>n>>m>>k;
+    vector<int> quota(m);
+    for(int i=0;i<m;++i){
+        cin>>quota[i];
+    }
+    vector<Applicant> applicants(n);
+    for(int i=0;i<n;++i){
+        int ge,gi;
+        cin>>ge>>gi;
+        applicants[i]=Applicant(ge,gi,i);
+        for(int j=0;j<k;++j){
+            cin>>applicants[i].preference[j];
         }
-        for(int i=0;i<m;++i){
-            quota[i]=Reader.nextInt();
+    }
+    sort(applicants.begin(),applicants.end(),[](Applicant& a,Applicant& b){
+        if(a.ge+a.gi==b.ge+b.gi){
+            return a.ge>b.ge;
         }
-        for(int i=0;i<n;++i){
-            applicants[i]=new Applicant(Reader.nextInt(),Reader.nextInt(),i);
-            for(int j=0;j<k;++j){
-                preferred[i][j]=Reader.nextInt();
+        return a.ge+a.gi>b.ge+b.gi;
+    });
+    vector<vector<Applicant>> result(m);
+    for(Applicant& a:applicants){
+        for(int p:a.preference){
+            if(result[p].size()<quota[p] || (result[p].back().ge+result[p].back().gi==a.ge+a.gi && result[p].back().ge==a.ge)){
+                result[p].push_back(a);
+                break;
             }
         }
-        Arrays.sort(applicants, new Comparator<Applicant>() {
-            @Override
-            public int compare(Applicant o1, Applicant o2) {
-                if(o1.ge+o1.gi==o2.ge+o2.gi){
-                    return o2.ge-o1.ge;
-                }
-                return o2.ge+o2.gi-o1.ge-o1.gi;
-            }
-        });
-        for(int i=0;i<n;++i){
-            for(int j=0;j<k;++j){
-                int idx=preferred[applicants[i].id][j];
-                if(result.get(idx).size()<quota[idx]){
-                    result.get(idx).add(applicants[i]);
-                    break;
-                }
-                Applicant last=result.get(idx).get(result.get(idx).size()-1);
-                if(last.gi+last.ge==applicants[i].gi+applicants[i].ge && last.ge==applicants[i].ge){
-                    result.get(idx).add(applicants[i]);
-                    break;
-                }
+    }
+    for(auto row:result){
+        if(!row.empty()){
+            sort(row.begin(),row.end(),[](Applicant& a,Applicant& b){return a.id<b.id;});
+            cout<<row[0].id;
+            for(int i=1;i<row.size();++i){
+                cout<<' '<<row[i].id;
             }
         }
-        for(List<Applicant> candidates:result){
-            if(!candidates.isEmpty()){
-                Collections.sort(candidates, new Comparator<Applicant>() {
-                    @Override
-                    public int compare(Applicant o1, Applicant o2) {
-                        return o1.id-o2.id;
-                    }
-                });
-                System.out.print(candidates.get(0).id);
-                for(int i=1;i<candidates.size();++i){
-                    System.out.print(" "+candidates.get(i).id);
-                }
-            }
-            System.out.println();
-        }
+        cout<<endl;
     }
-    static class Applicant{
-        int ge,gi,id;
-
-        public Applicant(int ge, int gi,int id) {
-            this.ge = ge;
-            this.gi = gi;
-            this.id = id;
-        }
-    }
-}
-
-
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
