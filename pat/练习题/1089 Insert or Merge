@@ -1,0 +1,145 @@
+For two rational numbers, your task is to implement the basic arithmetics, 
+that is, to calculate their sum, difference, product and quotient.
+
+Input Specification:
+
+Each input file contains one test case,
+which gives in one line the two rational numbers in the format “a1/b1 a2/b2”. 
+The numerators and the denominators are all in the range of long int. 
+If there is a negative sign, it must appear only in front of the numerator. 
+The denominators are guaranteed to be non-zero numbers.
+
+Output Specification:
+
+For each test case, print in 4 lines the sum, difference,
+product and quotient of the two rational numbers, respectively. 
+The format of each line is “number1 operator number2 = result”. 
+Notice that all the rational numbers must be in their simplest form “k a/b”, 
+where k is the integer part, and a/b is the simplest fraction part. 
+If the number is negative, it must be included in a pair of parentheses.
+If the denominator in the division is zero, output “Inf” as the result. 
+It is guaranteed that all the output integers are in the range of long int.
+
+
+Sample Input 1:
+2/3 -4/2
+Sample Output 1:
+2/3 + (-2) = (-1 1/3)
+2/3 – (-2) = 2 2/3
+2/3 * (-2) = (-1 1/3)
+2/3 / (-2) = (-1/3)
+
+
+Sample Input 2:
+5/3 0/6
+Sample Output 2:
+1 2/3 + 0 = 1 2/3
+1 2/3 – 0 = 1 2/3
+1 2/3 * 0 = 0
+1 2/3 / 0 = Inf
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+long long gcd(long long a,long long b){
+    if(a==0 || b==0){
+        return 1;
+    }
+    while(b){
+        long long tmp=a%b;
+        a=b;
+        b=tmp;
+    }
+    return a;
+}
+
+string format(string num,bool flag,int i){
+    int idx=flag ? i:num.find('/');
+    long long numerator=stol(num.substr(num[0]=='-',idx));
+    long long denominator=stol(num.substr(idx+1+(num[idx+1]=='-')));
+    if(denominator==0){
+        return "Inf";
+    }
+    long long x=numerator/denominator;
+    long long y=numerator%denominator;
+    long long z=gcd(y,denominator);
+    y/=z;
+    denominator/=z;
+    string result;
+    if(x){
+        if(y){
+            result=to_string(x)+" "+to_string(y)+"/"+to_string(denominator);
+        }else{
+            result=to_string(x);
+        }
+    }else{
+        if(y){
+            result=to_string(y)+"/"+to_string(denominator);
+        }else{
+            return "0";
+        }
+    }
+    if((num[0]=='-') ^ (num[idx+1]=='-')){
+        return "(-"+result+")";
+    }
+    return result;
+}
+
+int main(){
+    string a,b;
+    cin>>a>>b;
+    int i=a.find('/');
+    int j=b.find('/');
+    long long arr[4]={stoll(a.substr(0,i)),stoll(a.substr(i+1)),stoll(b.substr(0,j)),stoll(b.substr(j+1))};
+    long long m=arr[0];
+    long long n=arr[1];
+    long long p=arr[2];
+    long long q=arr[3];
+    string w=format(a,false,0);
+    string e=format(b,false,0);
+    string s=to_string(m*q+p*n);
+    cout<<w+" + "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    s=to_string(m*q-p*n);
+    cout<<w+" - "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    m=arr[0];
+    n=arr[1];
+    p=arr[2];
+    q=arr[3];
+    long long x=gcd(m,n);
+    long long y=gcd(p,q);
+    m/=x;
+    n/=x;
+    p/=y;
+    q/=y;
+    long long r=gcd(m,q);
+    long long t=gcd(n,p);
+    m/=r;
+    q/=r;
+    n/=t;
+    p/=t;
+    s=to_string(m*p);
+    cout<<w+" * "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    m=arr[0];
+    n=arr[1];
+    p=arr[2];
+    q=arr[3];
+    x=gcd(m,n);
+    y=gcd(p,q);
+    m/=x;
+    n/=x;
+    p/=y;
+    q/=y;
+    r=gcd(m,p);
+    t=gcd(n,q);
+    m/=r;
+    p/=r;
+    n/=t;
+    q/=t;
+    s=to_string(m*q);
+    cout<<w+" / "+e+" = "<<format(s+"/"+to_string(n*p),true,s.length())<<endl;
+    return 0;
+}
