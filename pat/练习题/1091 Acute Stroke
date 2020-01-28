@@ -1,0 +1,118 @@
+One important factor to identify acute stroke (急性脑卒中) is the volume of the stroke core. 
+Given the results of image analysis in which the core regions are identified in each MRI slice,
+your job is to calculate the volume of the stroke core.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains 4 positive integers: 
+M, N, L and T, where M and N are the sizes of each slice (i.e. pixels of a slice are in an M by N matrix, 
+and the maximum resolution is 1286 by 128); L (<=60) is the number of slices of a brain; 
+and T is the integer threshold (i.e. if the volume of a connected core is less than T, 
+then that core must not be counted).
+
+Then L slices are given. Each slice is represented by an M by N matrix of 0’s and 1’s, 
+where 1 represents a pixel of stroke, and 0 means normal. Since the thickness of a slice is a constant,
+we only have to count the number of 1’s to obtain the volume.
+However, there might be several separated core regions in a brain, 
+and only those with their volumes no less than T are counted. 
+Two pixels are “connected” and hence belong to the same region if they share a common side, 
+as shown by Figure 1 where all the 6 red pixels are connected to the blue one.
+
+
+
+Output Specification:
+For each case, output in a line the total volume of the stroke core.
+
+
+Sample Input:
+3 4 5 2
+1 1 1 1
+1 1 1 1
+1 1 1 1
+0 0 1 1
+0 0 1 1
+0 0 1 1
+1 0 1 1
+0 1 0 0
+0 0 0 0
+1 0 1 1
+0 0 0 0
+0 0 0 0
+0 0 0 1
+0 0 0 1
+1 0 0 0
+
+
+Sample Output:
+26
+
+
+
+用dfs会因为递归层数太多爆栈，只能用bfs
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int m,n,l,t;
+int step[6][3]={{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{0,0,1},{0,0,-1}};
+
+int bfs(vector<vector<vector<bool>>>& graph,int i,int j,int k){
+    queue<int> q;
+    q.push(i);
+    q.push(j);
+    q.push(k);
+    graph[i][j][k]=false;
+    int result=0;
+    while(!q.empty()){
+        int x=q.front();
+        q.pop();
+        int y=q.front();
+        q.pop();
+        int z=q.front();
+        q.pop();
+        for(int s=0;s<6;++s){
+            int a=x+step[s][0];
+            int b=y+step[s][1];
+            int c=z+step[s][2];
+            if(a>=0 && a<l && b>=0 && b<m && c>=0 && c<n && graph[a][b][c]){
+                q.push(a);
+                q.push(b);
+                q.push(c);
+                graph[a][b][c]=false;
+            }
+        }
+        ++result;
+    }
+    return result;
+}
+
+int main(){
+    cin>>m>>n>>l>>t;
+    vector<vector<vector<bool>>> graph(l,vector<vector<bool>>(m,vector<bool>(n)));
+    for(int i=0;i<l;++i){
+        for(int j=0;j<m;++j){
+            for(int k=0;k<n;++k){
+                bool pixel;
+                cin>>pixel;
+                graph[i][j][k]=pixel;
+            }
+        }
+    }
+    int result=0;
+    for(int i=0;i<l;++i){
+        for(int j=0;j<m;++j){
+            for(int k=0;k<n;++k){
+                if(graph[i][j][k]){
+                    int cnt=bfs(graph,i,j,k);
+                    if(cnt>=t){
+                        result+=cnt;
+                    }
+                }
+            }
+        }
+    }
+    cout<<result;
+    return 0;
+}
