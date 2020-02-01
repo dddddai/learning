@@ -1,0 +1,108 @@
+Given a tree, you are supposed to tell if it is a complete binary tree.
+
+Input Specification:
+
+Each input file contains one test case. For each case, 
+the first line gives a positive integer N (<=20)
+which is the total number of nodes in the tree —and hence the nodes are numbered from 0 to N-1.
+Then N lines follow, each corresponds to a node, and gives the indices of the left and right children of the node.
+If the child does not exist, a “-” will be put at the position. Any pair of children are separated by a space.
+
+Output Specification:
+
+For each case, print in one line “YES” and the index of the last node if the tree is a complete binary tree, 
+or “NO” and the index of the root if not. There must be exactly one space separating the word and the number.
+
+
+Sample Input 1:
+9
+7 8
+– –
+– –
+– –
+0 1
+2 3
+4 5
+– –
+– –
+
+Sample Output 1:
+YES 8
+
+
+Sample Input 2:
+8
+– –
+4 5
+0 6
+– –
+2 3
+– 7
+– –
+– –
+
+Sample Output 2:
+NO 1
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<pair<int,int>> arr(n);
+    vector<bool> visited(n);
+    for(int i=0;i<n;++i){
+        string a,b;
+        cin>>a>>b;
+        if(a[0]=='-'){
+            arr[i].first=-1;
+        }else{
+            arr[i].first=stoi(a);
+            visited[arr[i].first]=true;
+        }
+        if(b[0]=='-'){
+            arr[i].second=-1;
+        }else{
+            arr[i].second=stoi(b);
+            visited[arr[i].second]=true;
+        }
+    }
+    int root=0;
+    while(visited[root]){
+        ++root;
+    }
+    bool flag=false;
+    queue<int> q;
+    q.push(root);
+    while(1){
+        if(arr[q.front()].first!=-1){
+            if(flag){
+                cout<<"NO "<<root;
+                break;
+            }
+            q.push(arr[q.front()].first);
+        }else{
+            flag=true;
+        }
+        if(arr[q.front()].second!=-1){
+            if(flag){
+                cout<<"NO "<<root;
+                break;
+            }
+            q.push(arr[q.front()].second);
+        }else{
+            flag=true;
+        }
+        if(q.size()==1){
+            cout<<"YES "<<q.front();
+            break;
+        }
+        q.pop();
+    }
+    return 0;
+}
