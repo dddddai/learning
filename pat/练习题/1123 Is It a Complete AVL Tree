@@ -1,0 +1,144 @@
+An AVL tree is a self-balancing binary search tree. 
+In an AVL tree, the heights of the two child subtrees of any node differ by at most one; 
+if at any time they differ by more than one, rebalancing is done to restore this property. 
+Figures 1-4 illustrate the rotation rules.
+
+Now given a sequence of insertions,
+you are supposed to output the level-order traversal sequence of the resulting AVL tree, 
+and to tell if it is a complete binary tree.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line contains a positive integer N (<= 20). 
+Then N distinct integer keys are given in the next line. All the numbers in a line are separated by a space.
+
+Output Specification:
+
+For each test case, insert the keys one by one into an initially empty AVL tree. 
+Then first print in a line the level-order traversal sequence of the resulting AVL tree. 
+All the numbers in a line must be separated by a space, and there must be no extra space at the end of the line.
+Then in the next line, print “YES” if the tree is complete, or “NO” if not.
+
+
+Sample Input 1:
+5
+88 70 61 63 65
+
+Sample Output 1:
+70 63 88 61 65
+YES
+
+
+Sample Input 2:
+8
+88 70 61 96 120 90 65 68
+
+Sample Output 2:
+88 65 96 61 70 90 120 68
+NO
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node{
+    int val;
+    Node* left;
+    Node* right;
+
+    Node(int v){
+        val=v;
+    }
+};
+
+Node* rotateLeft(Node* root){
+    Node* newRoot=root->right;
+    root->right=newRoot->left;
+    newRoot->left=root;
+    return newRoot;
+}
+
+Node* rotateRight(Node* root){
+    Node* newRoot=root->left;
+    root->left=newRoot->right;
+    newRoot->right=root;
+    return newRoot;
+}
+
+Node* rotateLeftRight(Node* root){
+    root->left=rotateLeft(root->left);
+    return rotateRight(root);
+}
+
+Node* rotateRightLeft(Node* root){
+    root->right=rotateRight(root->right);
+    return rotateLeft(root);
+}
+
+int getDepth(Node* root){
+    if(root==nullptr){
+        return 0;
+    }
+    return max(getDepth(root->left),getDepth(root->right))+1;
+}
+
+Node* insert(Node* root,int num){
+    if(root==nullptr){
+        return new Node(num);
+    }
+    if(num<root->val){
+        root->left=insert(root->left,num);
+        if(getDepth(root->left)>getDepth(root->right)+1){
+            root=num<root->left->val ? rotateRight(root):rotateLeftRight(root);
+        }
+    }else{
+        root->right=insert(root->right,num);
+        if(getDepth(root->right)>getDepth(root->left)+1){
+            root=num>root->right->val ? rotateLeft(root):rotateRightLeft(root);
+        }
+    }
+    return root;
+}
+
+int main(){
+    int n;
+    cin>>n;
+    int num;
+    cin>>num;
+    Node* root=new Node(num);
+    for(int i=1;i<n;++i){
+        cin>>num;
+        root=insert(root,num);
+    }
+    queue<Node*> q;
+    q.push(root);
+    cout<<root->val;
+    bool flag=false,complete=true;
+    while(!q.empty()){
+        if(q.front()->left){
+            if(flag){
+                complete=false;
+            }
+            q.push(q.front()->left);
+            cout<<' '<<q.front()->left->val;
+        }else{
+            flag=true;
+        }
+        if(q.front()->right){
+            if(flag){
+                complete=false;
+            }
+            q.push(q.front()->right);
+            cout<<' '<<q.front()->right->val;
+        }else{
+            flag=true;
+        }
+        q.pop();
+    }
+    cout<<endl<<(complete ? "YES":"NO"); 
+    return 0;
+}
