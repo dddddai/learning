@@ -1,0 +1,115 @@
+Suppose that all the keys in a binary tree are distinct positive integers.
+A unique binary tree can be determined by a given pair of postorder and inorder traversal sequences. 
+And it is a simple standard routine to print the numbers in level-order. However,
+if you think the problem is too simple, then you are too naive.
+This time you are supposed to print the numbers in "zigzagging order" 
+-- that is, starting from the root, print the numbers level-by-level, 
+alternating between left to right and right to left. 
+For example, for the following tree you must output: 1 11 5 8 17 12 20 15.
+
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line gives a positive integer N (≤30), 
+the total number of nodes in the binary tree. 
+The second line gives the inorder sequence and the third line gives the postorder sequence.
+All the numbers in a line are separated by a space.
+
+Output Specification:
+
+For each test case, print the zigzagging sequence of the tree in a line. 
+All the numbers in a line must be separated by exactly one space, 
+and there must be no extra space at the end of the line.
+
+Sample Input:
+8
+12 11 20 17 1 15 8 5
+12 20 17 11 15 8 5 1
+
+Sample Output:
+1 11 5 8 17 12 20 15
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node{
+    int val;
+    Node* left;
+    Node* right;
+
+    Node(int v){
+        val=v;
+    }
+};
+
+
+vector<int> post,in;
+unordered_map<int,int> idx;
+
+Node* func(int postStart,int postEnd,int inStart,int inEnd){
+    if(postStart>postEnd){
+        return nullptr;
+    }
+    Node* root=new Node(post[postEnd]);
+    int i=idx[post[postEnd]];
+    root->left=func(postStart,postStart+i-inStart-1,inStart,i-1);
+    root->right=func(postStart+i-inStart,postEnd-1,i+1,inEnd);
+    return root;
+}
+
+int main(){
+    int n;
+    cin>>n;
+    post.resize(n);
+    in.resize(n);
+    idx.reserve(int(n/0.75)+1);
+    for(int i=0;i<n;++i){
+        cin>>in[i];
+        idx[in[i]]=i;
+    }
+    for(int i=0;i<n;++i){
+        cin>>post[i];
+    }
+    Node* root=func(0,n-1,0,n-1);
+    list<Node*> q;
+    q.push_back(root);
+    int cnt=0;
+    bool first=true;
+    while(!q.empty()){
+        ++cnt;
+        int k=q.size();
+        if(cnt&1){
+            while(k-->0){
+                if(first){
+                    first=false;
+                }else{
+                    cout<<' ';
+                }
+                cout<<q.back()->val;
+                if(q.back()->right){
+                    q.push_front(q.back()->right);
+                }
+                if(q.back()->left){
+                    q.push_front(q.back()->left);
+                }
+                q.pop_back();
+            }
+        }else{
+            while(k-->0){
+                cout<<' '<<q.front()->val;
+                if(q.front()->left){
+                    q.push_back(q.front()->left);
+                }
+                if(q.front()->right){
+                    q.push_back(q.front()->right);
+                }
+                q.pop_front();
+            }
+        }
+    }
+    return 0;
+}
