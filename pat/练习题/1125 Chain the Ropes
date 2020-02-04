@@ -1,0 +1,60 @@
+Given some segments of rope, you are supposed to chain them into one rope. 
+Each time you may only fold two segments into loops and chain them into one piece,
+as shown by the figure. The resulting chain will be treated as another segment of rope and can be folded again.
+After each chaining, the lengths of the original two segments will be halved.
+
+
+
+Your job is to make the longest possible rope out of N given segments.
+
+Input Specification:
+
+Each input file contains one test case. For each case, the first line gives a positive integer N (2 <= N <= 104). 
+Then N positive integer lengths of the segments are given in the next line, separated by spaces.
+All the integers are no more than 104.
+
+Output Specification:
+
+For each case, print in a line the length of the longest possible rope that can be made by the given segments.
+The result must be rounded to the nearest integer that is no greater than the maximum length.
+
+
+Sample Input:
+8
+10 15 12 3 4 13 1 15
+
+Sample Output:
+14
+
+
+
+
+一个绳子可以对半折成一个圈，和另一个折成圈的绳子连起来
+越先折成圈的绳子损失的长度越多，所以优先折短的绳子
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    priority_queue<double,vector<double>,greater<double>> pq;
+    for(int i=0;i<n;++i){
+        double num;
+        cin>>num;
+        pq.push(num);
+    }
+    while(pq.size()>1){
+        double a=pq.top();
+        pq.pop();
+        double b=pq.top();
+        pq.pop();
+        pq.push((a+b)/2);
+    }
+    cout<<int(pq.top());
+    return 0;
+}
