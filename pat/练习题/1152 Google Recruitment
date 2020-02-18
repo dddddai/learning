@@ -1,0 +1,65 @@
+Now you are asked to solve a more general problem:
+find the first K-digit prime in consecutive digits of any given L-digit number.
+
+Input Specification:
+Each input file contains one test case. Each case first gives in a line two positive integers:
+L (≤ 1,000) and K (< 10), which are the numbers of digits of the given number and the prime to be found, 
+respectively. Then the L-digit number N is given in the next line.
+
+Output Specification:
+For each test case, print in a line the first K-digit prime in consecutive digits of N. 
+If such a number does not exist, output 404 instead. 
+Note: the leading zeroes must also be counted aspart of the K digits. 
+For example, to find the 4-digit prime in 200236, 0023 is a solution. 
+However the first digit 2 must not be treated as a solution 0002 
+since the leading zeroes are not in the original number.
+
+
+Sample Input 1:
+20 5
+23654987725541023819
+
+Sample Output 1:
+49877
+
+
+Sample Input 2:
+10 3
+2468024680
+
+Sample Output 2:
+404
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+bool isPrime(long num){
+    if(num<2){
+        return false;
+    }
+    for(int i=2;i*i<=num;++i){
+        if(num%i==0){
+            return false;
+        }
+    }
+    return true;
+}
+
+int main(){
+    int l,k;
+    string s;
+    cin>>l>>k>>s;
+    for(int i=0;i+k<=l;++i){
+        long num=stol(s.substr(i,k));
+        if(isPrime(num)){
+            cout<<s.substr(i,k);
+            return 0;
+        }
+    }
+    cout<<404;
+    return 0;
+}
