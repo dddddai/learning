@@ -10,9 +10,12 @@ Then if city1 is occupied by the enemy, we must have 1 highway repaired, that is
 Input
 
 Each input file contains one test case. Each case starts with a line containing 3 numbers N (<1000), M and K, 
-which are the total number of cities, the number of remaining highways, and the number of cities to be checked, respectively. 
-Then M lines follow, each describes a highway by 2 integers, which are the numbers of the cities the highway connects.
-The cities are numbered from 1 to N. Finally there is a line containing K numbers, which represent the cities we concern.
+which are the total number of cities, the number of remaining highways, 
+and the number of cities to be checked, respectively. 
+Then M lines follow, each describes a highway by 2 integers, 
+which are the numbers of the cities the highway connects.
+The cities are numbered from 1 to N. Finally there is a line containing K numbers,
+which represent the cities we concern.
 
 Output
 
@@ -35,9 +38,6 @@ Sample Output
 
 
 
-思路：求去除了某个节点后剩余部分的连通分量数，需修的道路数=连通分量数-1
-
-一个测试样例超时
 
 
 
@@ -45,13 +45,11 @@ Sample Output
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<bool> visited;
-
-void dfs(vector<forward_list<int>>& graph,int idx){
+void dfs(vector<forward_list<int>>& graph,int idx,vector<bool>& visited){
     visited[idx]=true;
     for(int next:graph[idx]){
         if(!visited[next]){
-            dfs(graph,next);
+            dfs(graph,next,visited);
         }
     }
 }
@@ -62,20 +60,19 @@ int main(){
     vector<forward_list<int>> graph(n+1);
     for(int i=0;i<m;++i){
         int a,b;
-        cin>>a>>b;
+        scanf("%d %d",&a,&b);
         graph[a].push_front(b);
         graph[b].push_front(a);
     }
-    visited.resize(n+1);
     for(int i=0;i<k;++i){
-        fill(visited.begin(),visited.end(),false);
-        int occupied;
-        cin>>occupied;
-        visited[occupied]=true;
+        int idx;
+        scanf("%d",&idx);
         int cnt=0;
+        vector<bool> visited(n+1);
+        visited[idx]=true;
         for(int j=1;j<=n;++j){
             if(!visited[j]){
-                dfs(graph,j);
+                dfs(graph,j,visited);
                 ++cnt;
             }
         }
