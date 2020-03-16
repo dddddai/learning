@@ -42,7 +42,8 @@ Sample Output:
 
 
 
-2个测试样例不通过？why？？
+注意不能直接把路上所有的bike数量相加来算送出和回收的bike，要从起点一步步算
+
 
 
 
@@ -61,20 +62,30 @@ struct Edge{
 
 forward_list<int> path;
 vector<int> cnt;
-int minSent=INT_MAX;
+int minSent=INT_MAX,minBack=INT_MAX;
 int c;
 
-void dfs(vector<forward_list<int>>& pre,int idx,forward_list<int>& tmp,int sent){
+void dfs(vector<forward_list<int>>& pre,int idx,forward_list<int>& tmp){
     if(idx==0){
-        if((minSent>0 && sent<minSent) || (sent<=0 && minSent<0 && sent>minSent)){
+        int sent=0,back=0;
+        for(int i:tmp){
+            if(back+cnt[i]>=(c>>1)){
+                back+=cnt[i]-(c>>1);
+            }else{
+                sent+=(c>>1)-back-cnt[i];
+                back=0;
+            }
+        }
+        if(sent<minSent || (sent==minSent && back<minBack)){
             minSent=sent;
+            minBack=back;
             path=forward_list<int>(tmp);
         }
         return;
     }
     tmp.push_front(idx);
     for(int p:pre[idx]){
-        dfs(pre,p,tmp,sent+(c>>1)-cnt[idx]);
+        dfs(pre,p,tmp);
     }
     tmp.pop_front();
 }
@@ -123,11 +134,11 @@ int main(){
         }
     }
     forward_list<int> tmp;
-    dfs(pre,s,tmp,0);
-    cout<<max(0,minSent)<<" 0";
+    dfs(pre,s,tmp);
+    cout<<minSent<<" 0";
     for(int station:path){
         cout<<"->"<<station;
     }
-    cout<<" "<<max(0,-minSent);
+    cout<<' '<<minBack;
     return 0;
 }
