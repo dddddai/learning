@@ -59,173 +59,161 @@ Sample Output:
 
 
 
-格式错误？？？wtf
+
+注意两个坑
+
+有vip桌子时，优先把vip分到vip桌子
+
+4
+06:00:00 30 1
+08:00:00 30 1
+10:00:00 30 1
+12:00:00 30 1
+5 1
+3
+
+答案为：
+06:00:00 08:00:00 120
+08:00:00 08:00:00 0
+10:00:00 10:00:00 0
+12:00:00 12:00:00 0
+1 0 3 0 0
 
 
-import java.util.*;
-import java.io.*;
+21点停止服务
 
-public class Hello{
-    public static int closeTime=21*3600;
-    private static Person[] players;
-    private static Table[] tables;
+1
+21:00:00 10 1
+3 3
+1 2 3
 
-    public static void main(String[] args) throws Exception {
-        Reader.init(System.in);
-        int n=Reader.nextInt();
-        players=new Person[n];
-        int i;
-        for(i=0;i<n;++i){
-            String[] time=Reader.next().split(":");
-            int seconds=Integer.valueOf(time[0])*3600+Integer.valueOf(time[1])*60+Integer.valueOf(time[2]);
-            players[i]=new Person(seconds,Math.min(7200,Reader.nextInt()*60),Reader.nextInt()==1);
+答案为：
+0 0 0
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Player{
+    int arrivingTime,playingTime;
+    bool vip,served;
+
+    Player(int a,int p,bool v){
+        arrivingTime=a;
+        playingTime=p;
+        vip=v;
+        served=false;
+    }
+};
+
+struct Table{
+    int idx,endTime;
+
+    Table(int i,int e){
+        idx=i;
+        endTime=e;
+    }
+};
+
+int main(){
+    int n;
+    cin>>n;
+    vector<Player> arr;
+    arr.reserve(n);
+    for(int i=0;i<n;++i){
+        string s;
+        int p;
+        bool v;
+        cin>>s>>p>>v;
+        int a=stoi(s.substr(0,2))*3600+stoi(s.substr(3,2))*60+stoi(s.substr(6,2));
+        Player pl(a,min(p,120)*60,v);
+        arr.push_back(pl);
+    }
+    int k,m;
+    cin>>k>>m;
+    vector<bool> isVipTable(k+1);
+    for(int i=0;i<m;++i){
+        int idx;
+        cin>>idx;
+        isVipTable[idx]=true;
+    }
+    sort(arr.begin(),arr.end(),[](Player a,Player b){
+        return a.arrivingTime<b.arrivingTime;
+    });
+    auto cmp=[](Table a,Table b){
+        if(a.endTime==b.endTime){
+            return a.idx>b.idx;
         }
-        Arrays.sort(players,new CmpByArrivingTime());
-
-        int k=Reader.nextInt(),m=Reader.nextInt();
-        tables=new Table[k+1];
-        for(i=1;i<=k;++i){
-            tables[i]=new Table();
+        return a.endTime>b.endTime;
+    };
+    vector<int> cnt(k+1);
+    priority_queue<Table,vector<Table>,decltype(cmp)> pq(cmp);
+    for(int i=1;i<=k;++i){
+        pq.push(Table(i,8*3600));
+    }
+    for(int cur=0;cur<n;){
+        if(arr[cur].served){
+            ++cur;
+            continue;
         }
-        for(i=0;i<m;++i){
-            tables[Reader.nextInt()].isVipTable=true;
-        }
-        i=0;
-        int nextVip=findNextVip(-1);
-        while(i<n){
-            if(players[i].isVip && i<nextVip){      //防止重复给vip分配table
-                ++i;
-                continue;
-            }
-            int idx=-1,min=Integer.MAX_VALUE;
-            for(int j=1;j<=k;++j){
-                if(tables[j].end<min){
-                    min=tables[j].end;
-                    idx=j;
+        Table t=pq.top();
+        int next=cur;
+        if(isVipTable[t.idx]){
+            for(int i=cur;i<n;++i){
+                if(arr[i].arrivingTime>t.endTime){
+                    break;
+                }
+                if(arr[i].vip && !arr[i].served){
+                    next=i;
+                    arr[i].served=true;
+                    break;
                 }
             }
-            if(tables[idx].end>=closeTime){
-                break;
+        }else if(arr[cur].vip){
+            queue<Table> q;
+            while(!pq.empty()){
+                if(arr[cur].arrivingTime<pq.top().endTime){
+                    break;
+                }
+                if(isVipTable[pq.top().idx]){
+                    t=pq.top();
+                    pq.pop();
+                    break;
+                }
+                q.push(pq.top());
+                pq.pop();
             }
-            if(tables[idx].isVipTable){
-                if(players[i].isVip){
-                    allocTable(idx,i++);
-                    nextVip=findNextVip(nextVip);
-                }else{
-                    if(nextVip<n && players[nextVip].arrivingTime<=tables[idx].end) {
-                        allocTable(idx, nextVip);
-                        nextVip=findNextVip(nextVip);
-                    }else{
-                        allocTable(idx,i++);
-                    }
-                }
-            }else{
-                if(players[i].isVip){
-                    int vipIdx=-1,minEnd=Integer.MAX_VALUE;
-                    for(int j=1;j<=k;++j){
-                        if(tables[j].isVipTable && tables[j].end<minEnd){
-                            vipIdx=j;
-                        }
-                    }
-                    if(vipIdx==-1 || tables[vipIdx].end>players[i].arrivingTime){
-                        allocTable(idx,i++);
-                    }else{
-                        allocTable(vipIdx,i++);
-                    }
-                    nextVip=findNextVip(nextVip);
-                }else{
-                    allocTable(idx,i++);
-                }
+            while(!q.empty()){
+                pq.push(q.front());
+                q.pop();
             }
         }
-        Arrays.sort(players,new CmpByStart());
-        for(i=0;i<n && players[i].start<closeTime;++i){
-            System.out.println();
-            int hour=players[i].arrivingTime/3600;
-            int minute=players[i].arrivingTime%3600/60;
-            int second=players[i].arrivingTime%60;
-            System.out.format("%02d:%02d:%02d ",hour,minute,second);
-            hour=players[i].start/3600;
-            minute=players[i].start%3600/60;
-            second=players[i].start%60;
-            System.out.format("%02d:%02d:%02d ",hour,minute,second);
-            System.out.print(Math.round((players[i].start-players[i].arrivingTime)/60.));
+        if(next==cur){
+            ++cur;
         }
-        System.out.print('\n');
-        System.out.print(tables[1].cnt);
-        for(i=2;i<=k;++i){
-            System.out.print(" "+tables[i].cnt);
+        if(t.idx==pq.top().idx){
+            pq.pop();
         }
-    }
-    private static int findNextVip(int vipIdx){
-        int i;
-        for(i=vipIdx+1;i<players.length && !players[i].isVip;++i);
-        return i;
-    }
-    private static void allocTable(int tableIdx,int playerIdx){
-        if(players[playerIdx].arrivingTime<tables[tableIdx].end){
-            players[playerIdx].start=tables[tableIdx].end;
-        }else{
-            players[playerIdx].start=players[playerIdx].arrivingTime;
+        int hour=arr[next].arrivingTime/3600;
+        int minute=arr[next].arrivingTime%3600/60;
+        int second=arr[next].arrivingTime%60;
+        int servingTime=max(t.endTime,arr[next].arrivingTime);
+        if(servingTime>=21*3600){
+            break;
         }
-        ++tables[tableIdx].cnt;
-        tables[tableIdx].end=players[playerIdx].start+players[playerIdx].playingTime;
+        int h=servingTime/3600;
+        int m=servingTime%3600/60;
+        int s=servingTime%60;
+        printf("%02d:%02d:%02d %02d:%02d:%02d %.0f\n",hour,minute,second,h,m,s,round((servingTime-arr[next].arrivingTime)/60.0));
+        Table t1(t.idx,servingTime+arr[next].playingTime);
+        pq.push(t1);
+        ++cnt[t.idx];
     }
-}
-class Person{
-    Integer arrivingTime,start=Hello.closeTime,playingTime;
-    boolean isVip;
-
-    public Person(Integer arrivingTime,Integer playingTime, boolean isVip) {
-        this.arrivingTime = arrivingTime;
-        this.playingTime = playingTime;
-        this.isVip = isVip;
+    cout<<cnt[1];
+    for(int i=2;i<=k;++i){
+        cout<<" "<<cnt[i];
     }
-}
-class Table{
-    int end=8*3600,cnt;
-    boolean isVipTable;
-}
-class CmpByArrivingTime implements Comparator<Person>{
-    @Override
-    public int compare(Person o1, Person o2) {
-        return o1.arrivingTime.compareTo(o2.arrivingTime);
-    }
-}
-class CmpByStart implements Comparator<Person>{
-    @Override
-    public int compare(Person o1, Person o2) {
-        return o1.start.compareTo(o2.start);
-    }
-}
-class Reader {
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    /** call this method to initialize reader for InputStream */
-    static void init(InputStream input) {
-        reader = new BufferedReader(
-                new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    /** get next word */
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-    static long nextLong() throws IOException{
-        return Long.parseLong(next());
-    }
+    return 0;
 }
