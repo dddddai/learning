@@ -1,43 +1,49 @@
-For two rational numbers, your task is to implement the basic arithmetics, 
-that is, to calculate their sum, difference, product and quotient.
+According to Wikipedia:
+Insertion sort iterates, consuming one input element each repetition, and growing a sorted output list. 
+Each iteration, insertion sort removes one element from the input data,
+finds the location it belongs within the sorted list, and inserts it there. 
+It repeats until no input elements remain.
+Merge sort works as follows: Divide the unsorted list into N sublists, each containing 1 element 
+(a list of 1 element is considered sorted). 
+Then repeatedly merge two adjacent sublists to produce new sorted sublists 
+until there is only 1 sublist remaining.
+
+Now given the initial sequence of integers, together with a sequence which is a result 
+of several iterations of some sorting method, can you tell which sorting method we are using?
 
 Input Specification:
 
-Each input file contains one test case,
-which gives in one line the two rational numbers in the format “a1/b1 a2/b2”. 
-The numerators and the denominators are all in the range of long int. 
-If there is a negative sign, it must appear only in front of the numerator. 
-The denominators are guaranteed to be non-zero numbers.
+Each input file contains one test case. For each case, the first line gives a positive integer N (<=100).
+Then in the next line, N integers are given as the initial sequence.
+The last line contains the partially sorted sequence of the N numbers. 
+It is assumed that the target sequence is always ascending. All the numbers in a line are separated by a space.
 
 Output Specification:
 
-For each test case, print in 4 lines the sum, difference,
-product and quotient of the two rational numbers, respectively. 
-The format of each line is “number1 operator number2 = result”. 
-Notice that all the rational numbers must be in their simplest form “k a/b”, 
-where k is the integer part, and a/b is the simplest fraction part. 
-If the number is negative, it must be included in a pair of parentheses.
-If the denominator in the division is zero, output “Inf” as the result. 
-It is guaranteed that all the output integers are in the range of long int.
-
+For each test case, print in the first line either “Insertion Sort” or “Merge Sort” 
+to indicate the method used to obtain the partial result. 
+Then run this method for one more iteration and output in the second line the resulting sequence. 
+It is guaranteed that the answer is unique for each test case.
+All the numbers in a line must be separated by a space, and there must be no extra space at the end of the line.
 
 Sample Input 1:
-2/3 -4/2
+10
+3 1 2 8 7 5 9 4 6 0
+1 2 3 7 8 5 9 4 6 0
+
 Sample Output 1:
-2/3 + (-2) = (-1 1/3)
-2/3 – (-2) = 2 2/3
-2/3 * (-2) = (-1 1/3)
-2/3 / (-2) = (-1/3)
+Insertion Sort
+1 2 3 5 7 8 9 4 6 0
 
 
 Sample Input 2:
-5/3 0/6
-Sample Output 2:
-1 2/3 + 0 = 1 2/3
-1 2/3 – 0 = 1 2/3
-1 2/3 * 0 = 0
-1 2/3 / 0 = Inf
+10
+3 1 2 8 7 5 9 4 0 6
+1 3 2 8 5 7 4 9 0 6
 
+Sample Output 2:
+Merge Sort
+1 2 3 8 4 5 7 9 0 6
 
 
 
@@ -45,101 +51,68 @@ Sample Output 2:
 #include<bits/stdc++.h>
 using namespace std;
 
-long long gcd(long long a,long long b){
-    if(a==0 || b==0){
-        return 1;
+int main(){
+    int n;
+    cin>>n;
+    vector<int> arr(n);
+    vector<int> tmp(n);
+    for(int i=0;i<n;++i){
+        cin>>arr[i];
     }
-    while(b){
-        long long tmp=a%b;
-        a=b;
-        b=tmp;
+    for(int i=0;i<n;++i){
+        cin>>tmp[i];
     }
-    return a;
-}
-
-string format(string num,bool flag,int i){
-    int idx=flag ? i:num.find('/');
-    long long numerator=stol(num.substr(num[0]=='-',idx));
-    long long denominator=stol(num.substr(idx+1+(num[idx+1]=='-')));
-    if(denominator==0){
-        return "Inf";
+    int i=1;
+    while(i<n){
+        if(tmp[i]<tmp[i-1]){
+            break;
+        }
+        ++i;
     }
-    long long x=numerator/denominator;
-    long long y=numerator%denominator;
-    long long z=gcd(y,denominator);
-    y/=z;
-    denominator/=z;
-    string result;
-    if(x){
-        if(y){
-            result=to_string(x)+" "+to_string(y)+"/"+to_string(denominator);
-        }else{
-            result=to_string(x);
+    int k=i;
+    while(i<n){
+        if(arr[i]!=tmp[i]){
+            break;
+        }
+        ++i;
+    }
+    if(i==n){
+        cout<<"Insertion Sort"<<endl;
+        while(k>0){
+            if(tmp[k]>=tmp[k-1]){
+                break;
+            }
+            int t=tmp[k];
+            tmp[k]=tmp[k-1];
+            tmp[--k]=t;
+        }
+        cout<<tmp[0];
+        for(i=1;i<n;++i){
+            cout<<' '<<tmp[i];
         }
     }else{
-        if(y){
-            result=to_string(y)+"/"+to_string(denominator);
-        }else{
-            return "0";
+        cout<<"Merge Sort"<<endl;
+        int len=2;
+        while(1){
+            for(i=0;i<n;++i){
+                if(arr[i]!=tmp[i]){
+                    break;
+                }
+            }
+            int j;
+            for(j=0;j+len<=n;j+=len){
+                sort(arr.begin()+j,arr.begin()+j+len);
+            }
+            sort(arr.begin()+j,arr.end());
+            if(i==n){
+                break;
+            }
+            len<<=1;
+        }
+        cout<<arr[0];
+        for(i=1;i<n;++i){
+            cout<<' '<<arr[i];
         }
     }
-    if((num[0]=='-') ^ (num[idx+1]=='-')){
-        return "(-"+result+")";
-    }
-    return result;
-}
-
-int main(){
-    string a,b;
-    cin>>a>>b;
-    int i=a.find('/');
-    int j=b.find('/');
-    long long arr[4]={stoll(a.substr(0,i)),stoll(a.substr(i+1)),stoll(b.substr(0,j)),stoll(b.substr(j+1))};
-    long long m=arr[0];
-    long long n=arr[1];
-    long long p=arr[2];
-    long long q=arr[3];
-    string w=format(a,false,0);
-    string e=format(b,false,0);
-    string s=to_string(m*q+p*n);
-    cout<<w+" + "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
-    s=to_string(m*q-p*n);
-    cout<<w+" - "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
-    m=arr[0];
-    n=arr[1];
-    p=arr[2];
-    q=arr[3];
-    long long x=gcd(m,n);
-    long long y=gcd(p,q);
-    m/=x;
-    n/=x;
-    p/=y;
-    q/=y;
-    long long r=gcd(m,q);
-    long long t=gcd(n,p);
-    m/=r;
-    q/=r;
-    n/=t;
-    p/=t;
-    s=to_string(m*p);
-    cout<<w+" * "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
-    m=arr[0];
-    n=arr[1];
-    p=arr[2];
-    q=arr[3];
-    x=gcd(m,n);
-    y=gcd(p,q);
-    m/=x;
-    n/=x;
-    p/=y;
-    q/=y;
-    r=gcd(m,p);
-    t=gcd(n,q);
-    m/=r;
-    p/=r;
-    n/=t;
-    q/=t;
-    s=to_string(m*q);
-    cout<<w+" / "+e+" = "<<format(s+"/"+to_string(n*p),true,s.length())<<endl;
     return 0;
 }
