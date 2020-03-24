@@ -18,8 +18,10 @@ It is guaranteed that there exists at least one path from C1 to C2.
 Output
 
 For each test case, print in one line two numbers:
-the number of different shortest paths between C1 and C2, and the maximum amount of rescue teams you can possibly gather. 
-All the numbers in a line must be separated by exactly one space, and there is no extra space allowed at the end of a line.
+the number of different shortest paths between C1 and C2, 
+and the maximum amount of rescue teams you can possibly gather. 
+All the numbers in a line must be separated by exactly one space, 
+and there is no extra space allowed at the end of a line.
 
 Sample Input 
 5 6 0 2 
@@ -36,11 +38,6 @@ Sample Output
 
 
 
-Dijkstra算法！！！
-
-
-
-
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -52,109 +49,44 @@ int main(){
     for(int i=0;i<n;++i){
         cin>>teamNum[i];
     }
-    vector<vector<int>> graph(n,vector<int>(n,-1));
+    vector<forward_list<pair<int,int>>> graph(n);
     for(int i=0;i<m;++i){
         int a,b,l;
         cin>>a>>b>>l;
-        graph[a][b]=graph[b][a]=l;
+        graph[a].push_front({l,b});
+        graph[b].push_front({l,a});
     }
     vector<int> dist(n,INT_MAX);
     dist[c1]=0;
-    vector<bool> visited(n,false);
     vector<int> teamGathered(n);
     teamGathered[c1]=teamNum[c1];
     vector<int> differentPath(n);
     differentPath[c1]=1;
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,c1});
     while(1){
-        int next;
-        int minDist=INT_MAX;
-        for(int i=0;i<n;++i){
-            if(!visited[i] && dist[i]<minDist){
-                minDist=dist[i];
-                next=i;
-            }
-        }
-        if(next==c2){
+        auto p=pq.top();
+        if(p.second==c2){
             break;
         }
-        visited[next]=true;
-        for(int i=0;i<n;++i){
-            if(!visited[i] && graph[next][i]!=-1){
-                if(minDist+graph[next][i]<dist[i]){
-                    dist[i]=minDist+graph[next][i];
-                    teamGathered[i]=teamGathered[next]+teamNum[i];
-                    differentPath[i]=differentPath[next];
-                }else if(minDist+graph[next][i]==dist[i]){
-                    teamGathered[i]=max(teamGathered[i],teamGathered[next]+teamNum[i]);
-                    differentPath[i]+=differentPath[next];
+        pq.pop();
+        if(dist[p.second]<p.first){
+            continue;
+        }
+        for(auto& edge:graph[p.second]){
+            if(p.first+edge.first<dist[edge.second]){
+                dist[edge.second]=p.first+edge.first;
+                pq.push({dist[edge.second],edge.second});
+                differentPath[edge.second]=differentPath[p.second];
+                teamGathered[edge.second]=teamGathered[p.second]+teamNum[edge.second];
+            }else if(p.first+edge.first==dist[edge.second]){
+                differentPath[edge.second]+=differentPath[p.second];
+                if(teamGathered[edge.second]<teamGathered[p.second]+teamNum[edge.second]){
+                    teamGathered[edge.second]=teamGathered[p.second]+teamNum[edge.second];
                 }
-            } 
+            }
         }
     }
-    cout<<differentPath[c2]<<" "<<teamGathered[c2];
+    cout<<differentPath[c2]<<' '<<teamGathered[c2];
     return 0;
-}
-
-
-
-
-
-
-import java.util.*;
-
-public class Main{
-	public static void main(String args[]){
-        Scanner sc=new Scanner(System.in);
-        int cityNum=sc.nextInt();
-        int roadNum=sc.nextInt();
-        int c1=sc.nextInt(),c2=sc.nextInt();
-        int i;
-        int[] teamNum=new int[cityNum];
-        int[][] graph=new int[cityNum][cityNum];
-        boolean[] visited=new boolean[cityNum];
-        int[] dist=new int[cityNum];
-        Arrays.fill(dist,Integer.MAX_VALUE);
-        int[] getTeams=new int[cityNum];
-        int[] differentPath=new int[cityNum];
-        for(i=0;i<cityNum;++i){
-            teamNum[i]=sc.nextInt();
-        }
-
-        for(int[] row:graph){
-            Arrays.fill(row,-1);
-        }
-        for(i=0;i<roadNum;++i){
-            int a=sc.nextInt(),b=sc.nextInt(),d=sc.nextInt();
-            graph[a][b]=graph[b][a]=d;
-        }
-        dist[c1]=0;
-        differentPath[c1]=1;
-        getTeams[c1]=teamNum[c1];
-        while(true){
-            int idx=-1,minDist=Integer.MAX_VALUE;
-            for(int j=0;j<cityNum;++j){
-                if(!visited[j] && dist[j]<minDist){
-                    minDist=dist[j];
-                    idx=j;
-                }
-            }
-            if(idx==c2 || idx==-1){
-                break;
-            }
-            visited[idx]=true;
-            for(int k=0;k<cityNum;++k){
-                if(!visited[k] && graph[idx][k]!=-1){
-                    if(dist[idx]+graph[idx][k]<dist[k]){
-                        dist[k]=dist[idx]+graph[idx][k];
-                        getTeams[k]=getTeams[idx]+teamNum[k];
-                        differentPath[k]=differentPath[idx];
-                    }else if(dist[idx]+graph[idx][k]==dist[k]){
-                        getTeams[k]=Math.max(getTeams[k],getTeams[idx]+teamNum[k]);
-                        differentPath[k]+=differentPath[idx];
-                    }
-                }
-            }
-        }
-        System.out.println(differentPath[c2]+" "+getTeams[c2]);
-    }
 }
