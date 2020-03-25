@@ -1,0 +1,59 @@
+给定一个数组 nums，其中有 n 个非负整数。你的目的是进行两次操作，使得数组的元素之和最小。
+每次操作形如：任选一个整数 x ，将数组中所有大于等于 x 的数减去 x 。
+
+
+解题思路参考
+https://blog.nowcoder.net/n/1ab38384450444658fe3736c2d3fcc04
+
+
+
+import java.util.*;
+
+public class Solution {
+    public long minimumValueAfterDispel (int[] nums) {
+        // write code here
+        long sum=0;
+        long max=0;
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length;++i){
+            sum+=nums[i];
+            for(int j=i;j<nums.length;++j){
+                int k=getIdx(nums,j,nums.length-1,nums[i]+nums[j]);
+                max=Math.max(max,(long)nums[i]*(j-i)+
+                                (long)nums[j]*(k-j)+
+                                ((long)nums[i]+nums[j])*
+                             ((long)nums[i]+nums[j]>nums[k] ? 0:nums.length-k));
+                //二分法要注意nums[i]+nums[j]>nums[nums.length-1]的情况
+            }
+        }
+        for(int i=0;i<nums.length;++i){
+            for(int k=i;k<nums.length;++k){
+                int j=getIdx(nums,i,k,nums[k]-nums[i]);
+                max=Math.max(max,(long)nums[i]*(j-i)+
+                                (long)(nums[k]-nums[i])*(k-j)+
+                                (long)nums[k]*(nums.length-k));
+            }
+        }
+        for(int j=0;j<nums.length;++j){
+            for(int k=j;k<nums.length;++k){
+                int i=getIdx(nums,0,j,nums[k]-nums[j]);
+                max=Math.max(max,(long)(nums[k]-nums[j])*(j-i)+
+                                (long)nums[j]*(k-j)+
+                                (long)nums[k]*(nums.length-k));
+            }
+        }
+        return sum-max;
+    }
+    
+    private int getIdx(int[] nums,int l,int r,long target){
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(nums[mid]<target){
+                l=mid+1;
+            }else{
+                r=mid;
+            }
+        }
+        return l;
+    }
+}
