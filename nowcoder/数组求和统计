@@ -1,0 +1,48 @@
+牛牛有两个长度为n的数组a,b 牛牛希望统计有多少数对(l,r)满足：
+1. 0<=l<=r<n
+2. a[l]+a[l+1]+...+a[r-1]+a[r]=b[l]+b[r]
+ 
+示例1
+输入
+[1,2,3,4],[2,1,4,5]
+
+输出
+4
+
+说明
+满足条件的数对有(0, 1), (0, 2), (1, 1), (1, 2)(0,1),(0,2),(1,1),(1,2)
+
+
+示例2
+输入
+[0,0,1,1,1],[2,0,4,3,3]
+
+输出
+2
+
+
+
+
+
+import java.util.*;
+
+
+public class Solution {
+    public int countLR (int[] a, int[] b) {
+        // write code here
+        int n=a.length;
+        int[] arr=new int[n+1];
+        for(int i=1;i<=n;++i){
+            arr[i]=arr[i-1]+a[i-1];
+        }
+        int cnt=0;
+        for(int l=0;l<n;++l){
+            for(int r=l;r<n;++r){
+                if(arr[r+1]-arr[l]==b[l]+b[r]){
+                    ++cnt;
+                }
+            }
+        }
+        return cnt;
+    }
+}
