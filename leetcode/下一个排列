@@ -11,50 +11,34 @@
 
 
 
-class Solution(object):
-    def nextPermutation(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: None Do not return anything, modify nums in-place instead.
-        """
-        for i in xrange(len(nums)-1,0,-1):
-            if nums[i-1]<nums[i]:
-                for j in xrange(len(nums)-1,i-1,-1):
-                    if nums[j]>nums[i-1]:
-                        nums[j],nums[i-1]=nums[i-1],nums[j]
-                        self.reverse(nums,i,len(nums)-1)
-                        return
-        
-        nums.reverse()
-                        
-            
-    def reverse(self,arr,start,end):
-        l,r=start,end
-        while l<r:
-            arr[l],arr[r]=arr[r],arr[l]
-            l+=1
-            r-=1
-            
-            
-            
- 
- class Solution {
+
+class Solution {
     public void nextPermutation(int[] nums) {
         for(int i=nums.length-1;i>0;--i){
             if(nums[i-1]<nums[i]){
-                for(int j=nums.length-1;j>=i;--j){
-                    if(nums[j]>nums[i-1]){
-                        int tmp=nums[j];
-                        nums[j]=nums[i-1];
-                        nums[i-1]=tmp;
-                        reverse(nums,i,nums.length-1);
-                        return;
+                int l=i,r=nums.length-1;
+                //找到右边第一个比nums[i-1]大的数
+                while(l<r){
+                    int mid=(l+r)>>1;
+                    if(nums[mid]>nums[i-1]){
+                        l=mid+1;
+                    }else{
+                        r=mid;
                     }
                 }
+                if(nums[l]<=nums[i-1]){
+                    --l;
+                }
+                int tmp=nums[l];
+                nums[l]=nums[i-1];
+                nums[i-1]=tmp;
+                reverse(nums,i,nums.length-1);
+                return;
             }
         }
         reverse(nums,0,nums.length-1);
     }
+    
     private void reverse(int[] arr,int start,int end){
         int l=start,r=end;
         while(l<r){
