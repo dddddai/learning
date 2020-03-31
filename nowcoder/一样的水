@@ -27,11 +27,11 @@ public class Solution {
         // write code here
         Arrays.sort(a);
         int[] result=new int[q];
+        int[] sum=new int[n+1];
+        for(int i=1;i<=n;++i){
+            sum[i]=sum[i-1]+a[i-1];
+        }
         for(int i=0;i<q;++i){
-            int[] sum=new int[n+1];
-            for(int j=1;j<=n;++j){
-                sum[j]=sum[j-1]+a[j-1];
-            }
             int k=0,min=Integer.MAX_VALUE;
             for(int j=0;j+p[i]<=n;++j){
                 int tmp=a[j+p[i]-1]*p[i]-sum[j+p[i]]+sum[j];
@@ -41,8 +41,14 @@ public class Solution {
                 }
             }
             result[i]=min;
-            for(int j=0;j<p[i]-1;++j){
+            int last=0;
+            for(int j=0;j<p[i];++j){
+                sum[k+j+1]+=last+a[k+p[i]-1]-a[k+j];
+                last+=a[k+p[i]-1]-a[k+j];
                 a[k+j]=a[k+p[i]-1];
+            }
+            for(int j=p[i];k+j<n;++j){
+                sum[k+j+1]+=last;
             }
         }
         return result;
