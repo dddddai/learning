@@ -1,13 +1,18 @@
-Notice that the number 123456789 is a 9-digit number consisting exactly the numbers from 1 to 9, with no duplication.
-Double it we will obtain 246913578, which happens to be another 9-digit number consisting exactly the numbers from 1 to 9, 
+Notice that the number 123456789 is a 9-digit number consisting exactly the numbers from 1 to 9,
+with no duplication.
+Double it we will obtain 246913578, 
+which happens to be another 9-digit number consisting exactly the numbers from 1 to 9, 
 only in a different permutation. Check to see the result if we double it again!
 
-Now you are suppose to check if there are more numbers with this property.That is, double a given number with k digits,
-you are to tell if the resulting number consists of only a permutation of the digits in the original number.
+Now you are suppose to check if there are more numbers with this property.
+That is, double a given number with k digits,
+you are to tell if the resulting number consists of only a permutation of the digits 
+in the original number.
 
 Input Specification:
 
-Each input file contains one test case. Each case contains one positive integer with no more than 20 digits.
+Each input file contains one test case. Each case contains one positive integer 
+with no more than 20 digits.
 
 Output Specification:
 
@@ -51,15 +56,17 @@ int main(){
         doubled[i+1]=num;
     }
     doubled[0]=carry;
-    bool flag=true;
-    for(int x:arr){
-        if(x){
-            flag=false;
-            break;
+    bool flag=!carry;
+    if(flag){
+        for(int x:arr){
+            if(x){
+                flag=false;
+                break;
+            }
         }
     }
     cout<<(flag ? "Yes":"No")<<endl;
-    for(int i=doubled[0]==0 ? 1:0;i<doubled.size();++i){
+    for(int i=carry ? 0:1;i<doubled.size();++i){
         cout<<doubled[i];
     }
     return 0;
