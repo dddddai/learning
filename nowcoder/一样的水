@@ -1,0 +1,50 @@
+有n个水桶，第i个水桶里面水的体积为Ai，你可以用1秒时间向一个桶里添加1体积的水。
+有q次询问，每次询问一个整数pi,你需要求出使其中pi个桶中水的体积相同所花费的最少时间。
+对于一次询问如果有多种方案，则采用使最终pi个桶中水的体积最小的方案。
+
+示例1
+
+输入
+4,3,[1,2,3,4],[2,2,4]
+
+输出
+[1,0,5]
+
+说明
+
+第一次：花费一秒变为 2 2 3 4
+第二次：已经存在两个水的体积一样的桶
+第三次：花费五秒从2 2 3 4变为4 4 4 4
+
+
+
+
+
+import java.util.*;
+
+public class Solution {
+    public int[] solve (int n, int q, int[] a, int[] p) {
+        // write code here
+        Arrays.sort(a);
+        int[] result=new int[q];
+        for(int i=0;i<q;++i){
+            int[] sum=new int[n+1];
+            for(int j=1;j<=n;++j){
+                sum[j]=sum[j-1]+a[j-1];
+            }
+            int k=0,min=Integer.MAX_VALUE;
+            for(int j=0;j+p[i]<=n;++j){
+                int tmp=a[j+p[i]-1]*p[i]-sum[j+p[i]]+sum[j];
+                if(tmp<min){
+                    min=tmp;
+                    k=j;
+                }
+            }
+            result[i]=min;
+            for(int j=0;j<p[i]-1;++j){
+                a[k+j]=a[k+p[i]-1];
+            }
+        }
+        return result;
+    }
+}
