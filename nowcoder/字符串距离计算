@@ -1,0 +1,54 @@
+给定两个长度相等的，由小写字母组成的字符串S1和S2，
+定义S1和S2的距离为两个字符串有多少个位置上的字母不相等。
+现在牛牛可以选定两个字母X1和X2，将S1中的所有字母X1均替换成X2。（X1和X2可以相同）
+牛牛希望知道执行一次替换之后，两个字符串的距离最少为多少。
+
+示例1
+
+输入
+"aaa","bbb"
+
+输出
+0
+
+说明
+牛牛可以将S1中的字符'a'全部替换成字符'b'，这样S1就变成了"bbb"，那么S1和S2的距离就是0
+
+
+示例2
+
+输入
+"aabb","cdef"
+
+输出
+3
+
+说明
+一种可行的方案是将S1中的字符'a'全部替换成字符'c'，那么S1变成了"ccbb"，和S2的距离是3
+
+
+
+
+
+import java.util.*;
+
+public class Solution {
+    public int GetMinDistance (String S1, String S2) {
+        // write code here
+        int[][] cnt=new int[26][26];
+        int sum=0;
+        for(int i=0;i<S1.length();++i){
+            ++cnt[S1.charAt(i)-'a'][S2.charAt(i)-'a'];
+            if(S1.charAt(i)!=S2.charAt(i)){
+                ++sum;
+            }
+        }
+        int result=S1.length();
+        for(int i=0;i<26;++i){
+            for(int j=0;j<26;++j){
+                result=Math.min(result,sum-cnt[i][j]+cnt[i][i]);
+            }
+        }
+        return result;
+    }
+}
