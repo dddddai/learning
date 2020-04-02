@@ -173,20 +173,22 @@ int main(){
             }
         }else if(arr[cur].vip){
             queue<Table> q;
+            int minIdx=k+1;
             while(!pq.empty()){
                 if(arr[cur].arrivingTime<pq.top().endTime){
                     break;
                 }
-                if(isVipTable[pq.top().idx]){
+                if(isVipTable[pq.top().idx] && pq.top().idx<minIdx){
                     t=pq.top();
-                    pq.pop();
-                    break;
+                    minIdx=pq.top().idx;
                 }
                 q.push(pq.top());
                 pq.pop();
             }
             while(!q.empty()){
-                pq.push(q.front());
+                if(q.front().idx!=minIdx){
+                    pq.push(q.front());
+                }
                 q.pop();
             }
         }
@@ -206,7 +208,8 @@ int main(){
         int h=servingTime/3600;
         int m=servingTime%3600/60;
         int s=servingTime%60;
-        printf("%02d:%02d:%02d %02d:%02d:%02d %.0f\n",hour,minute,second,h,m,s,round((servingTime-arr[next].arrivingTime)/60.0));
+        printf("%02d:%02d:%02d %02d:%02d:%02d %.0f\n",hour,minute,second,
+                h,m,s,round((servingTime-arr[next].arrivingTime)/60.0));
         Table t1(t.idx,servingTime+arr[next].playingTime);
         pq.push(t1);
         ++cnt[t.idx];
