@@ -46,6 +46,6 @@ public class Solution {
                 dp[i]=Math.max(dp[i],dp[i-num]+num);
             }
         }
-        return Math.abs(2*dp[dp.length-1]-sum);
+        return sum-2*dp[dp.length-1];
     }
 }
