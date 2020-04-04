@@ -1,0 +1,75 @@
+题目描述
+众所周知，牛妹是一个offer收割姬，这次面试她遇到了这样的一个问题。
+给了一个序列，让找出最长的“凸子序列”
+何为“凸子序列”：数列中有一个xi,使得所有x0<x1<x2….xi-1<xi且xi>xi+1>xi+1>….>xn
+eg：12345431,是凸子序列，12345234不是凸子序列
+注：单调递增或单调递减序列也算凸子序列；单独一个数是长度为1的凸子序列
+
+示例1
+
+输入
+[1,2,3,6,1]
+
+输出
+5
+
+示例2
+
+输入
+[1,2,2,1]
+
+输出
+3
+
+说明
+[1,2,1]
+
+
+
+
+import java.util.*;
+
+public class Solution {
+    public int mountainSequence (int[] arr) {
+        // write code here
+        List<Integer> tmp=new ArrayList<>(arr.length);
+        int[] left=new int[arr.length];
+        for(int i=0;i<arr.length;++i){
+            int l=0,r=tmp.size()-1;
+            while(l<=r){
+                int mid=(l+r)>>1;
+                if(arr[i]<=tmp.get(mid)){
+                    r=mid-1;
+                }else{
+                    l=mid+1;
+                }
+            }
+            if(l==tmp.size()){
+                tmp.add(arr[i]);
+            }else{
+                tmp.set(l,arr[i]);
+            }
+            left[i]=tmp.size();
+        }
+        tmp.clear();
+        int result=1;
+        for(int i=arr.length-1;i>=0;--i){
+            int l=0,r=tmp.size()-1;
+            while(l<=r){
+                int mid=(l+r)>>1;
+                if(arr[i]<=tmp.get(mid)){
+                    r=mid-1;
+                }else{
+                    l=mid+1;
+                }
+            }
+            if(l==tmp.size()){
+                tmp.add(arr[i]);
+            }else{
+                tmp.set(l,arr[i]);
+            }
+            result=Math.max(result,left[i]+tmp.size()-1);
+        }
+        return result;
+    }
+}
