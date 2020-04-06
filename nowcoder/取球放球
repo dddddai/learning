@@ -1,0 +1,68 @@
+有n个箱子，第i个箱子一开始有a_i个球，你可以进行最多k次操作，
+每次操作可以从一个箱子拿走一个球或者放入一个球。
+第i个箱子最多能装w_i个球，装满了之后不能再往这个箱子里面放球。
+如果一个箱子为空，就不能从里面拿球。
+设相邻箱子的球的数量的差的平方中的最大值为x，求进行最多k次操作之后x最小可以是多少。
+
+
+示例1
+
+输入
+5,4,[12,4,7,9,1],[15,15,15,15,15]
+
+输出
+36
+
+说明
+往第2个箱子放2个球，往第4个箱子放2个球得到[12,6,7,9,3],此时相邻箱子的球数差值为[-6,1,2,-6],
+平方后为[36,1,4,36]，其中最大值为36
+
+备注:
+2≤n≤100 , 1≤a[i]≤w[i]≤500
+
+
+
+
+
+import java.util.*;
+
+public class Solution {
+    public int solve (int n, int k, int[] a, int[] w) {
+        // write code here
+        int l=0,r=499;
+        while(l<r){
+            int mid=(l+r)>>1;
+            if(func(n,k,a,w,mid)>k){
+                l=mid+1;
+            }else{
+                r=mid;
+            }
+        }
+        return l*l;
+    }
+    
+    private int func(int n,int k,int[] a,int[] w,int diff){
+        int[][] dp=new int[2][501];
+        int cur=0;
+        for(int i=0;i<=w[0];++i){
+            dp[0][i]=Math.abs(i-a[0]);
+        }
+        for(int i=w[0]+1;i<=500;++i){
+            dp[0][i]=k+1;
+        }
+        for(int i=1;i<n;++i){
+            cur^=1;
+            for(int j=0;j<=w[i];++j){
+                dp[cur][j]=k+1;
+                for(int m=Math.max(0,j-diff);m<=Math.min(w[i-1],j+diff);++m){
+                    dp[cur][j]=Math.min(dp[cur][j],dp[cur^1][m]+Math.abs(j-a[i]));
+                }
+            }
+        }
+        int result=k+1;
+        for(int i=0;i<=w[n-1];++i){
+            result=Math.min(result,dp[cur][i]);
+        }
+        return result;
+    }
+}
