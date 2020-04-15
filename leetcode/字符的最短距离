@@ -21,7 +21,7 @@ class Solution {
         for(int i=1;i<s.length();++i){
             result[i]=s.charAt(i)==c ? 0:result[i-1]+1;
         }
-        int right=s.charAt(s.length()-1)==c ? 0:s.length();
+        int right=result[s.length()-1];
         for(int i=s.length()-2;i>=0;--i){
             int tmp=s.charAt(i)==c ? 0:right+1;
             result[i]=Math.min(result[i],tmp);
