@@ -1,0 +1,49 @@
+给定一个整数，打印该整数的英文描述。
+
+示例 1:
+
+输入: 123
+输出: "One Hundred Twenty Three"
+示例 2:
+
+输入: 12345
+输出: "Twelve Thousand Three Hundred Forty Five"
+示例 3:
+
+输入: 1234567
+输出: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+示例 4:
+
+输入: 1234567891
+输出: "One Billion Two Hundred Thirty Four Million Five Hundred 
+Sixty Seven Thousand Eight Hundred Ninety One"
+
+
+
+
+
+
+class Solution {
+    private static final int[] arr={1000000000,1000000,1000,100,90,80,
+                               70,60,50,40,30,20,19,18,17,16,15,14,
+                               13,12,11,10,9,8,7,6,5,4,3,2,1};
+    
+    private static final String[] s={"Billion","Million","Thousand","Hundred","Ninety","Eighty",
+                                     "Seventy","Sixty","Fifty","Forty","Thirty","Twenty","Nineteen",
+                                     "Eighteen","Seventeen","Sixteen","Fifteen","Fourteen",
+                                     "Thirteen","Twelve","Eleven","Ten","Nine","Eight","Seven","Six",
+                                     "Five","Four","Three","Two","One"};
+    
+    public String numberToWords(int num) {
+        if(num==0){
+            return "Zero";
+        }
+        int i=0;
+        while(arr[i]>num){
+            ++i;
+        }
+        String pre = arr[i]>=100 ? (numberToWords(num/arr[i])+" "):"";
+        String suff = num%arr[i]==0 ? "":(" "+numberToWords(num%arr[i]));
+        return pre+s[i]+suff;
+    }
+}
