@@ -37,28 +37,26 @@ YES
 
 
 
-
 #include<bits/stdc++.h>
 using namespace std;
 
 int main(){
     int k;
     cin>>k;
-    while(k-->0){
+    while(k--){
         int n;
         cin>>n;
         vector<bool> used(n+1);
         vector<int> row(n+1);
         bool flag=true;
-        for(int i=1;i<=n;++i){
+        for(int i=0;i<n;++i){
             cin>>row[i];
             if(used[row[i]]){
                 flag=false;
             }
-            for(int j=1;j<i;++j){
+            for(int j=1;j<i && flag;++j){
                 if(abs(row[i]-row[j])==i-j){
                     flag=false;
-                    break;
                 }
             }
             used[row[i]]=true;
