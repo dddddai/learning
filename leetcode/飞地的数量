@@ -1,0 +1,67 @@
+给出一个二维数组 A，每个单元格为 0（代表海）或 1（代表陆地）。
+
+移动是指在陆地上从一个地方走到另一个地方（朝四个方向之一）或离开网格的边界。
+
+返回网格中无法在任意次数的移动中离开网格边界的陆地单元格的数量。
+
+ 
+
+示例 1：
+
+输入：[[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]
+输出：3
+解释： 
+有三个 1 被 0 包围。一个 1 没有被包围，因为它在边界上。
+示例 2：
+
+输入：[[0,1,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]]
+输出：0
+解释：
+所有 1 都在边界上或可以到达边界。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/number-of-enclaves
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+
+
+class Solution {
+    private int k=0;
+    
+    public int numEnclaves(int[][] A) {
+        int cnt=0;
+        for(int[] row:A){
+            for(int num:row){
+                cnt+=num;
+            }
+        }
+        boolean[][] visited=new boolean[A.length][A[0].length];
+        for(int i=0;i<A[0].length;++i){
+            dfs(A,0,i,visited);
+        }
+        for(int i=1;i<A.length;++i){
+            dfs(A,i,0,visited);
+        }
+        for(int i=1;i<A[0].length;++i){
+            dfs(A,A.length-1,i,visited);
+        }
+        for(int i=1;i<A.length-1;++i){
+            dfs(A,i,A[0].length-1,visited);
+        }
+        return cnt-k;
+    }
+    
+    private void dfs(int[][] A,int i,int j,boolean[][] visited){
+        if(i<0 || i==A.length || j<0 || j==A[0].length || A[i][j]==0 || visited[i][j]){
+            return;
+        }
+        visited[i][j]=true;
+        ++k;
+        dfs(A,i+1,j,visited);
+        dfs(A,i-1,j,visited);
+        dfs(A,i,j+1,visited);
+        dfs(A,i,j-1,visited);
+    }
+}
