@@ -1,0 +1,75 @@
+给出两个图像 A 和 B ，A 和 B 为大小相同的二维正方形矩阵。（并且为二进制矩阵，只包含0和1）。
+
+我们转换其中一个图像，向左，右，上，或下滑动任何数量的单位，并把它放在另一个图像的上面。
+之后，该转换的重叠是指两个图像都具有 1 的位置的数目。
+
+（请注意，转换不包括向任何方向旋转。）
+
+最大可能的重叠是什么？
+
+示例 1:
+
+输入：A = [[1,1,0],
+          [0,1,0],
+          [0,1,0]]
+     B = [[0,0,0],
+          [0,1,1],
+          [0,0,1]]
+输出：3
+解释: 将 A 向右移动一个单位，然后向下移动一个单位。
+
+
+
+
+
+class Solution {
+    public int largestOverlap(int[][] A, int[][] B) {
+        List<Pair> a=new ArrayList<>((int)(A.length*A.length*0.75));
+        Set<Pair> b=new HashSet<>(A.length);
+        for(int i=0;i<A.length;++i){
+            for(int j=0;j<A.length;++j){
+                if(A[i][j]==1){
+                    a.add(new Pair(i,j));
+                }
+                if(B[i][j]==1){
+                    b.add(new Pair(i,j));
+                }
+            }
+        }
+        int result=0;
+        Set<Pair> visited=new HashSet<>(a.size()*b.size());
+        for(Pair pa:a){
+            for(Pair pb:b){
+                Pair delta=new Pair(pb.x-pa.x,pb.y-pa.y);
+                if(!visited.contains(delta)){
+                    visited.add(delta);
+                    int cnt=0;
+                    for(Pair p:a){
+                        if(b.contains(new Pair(p.x+delta.x,p.y+delta.y))){
+                            ++cnt;
+                        }
+                    }
+                    result=Math.max(result,cnt);
+                }
+            }
+        }
+        return result;
+    }
+    
+    private class Pair{
+        int x,y;
+        
+        Pair(int x,int y){
+            this.x=x;
+            this.y=y;
+        }
+        
+        public int hashCode(){
+            return x*y+x+y;
+        }
+        
+        public boolean equals(Object o){
+            return ((Pair)o).x==x && ((Pair)o).y==y;
+        }
+    }
+}
