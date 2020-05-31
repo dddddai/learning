@@ -33,34 +33,34 @@ using namespace std;
 int main(){
     int k1;
     cin>>k1;
-    vector<double> arr(1001);
-    for(int i=0;i<k1;++i){
+    unordered_map<int,double> m(int(k1/0.75)+1);
+    while(k1--){
         int idx;
         double a;
         cin>>idx>>a;
-        arr[idx]=a;
+        m[idx]=a;
     }
     int k2;
     cin>>k2;
-    vector<double> result(2001);
-    for(int i=0;i<k2;++i){
+    map<int,double,greater<int>> result;
+    while(k2--){
         int idx;
         double a;
         cin>>idx>>a;
-        for(int j=0;j<=1000;++j){
-            result[idx+j]+=a*arr[j];
+        for(auto p:m){
+            result[idx+p.first]+=a*p.second;
         }
     }
     int cnt=0;
-    for(int num:result){
-        if(num){
+    for(auto p:result){
+        if(p.second){
             ++cnt;
         }
     }
     cout<<cnt;
-    for(int i=2000;i>=0;--i){
-        if(result[i]){
-            printf(" %d %.1f",i,result[i]);
+    for(auto p:result){
+        if(p.second){
+            printf(" %d %.1f",p.first,p.second);
         }
     }
     return 0;
