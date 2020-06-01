@@ -48,10 +48,10 @@ bool isPrime(int num){
     return true;
 }
 
-string convert(int num,int radix){
-    string result;
+vector<int> convert(int num,int radix){
+    vector<int> result;
     while(num){
-        result.push_back(num%radix+'0');
+        result.push_back(num%radix);
         num/=radix;
     }
     return result;
@@ -60,14 +60,16 @@ string convert(int num,int radix){
 int main(){
     int n,d;
     while(cin>>n>>d){
-        string converted=convert(n,d);
+        vector<int> converted=convert(n,d);
         if(!isPrime(n)){
             cout<<"No"<<endl;
             continue;
         }
         int reversed=0;
-        for(int i=0;i<converted.length();++i){
-            reversed+=(converted[i]-'0')*pow(d,converted.length()-1-i);
+        int tmp=1;
+        for(int i=converted.size()-1;i>=0;--i){
+            reversed+=converted[i]*tmp;
+            tmp*=d;
         }
         cout<<(isPrime(reversed) ? "Yes":"No")<<endl;
     }
