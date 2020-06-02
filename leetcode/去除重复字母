@@ -1,0 +1,46 @@
+给你一个仅包含小写字母的字符串，请你去除字符串中重复的字母，使得每个字母只出现一次。
+需保证返回结果的字典序最小（要求不能打乱其他字符的相对位置）。
+
+ 
+
+示例 1:
+
+输入: "bcabc"
+输出: "abc"
+
+
+示例 2:
+
+输入: "cbacdcbc"
+输出: "acdb"
+
+
+
+
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        int[] last=new int[26];
+        for(int i=0;i<s.length();++i){
+            last[s.charAt(i)-'a']=i;
+        }
+        List<Character> arr=new ArrayList<>(s.length());
+        boolean[] visited=new boolean[26];
+        for(int i=0;i<s.length();++i){
+            if(visited[s.charAt(i)-'a']){
+                continue;
+            }
+            while(!arr.isEmpty() && arr.get(arr.size()-1)>s.charAt(i) &&
+                  i<last[arr.get(arr.size()-1)-'a']){
+                visited[arr.get(arr.size()-1)-'a']=false;
+                arr.remove(arr.size()-1);
+            }
+            arr.add(s.charAt(i));
+            visited[s.charAt(i)-'a']=true;
+        }
+        StringBuilder sb=new StringBuilder(s.length());
+        for(char c:arr){
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+}
