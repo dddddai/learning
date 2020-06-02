@@ -34,76 +34,28 @@ import java.util.*;
 public class Main{
     public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
-        char[] arr=sc.nextLine().toCharArray();
+        String s=sc.nextLine();
         sc.close();
-        StringBuilder sb=new StringBuilder(arr.length);
-        int[] cnt=new int[26];
+        int[] last=new int[26];
+        for(int i=0;i<s.length();++i){
+            last[s.charAt(i)-'a']=i;
+        }
+        List<Character> arr=new ArrayList<>(s.length());
+        boolean[] visited=new boolean[26];
+        for(int i=0;i<s.length();++i){
+            if(visited[s.charAt(i)-'a']){
+                continue;
+            }
+            while(!arr.isEmpty() && arr.get(arr.size()-1)>s.charAt(i) &&
+                  i<last[arr.get(arr.size()-1)-'a']){
+                visited[arr.get(arr.size()-1)-'a']=false;
+                arr.remove(arr.size()-1);
+            }
+            arr.add(s.charAt(i));
+            visited[s.charAt(i)-'a']=true;
+        }
         for(char c:arr){
-            ++cnt[c-'a'];
-        }
-        int cur=0;
-        while(cur<26 && cnt[cur]==0){
-            ++cur;
-        }
-        for(char c:arr){
-            if(c-'a'==cur){
-                cnt[cur]=0;
-                sb.append(c);
-                while(cur<26 && cnt[cur]==0){
-                    ++cur;
-                }
-                if(cur==26){
-                    break;
-                }
-            }else{
-                if(cnt[c-'a']==1){
-                    sb.append(c);
-                }
-                --cnt[c-'a'];
-            }
-        }
-        System.out.print(sb);
-    }
-}
-
-
-
-
-
-
-#include<bits/stdc++.h>
-using namespace std;
-
-int main(){
-    string s;
-    cin>>s;
-    vector<int> cnt(26);
-    for(char c:s){
-        ++cnt[c-'a'];
-    }
-    string result;
-    result.reserve(s.length());
-    int cur=0;
-    while(cnt[cur]==0){
-        ++cur;
-    }
-    for(char c:s){
-        if(c-'a'==cur){
-            cnt[cur]=0;
-            result.push_back(c);
-            while(cur<26 && cnt[cur]==0){
-                ++cur;
-            }
-            if(cur==26){
-                break;
-            }
-        }else{
-            if(cnt[c-'a']==1){
-                result.push_back(c);
-            }
-            --cnt[c-'a'];
+            System.out.print(c);
         }
     }
-    cout<<result;
-    return 0;
 }
