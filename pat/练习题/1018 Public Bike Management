@@ -106,30 +106,28 @@ int main(){
         graph[a].push_front(e1);
         graph[b].push_front(e2);
     }
-    vector<bool> visited(n+1);
     vector<int> dist(n+1,INT_MAX);
     dist[0]=0;
     vector<forward_list<int>> pre(n+1);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push({0,0});
     while(1){
-        int minIdx=0;
-        int minDist=INT_MAX;
-        for(int i=0;i<=n;++i){
-            if(!visited[i] && dist[i]<minDist){
-                minDist=dist[i];
-                minIdx=i;
-            }
-        }
-        if(minIdx==s){
+        auto p=pq.top();
+        pq.pop();
+        if(p.second==s){
             break;
         }
-        visited[minIdx]=true;
-        for(Edge e:graph[minIdx]){
-            if(minDist+e.time<dist[e.next]){
-                dist[e.next]=minDist+e.time;
+        if(dist[p.second]<p.first){
+            continue;
+        }
+        for(Edge e:graph[p.second]){
+            if(p.first+e.time<dist[e.next]){
+                dist[e.next]=p.first+e.time;
                 pre[e.next].clear();
-                pre[e.next].push_front(minIdx);
-            }else if(minDist+e.time==dist[e.next]){
-                pre[e.next].push_front(minIdx);
+                pre[e.next].push_front(p.second);
+                pq.push({dist[e.next],e.next});
+            }else if(p.first+e.time==dist[e.next]){
+                pre[e.next].push_front(p.second);
             }
         }
     }
