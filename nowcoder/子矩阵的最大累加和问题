@@ -70,13 +70,10 @@ public class Main{
             for(int j=i+1;j<=n;++j){
                 int sum=0,tmp=0;
                 for(int k=0;k<m;++k){
-                    sum+=cumulation[j][k]-cumulation[i][k];
-                    tmp=Math.max(tmp,sum);
-                    if(sum<0){
-                        sum=0;
-                    }
+                    int num=cumulation[j][k]-cumulation[i][k];
+                    sum=Math.max(sum+num,num);
+                    result=Math.max(result,sum);
                 }
-                result=Math.max(result,tmp);
             }
         }
         System.out.print(result);
