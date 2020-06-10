@@ -42,23 +42,21 @@ Sample Output:
 using namespace std;
 
 int main(){
-    int n;
-    cin>>n;
-    cin>>n;
-    unordered_map<int,int> order(int(n/0.75)+1);
-    for(int i=0;i<n;++i){
+    int n,k;
+    cin>>n>>k;
+    vector<int> order(n+1,-1);
+    for(int i=0;i<k;++i){
         int num;
         cin>>num;
         order[num]=i;
     }
-    int m;
-    cin>>m;
+    cin>>k;
     vector<int> arr;
-    arr.reserve(m);
-    for(int i=0;i<m;++i){
+    arr.reserve(k);
+    while(k--){
         int color;
         cin>>color;
-        if(order.find(color)==order.end()){
+        if(order[color]==-1){
             continue;
         }
         int l=0;
