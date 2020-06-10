@@ -39,9 +39,10 @@ int main(){
     getline(cin,s);
     int result=1;
     for(int l=0;l<s.length()-1;++l){
-        for(int r=l+1;r<s.length();++r){
+        for(int r=s.length()-1;r>l;--r){
             if(isSymmetric(s,l,r)){
                 result=max(result,r-l+1);
+                break;
             }
         }
     }
