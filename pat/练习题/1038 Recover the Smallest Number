@@ -33,7 +33,7 @@ int main(){
         cin>>arr[i];
     }
     sort(arr.begin(),arr.end(),[](string a,string b){
-        return stol(a+b)<stol(b+a);
+        return a+b<b+a;
     });
     string result="";
     for(string s:arr){
