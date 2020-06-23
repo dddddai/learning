@@ -1,0 +1,36 @@
+给定一个二叉树，确定它是否是一个完全二叉树。
+
+
+
+
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        boolean flag=false;
+        Queue<TreeNode> q=new LinkedList<>();
+        q.offer(root);
+        while(!q.isEmpty()){
+            if(q.peek().left==null){
+                if(!flag){
+                    flag=true;
+                }
+            }else{
+                if(flag){
+                    return false;
+                }
+                q.offer(q.peek().left);
+            }
+            if(q.peek().right==null){
+                if(!flag){
+                    flag=true;
+                }
+            }else{
+                if(flag){
+                    return false;
+                }
+                q.offer(q.peek().right);
+            }
+            q.poll();
+        }
+        return true;
+    }
+}
