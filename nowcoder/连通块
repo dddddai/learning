@@ -1,0 +1,59 @@
+有n个房间，房间之间有通道相连，一共有n-1个通道，每两个房间之间都可以通过通道互相到达。
+
+第i个房间有x_i个金币。
+
+现在牛牛想通过封闭一些通道来把n个房间划分成k个互相不连通的区域，他希望这k个区域内部的金币数目和都大于等于m，你需要告诉他这是否可行。
+示例1
+输入
+
+3,2,3,[1,1],[2,3],[1,3,2]
+输出
+
+true
+说明
+
+切断1和2之间的通道，划分出了2个金币数为3的连通块
+
+备注:
+第一个参数n代表房间数量
+第二个参数k代表要划分成k块区域。
+第三个参数m代表每块区域的金币数要大于等于m
+第四、五个参数vector u,v代表通道，u_i与v_i通过通道相连
+第六个参数vector x代表每个房间的金币数
+
+
+
+
+import java.util.*;
+
+public class Solution {
+
+    private int cnt=0;
+    
+    public boolean solve (int n, int k, int m, int[] u, int[] v, int[] x) {
+        List<List<Integer>> graph=new ArrayList<>(n);
+        for(int i=0;i<n;++i){
+            graph.add(new LinkedList<>());
+        }
+        for(int i=0;i<u.length;++i){
+            graph.get(u[i]-1).add(v[i]-1);
+            graph.get(v[i]-1).add(u[i]-1);
+        }
+        dfs(graph,0,-1,x,m);
+        return cnt>=k;
+    }
+    
+    private int dfs(List<List<Integer>> graph,int idx,int pre,int[] x,int m){
+        int sum=x[idx];
+        for(int next:graph.get(idx)){
+            if(next!=pre){
+                sum+=dfs(graph,next,idx,x,m);
+            }
+        }
+        if(sum>=m){
+            ++cnt;
+            sum=0;
+        }
+        return sum;
+    }
+}
