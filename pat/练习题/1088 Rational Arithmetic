@@ -57,8 +57,8 @@ long long gcd(long long a,long long b){
     return a;
 }
 
-string format(string num,bool flag,int i){
-    int idx=flag ? i:num.find('/');
+string format(string num){
+    int idx=num.find('/');
     long long numerator=stol(num.substr(num[0]=='-',idx));
     long long denominator=stol(num.substr(idx+1+(num[idx+1]=='-')));
     if(denominator==0){
@@ -99,12 +99,12 @@ int main(){
     long long n=arr[1];
     long long p=arr[2];
     long long q=arr[3];
-    string w=format(a,false,0);
-    string e=format(b,false,0);
+    string w=format(a);
+    string e=format(b);
     string s=to_string(m*q+p*n);
-    cout<<w+" + "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    cout<<w+" + "+e+" = "<<format(s+"/"+to_string(n*q))<<endl;
     s=to_string(m*q-p*n);
-    cout<<w+" - "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    cout<<w+" - "+e+" = "<<format(s+"/"+to_string(n*q))<<endl;
     m=arr[0];
     n=arr[1];
     p=arr[2];
@@ -122,7 +122,7 @@ int main(){
     n/=t;
     p/=t;
     s=to_string(m*p);
-    cout<<w+" * "+e+" = "<<format(s+"/"+to_string(n*q),true,s.length())<<endl;
+    cout<<w+" * "+e+" = "<<format(s+"/"+to_string(n*q))<<endl;
     m=arr[0];
     n=arr[1];
     p=arr[2];
@@ -140,6 +140,6 @@ int main(){
     n/=t;
     q/=t;
     s=to_string(m*q);
-    cout<<w+" / "+e+" = "<<format(s+"/"+to_string(n*p),true,s.length())<<endl;
+    cout<<w+" / "+e+" = "<<format(s+"/"+to_string(n*p))<<endl;
     return 0;
 }
