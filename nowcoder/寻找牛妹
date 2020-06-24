@@ -1,0 +1,72 @@
+题目描述
+有n个房间，房间之间有通道相连，一共有n-1个通道，每两个房间之间都可以通过通道互相到达。
+
+牛牛一开始在1号房间。牛妹在某个另外的房间。牛牛想去寻找牛妹，但是他没有地图，所以只能在房间之间乱走。
+牛牛每走过一条通道需要花费1金币，每条通道最多只能走两次。
+牛牛有一个乱走规则：如果当前牛牛有 没走过的通道 可以走，牛牛就不会去走 走过一次的通道
+这个规则可以保证只要钱足够就一定可以找到牛妹。
+
+有m个查询，每次询问如果牛妹在x_i号房间，请问牛牛身上至少要带多少金币才可以保证任何情况下都可以找到牛妹。
+
+示例1
+
+输入
+4,1,[1,2,2],[2,3,4],[3]
+
+输出
+[4]
+
+说明
+花费金币最多的方案是1->2->4->2->3
+
+备注:
+
+第一个参数n代表房间数量
+第二个参数m代表查询数量
+第三、四个参数vector u,v代表通道，u_i与v_i通过通道相连
+第五个参数vector x代表m次查询中牛妹的位置
+
+
+
+超时了，思路是这样的，为什么别人就能AC...
+
+
+
+import java.util.*;
+ 
+public class Solution {
+ 
+    private int dist,children;
+     
+    public int[] solve (int n, int m, int[] u, int[] v, int[] x) {
+        // write code here
+        List<List<Integer>> graph=new ArrayList<>(n);
+        for(int i=0;i<n;++i){
+            graph.add(new LinkedList<>());
+        }
+        for(int i=0;i<u.length;++i){
+            graph.get(u[i]-1).add(v[i]-1);
+            graph.get(v[i]-1).add(u[i]-1);
+        }
+        int[] result=new int[m];
+        for(int i=0;i<m;++i){
+            dfs(graph,0,-1,x[i]-1,0);
+            result[i]=(n-1)*2-dist-children*2;
+        }
+        return result;
+    }
+     
+    private int dfs(List<List<Integer>> graph,int idx,int pre,int target,int depth){
+        int cnt=0;
+        for(int next:graph.get(idx)){
+            if(next!=pre){
+                cnt+=dfs(graph,next,idx,target,depth+1);
+            }
+        }
+        if(idx==target){
+            dist=depth;
+            children=cnt;
+        }
+        return cnt+1;
+    }
+}
