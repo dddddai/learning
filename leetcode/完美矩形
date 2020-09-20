@@ -1,0 +1,72 @@
+我们有 N 个与坐标轴对齐的矩形, 其中 N > 0, 判断它们是否能精确地覆盖一个矩形区域。
+
+每个矩形用左下角的点和右上角的点的坐标来表示。例如，一个单位正方形可以表示为 [1,1,2,2]。 
+( 左下角的点的坐标为 (1, 1) 以及右上角的点的坐标为 (2, 2) )。
+
+
+
+如果是完美矩形 那么一定满足两点： 
+（1）最左下 最左上 最右下 最右上 的四个点只出现一次 其他点成对出现 
+（2）四个点围城的矩形面积 = 小矩形的面积之和
+
+
+
+class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+        int left=Integer.MAX_VALUE,bottom=Integer.MAX_VALUE,right=0,top=0;
+        int sum=0;
+        Set<Pair> set=new HashSet<>(rectangles.length<<1);
+        for(int[] r:rectangles){
+            left=Math.min(left,r[0]);
+            bottom=Math.min(bottom,r[1]);
+            right=Math.max(right,r[2]);
+            top=Math.max(top,r[3]);
+            sum+=(r[2]-r[0])*(r[3]-r[1]);
+            Pair a=new Pair(r[0],r[1]);
+            Pair b=new Pair(r[0],r[3]);
+            Pair c=new Pair(r[2],r[1]);
+            Pair d=new Pair(r[2],r[3]);
+            if(set.contains(a)){
+                set.remove(a);
+            }else{
+                set.add(a);
+            }
+            if(set.contains(b)){
+                set.remove(b);
+            }else{
+                set.add(b);
+            }
+            if(set.contains(c)){
+                set.remove(c);
+            }else{
+                set.add(c);
+            }
+            if(set.contains(d)){
+                set.remove(d);
+            }else{
+                set.add(d);
+            }
+        }
+        return set.size()==4 && set.contains(new Pair(left,bottom)) &&
+        set.contains(new Pair(left,top)) && set.contains(new Pair(right,bottom)) &&
+        set.contains(new Pair(right,top)) && sum==(right-left)*(top-bottom);
+    }
+
+    private class Pair{
+        int x,y;
+
+        Pair(int x,int y){
+            this.x=x;
+            this.y=y;
+        }
+
+        public boolean equals (Object o){
+            Pair p=(Pair)o;
+            return p.x==x && p.y==y;
+        }
+
+        public int hashCode(){
+            return x*y+x+y;
+        }
+    }
+}
