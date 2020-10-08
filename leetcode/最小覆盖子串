@@ -1,0 +1,56 @@
+给你一个字符串 S、一个字符串 T 。
+请你设计一种算法，可以在 O(n) 的时间复杂度内，从字符串 S 里面找出：包含 T 所有字符的最小子串。
+
+
+示例：
+
+输入：S = "ADOBECODEBANC", T = "ABC"
+输出："BANC"
+
+提示：
+
+如果 S 中不存这样的子串，则返回空字符串 ""。
+如果 S 中存在这样的子串，我们保证它是唯一的答案。
+
+
+
+
+class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character,Integer> map=new HashMap<>((int)(t.length()/0.75)+1);
+        for(int i=0;i<t.length();++i){
+            map.put(t.charAt(i),map.getOrDefault(t.charAt(i),0)+1);
+        }
+        int l=0,r=0;
+        int cnt=t.length();
+        int a=-1,b=s.length();
+        while(r<s.length()){
+            Integer x=map.get(s.charAt(r));
+            if(x!=null){
+                map.put(s.charAt(r),x-1);
+                if(x>0){
+                    --cnt;
+                }
+            }
+            if(cnt==0){
+                while(l<=r){
+                    x=map.get(s.charAt(l));
+                    if(x!=null){
+                        if(x<0){
+                            map.put(s.charAt(l),x+1);
+                        }else{
+                            if(r-l<b-a){
+                                a=l;
+                                b=r;
+                            }
+                            break;
+                        }
+                    }
+                    ++l;
+                }
+            }
+            ++r;
+        }
+        return a==-1 ? "":s.substring(a,b+1);
+    }
+}
