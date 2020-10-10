@@ -36,10 +36,11 @@ class Solution {
             while(map.size()>k){
                 Integer x=map.get(arr[l]);
                 if(x==1){
-                    map.remove(arr[l++]);
+                    map.remove(arr[l]);
                 }else{
-                    map.put(arr[l++],x-1);
+                    map.put(arr[l],x-1);
                 }
+                ++l;
             }
             result+=++r-l;
         }
