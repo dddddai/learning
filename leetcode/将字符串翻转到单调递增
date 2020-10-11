@@ -26,27 +26,21 @@
 输出：2
 解释：我们翻转得到 00000000。
  
- 
-找到一个分界点，使得该分界点之前1的个数和分界点之后0的个数之和最小
+
+在某处为0，要么把前面的1全变成0，要么把当前的0变为1
 
 
 
 class Solution {
     public int minFlipsMonoIncr(String s) {
         int cnt=0;
+        int result=0;
         for(int i=0;i<s.length();++i){
-            if(s.charAt(i)=='0'){
+            if(s.charAt(i)=='1'){
                 ++cnt;
-            }
-        }
-        int result=cnt;
-        for(int i=0;i<s.length();++i){
-            if(s.charAt(i)=='0'){
-                --cnt;
             }else{
-                ++cnt;
+                result=Math.min(cnt,result+1);
             }
-            result=Math.min(result,cnt);
         }
         return result;
     }
