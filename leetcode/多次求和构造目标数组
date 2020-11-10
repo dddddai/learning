@@ -57,10 +57,7 @@ class Solution {
                 return true;
             }
             long x=sum-ax;
-            if(x<target.length-1){
-                return false;
-            }
-            if(ax<=x){
+            if(x<target.length-1 || ax<=x){
                 return false;
             }
             long a=ax%x;
