@@ -1,0 +1,56 @@
+给出二叉树的根节点 root，树上每个节点都有一个不同的值。
+
+如果节点值在 to_delete 中出现，我们就把该节点从树上删去，最后得到一个森林（一些不相交的树构成的集合）。
+
+返回森林中的每棵树。你可以按任意顺序组织答案。
+
+ 
+
+示例：
+
+输入：root = [1,2,3,4,5,6,7], to_delete = [3,5]
+输出：[[1,2,null,4],[6],[7]]
+
+
+
+
+class Solution {
+
+    Set<Integer> set;
+    List<TreeNode> result=new LinkedList<>();
+
+    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+        set=new HashSet<>((int)(to_delete.length/0.75)+1);
+        for(int num:to_delete){
+            set.add(num);
+        }
+        if(!set.contains(root.val)){
+            result.add(root);
+        }
+        dfs(root,null);
+        return result;
+    }
+
+    private void dfs(TreeNode root,TreeNode parent){
+        if(root==null){
+            return;
+        }
+        dfs(root.left,root);
+        dfs(root.right,root);
+        if(set.contains(root.val)){
+            if(parent!=null){
+                if(parent.left==root){
+                    parent.left=null;
+                }else{
+                    parent.right=null;
+                }
+            }
+            if(root.left!=null){
+                result.add(root.left);
+            }
+            if(root.right!=null){
+                result.add(root.right);
+            }
+        }
+    }
+}
