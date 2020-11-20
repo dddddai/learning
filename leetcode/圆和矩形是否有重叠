@@ -1,0 +1,21 @@
+给你一个以 (radius, x_center, y_center) 表示的圆和一个与坐标轴平行的矩形 (x1, y1, x2, y2)，
+其中 (x1, y1) 是矩形左下角的坐标，(x2, y2) 是右上角的坐标。
+
+如果圆和矩形有重叠的部分，请你返回 True ，否则返回 False 。
+
+换句话说，请你检测是否 存在 点 (xi, yi) ，它既在圆上也在矩形上（两者都包括点落在边界上的情况）。
+
+
+
+https://www.zhihu.com/question/24251545/answer/27184960
+
+
+
+class Solution {
+    public boolean checkOverlap(int radius, int x_center, int y_center, int x1, int y1, int x2, int y2) {
+        double xm=(x1+x2)/2.,ym=(y1+y2)/2.;
+        double x0=Math.abs(x_center-xm),y0=Math.abs(y_center-ym);
+        double a=Math.max(0,x0-x2+xm),b=Math.max(0,y0-y2+ym);
+        return a*a+b*b<=radius*radius;
+    }
+}
