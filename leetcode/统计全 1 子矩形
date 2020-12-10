@@ -48,7 +48,7 @@ class Solution {
         int n=mat.length,m=mat[0].length;
         int[] tmp=new int[m];
         int[] stack=new int[m+1];
-        int[] dp=new  int[m+1];
+        int[] dp=new int[m+1];
         stack[0]=-1;
         int result=0;
         for(int[] row:mat){
