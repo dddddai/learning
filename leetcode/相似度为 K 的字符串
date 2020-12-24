@@ -29,14 +29,14 @@ class Solution {
         while(match<n && a.charAt(match)==b.charAt(match)){
             ++match;
         }
-        Queue<StringBuilder> q=new LinkedList<>();
-        Set<StringBuilder> set=new HashSet<>(1000);
-        q.offer(new StringBuilder(a));
+        Queue<String> q=new LinkedList<>();
+        Set<String> set=new HashSet<>(1000);
+        q.offer(a);
         int result=0;
         while(true){
             int k=q.size();
             while(k-->0){
-                StringBuilder s=q.poll();
+                String s=q.poll();
                 int i=match;
                 while(i<n && s.charAt(i)==b.charAt(i)){
                     ++i;
@@ -47,7 +47,7 @@ class Solution {
                 int j=i;
                 while(++i<n){
                     if(s.charAt(i)==b.charAt(j) && s.charAt(i)!=b.charAt(i)){
-                        StringBuilder next=swap(s,i,j);
+                        String next=swap(s,i,j);
                         if(set.add(next)){
                             q.offer(next);
                         }
@@ -59,11 +59,11 @@ class Solution {
         }
     }
 
-    private StringBuilder swap(StringBuilder s,int i,int j){
-        StringBuilder x=new StringBuilder(s.toString());
-        char c=s.charAt(i);
-        x.setCharAt(i,s.charAt(j));
-        x.setCharAt(j,c);
-        return x;
+    private String swap(String s,int i,int j){
+        char[] arr=s.toCharArray();
+        char tmp=arr[i];
+        arr[i]=arr[j];
+        arr[j]=tmp;
+        return new String(arr);
     }
 }
