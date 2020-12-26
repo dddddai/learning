@@ -1,0 +1,73 @@
+给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。
+例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+
+你可以按任意顺序返回答案。
+
+示例 1：
+
+输入：["bella","label","roller"]
+输出：["e","l","l"]
+
+示例 2：
+
+输入：["cool","lock","cook"]
+输出：["c","o"]
+
+
+
+
+class Solution {
+    public List<String> commonChars(String[] a) {
+        List<String> result=new LinkedList<>();
+        int[][] cnt=new int[2][26];
+        for(int i=0;i<a[0].length();++i){
+            ++cnt[0][a[0].charAt(i)-'a'];
+        }
+        for(int i=1;i<a.length;++i){
+            Arrays.fill(cnt[1],0);
+            for(int j=0;j<a[i].length();++j){
+                ++cnt[1][a[i].charAt(j)-'a'];
+            }
+            for(int j=0;j<26;++j){
+                cnt[0][j]=Math.min(cnt[0][j],cnt[1][j]);
+            }
+        }
+        for(int i=0;i<26;++i){
+            while(cnt[0][i]>0){
+                result.add(Character.toString((char)('a'+i)));
+                --cnt[0][i];
+            }
+        }
+        return result;
+    }
+}
+
+
+
+func commonChars(a []string) []string {
+    var cnt [2][26]int
+    for _,c:=range a[0] {
+        cnt[0][c-'a']++
+    }
+    for _,s:=range a {
+        for i:=0;i<26;i++ {
+            cnt[1][i]=0
+        }
+        for _,c:=range s {
+            cnt[1][c-'a']++
+        }
+        for i:=0;i<26;i++ {
+            if cnt[1][i]<cnt[0][i] {
+                cnt[0][i]=cnt[1][i]
+            }
+        }
+    }
+    result:=make([]string,0,100)
+    for i,x:=range cnt[0] {
+        for x>0 {
+            result=append(result,string('a'+i))
+            x--
+        }
+    }
+    return result
+}
