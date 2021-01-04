@@ -47,13 +47,13 @@ class Solution {
 func maxEqualRowsAfterFlips(matrix [][]int) int {
     m:=make(map[string]int,len(matrix))
     for _,row:=range matrix {
-        var buf bytes.Buffer
+        var sb strings.Builder
         for i:=1;i<len(row);i++ {
             if row[i]!=row[i-1] {
-                buf.WriteString(strconv.Itoa(i))
+                sb.WriteByte(byte(i))
             }
         }
-        m[buf.String()]++
+        m[sb.String()]++
     }
     result:=0
     for _,v:=range m {
