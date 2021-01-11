@@ -27,7 +27,7 @@ class Solution {
         int result=0;
         Map<String,Integer> map=new HashMap<>((int)(matrix.length/0.75)+1);
         for(int[] row:matrix){
-            StringBuilder sb=new StringBuilder();
+            StringBuilder sb=new StringBuilder(row.length-1);
             for(int i=1;i<row.length;++i){
                 if(row[i]!=row[i-1]){
                     sb.append(i);
@@ -48,6 +48,7 @@ func maxEqualRowsAfterFlips(matrix [][]int) int {
     m:=make(map[string]int,len(matrix))
     for _,row:=range matrix {
         var sb strings.Builder
+        sb.Grow(len(row)-1)
         for i:=1;i<len(row);i++ {
             if row[i]!=row[i-1] {
                 sb.WriteByte(byte(i))
