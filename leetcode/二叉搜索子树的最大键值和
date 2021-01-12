@@ -1,0 +1,102 @@
+给你一棵以 root 为根的 二叉树 ，请你返回 任意 二叉搜索子树的最大键值和。
+
+二叉搜索树的定义如下：
+
+任意节点的左子树中的键值都 小于 此节点的键值。
+任意节点的右子树中的键值都 大于 此节点的键值。
+任意节点的左子树和右子树都是二叉搜索树。
+
+示例 1：
+输入：root = [1,4,3,2,4,2,5,null,null,null,null,null,null,4,6]
+输出：20
+解释：键值为 3 的子树是和最大的二叉搜索树。
+
+示例 2：
+输入：root = [4,3,null,1,2]
+输出：2
+解释：键值为 2 的单节点子树是和最大的二叉搜索树。
+
+示例 3：
+输入：root = [-4,-2,-5]
+输出：0
+
+解释：所有节点键值都为负数，和最大的二叉搜索树为空。
+示例 4：
+输入：root = [2,1,3]
+输出：6
+
+示例 5：
+输入：root = [5,4,8,3,null,6,3]
+输出：7
+
+
+
+class Solution {
+
+    private int result;
+
+    public int maxSumBST(TreeNode root) {
+        dfs(root);
+        return result;
+    }
+
+    private Tuple dfs(TreeNode root){
+        if(root==null){
+            return new Tuple(false,Integer.MAX_VALUE,Integer.MIN_VALUE,0);
+        }
+        // left和right必须要都遍历到，不能“先判断left的条件，不满足直接return”
+        Tuple left=dfs(root.left),right=dfs(root.right);
+        if(left.invalid || right.invalid || root.val<=left.max || root.val>=right.min){
+            return new Tuple(true,0,0,0);
+        }
+        result=Math.max(result,left.sum+root.val+right.sum);
+        return new Tuple(false,
+            root.left==null ? root.val:left.min,
+            root.right==null ? root.val:right.max,
+            left.sum+root.val+right.sum);
+    }
+
+    private class Tuple{
+        boolean invalid;
+        int min,max,sum;
+
+        private Tuple(boolean a,int b,int c,int d){
+            invalid=a;
+            min=b;
+            max=c;
+            sum=d;
+        }
+    }
+}
+
+
+
+var result int
+
+func maxSumBST(root *TreeNode) int {
+    result=0
+    dfs(root)
+    return result
+}
+
+func dfs(root *TreeNode) (bool,int,int,int) {
+    if root==nil {
+        return false,math.MaxInt64,math.MinInt64,0
+    }
+    linvalid,lmin,lmax,lsum:=dfs(root.Left)
+    rinvalid,rmin,rmax,rsum:=dfs(root.Right)
+    if linvalid || rinvalid || root.Val<=lmax || root.Val>=rmin {
+        return true,0,0,0
+    }
+    if lsum+root.Val+rsum>result {
+        result=lsum+root.Val+rsum
+    }
+    min,max:=lmin,rmax
+    if root.Left==nil {
+        min=root.Val
+    }
+    if root.Right==nil {
+        max=root.Val
+    }
+    return false,min,max,lsum+root.Val+rsum
+}
