@@ -1,0 +1,43 @@
+题意：
+通过计算机计算n个数的和。
+但是计算机计算数字的和是有花费的，计算x，y两个数的和，需要花费(c*x+c*y)秒。
+计算机一次只能计算一次，怎么合理安排计算的顺序，可以使得花费的时间最短。
+
+输入：
+给定n,c。
+给定a数组，ai表示第i个数的大小。
+
+输出：
+一个数字表示输出计算n个数字和的最小花费的时间。
+
+示例1
+输入
+5,76,[81,30,76,24,84]
+输出
+48944
+
+示例2
+输入
+5,70,[1,2,3,3,4]
+输出
+2030
+
+
+
+import java.util.*;
+
+public class Solution {
+    public long solve (int n, int c, int[] a) {
+        Queue<Integer> pq=new PriorityQueue<>(n);
+        for(int x:a){
+            pq.offer(x);
+        }
+        long sum=0;
+        while(pq.size()>1){
+            int x=pq.poll(),y=pq.poll();
+            sum+=x+y;
+            pq.offer(x+y);
+        }
+        return sum*c;
+    }
+}
