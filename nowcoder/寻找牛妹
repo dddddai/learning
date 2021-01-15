@@ -28,10 +28,6 @@
 
 
 
-超时了，思路是这样的，为什么别人就能AC...
-
-
-
 import java.util.*;
  
 public class Solution {
