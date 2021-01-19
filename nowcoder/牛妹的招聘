@@ -1,0 +1,52 @@
+一年一度的校招来了，同学们都有一个聪明值Si(-1000<=Si<=1000)和勤奋值Fi(-1000<=Fi<=1000).
+牛妹会选择一些同学作为同事，希望选入所有人的Si+Fi的总和最大，并且选中的所个人聪明值与勤奋值的和不能是负数
+给出每个同学分别的聪明值和勤奋值，请帮助牛妹求出最大的总和。
+
+示例1
+输入
+5,[-5,8,6,2,8],[7,-6,-3,1,-5]
+输出
+11
+
+说明
+选择第1,3,4,5位同学，聪明值的总和是-5+6+2+8=11，勤奋值的总和是7-3+1-5=0，最终输出11
+
+备注:
+人数小于100
+输入第一个参数：人数
+输入第二个参数：每个同学的聪明值
+输入第三个参数：每个同学的勤奋值
+
+
+
+import java.util.*;
+
+public class Solution {
+    public int smartSum (int n, int[] s, int[] f) {
+        ArrayList<int[]> stack=new ArrayList<>(1);
+        stack.add(new int[]{0,0});
+        for(int i=0;i<n;++i){
+            int size=stack.size();
+            stack.ensureCapacity(size<<1);
+            for(int j=0;j<size;++j){
+                stack.add(new int[]{stack.get(j)[0]+s[i],stack.get(j)[1]+f[i]});
+            }
+            stack.sort((a,b) -> a[0]==b[0] ? a[1]-b[1]:a[0]-b[0]);
+            ArrayList<int[]> tmp=new ArrayList<>(stack.size());
+            for(int[] x:stack){
+                while(!tmp.isEmpty() && tmp.get(tmp.size()-1)[1]<=x[1]){
+                    tmp.remove(tmp.size()-1);
+                }
+                tmp.add(x);
+            }
+            stack=tmp;
+        }
+        int result=0;
+        for(int[] x:stack){
+            if(x[0]>=0 && x[1]>=0){
+                result=Math.max(result,x[0]+x[1]);
+            }
+        }
+        return result;
+    }
+}
