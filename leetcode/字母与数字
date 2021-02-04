@@ -20,7 +20,7 @@ class Solution {
         int[] idx=new int[n*2+1];
         Arrays.fill(idx,-2);
         idx[n]=-1;
-        int sum=0;
+        int sum=n;
         int l=0,r=0;
         for(int i=0;i<n;++i){
             if(Character.isDigit(arr[i].charAt(0))){
@@ -28,10 +28,10 @@ class Solution {
             }else{
                 --sum;
             }
-            if(idx[sum+n]==-2){
-                idx[sum+n]=i;
-            }else if(i-idx[sum+n]>r-l){
-                l=idx[sum+n];
+            if(idx[sum]==-2){
+                idx[sum]=i;
+            }else if(i-idx[sum]>r-l){
+                l=idx[sum];
                 r=i;
             }
         }
@@ -48,17 +48,17 @@ func findLongestSubarray(arr []string) []string {
         idx[i]=-2
     }
     idx[n]=-1
-    var l,r,sum int
+    l,r,sum:=0,0,n
     for i,s:=range arr {
         if s[0]>='0' && s[0]<='9' {
             sum++
         }else{
             sum--
         }
-        if idx[sum+n]==-2 {
-            idx[sum+n]=i
-        }else if i-idx[sum+n]>r-l {
-            l=idx[sum+n]
+        if idx[sum]==-2 {
+            idx[sum]=i
+        }else if i-idx[sum]>r-l {
+            l=idx[sum]
             r=i
         }
     }
