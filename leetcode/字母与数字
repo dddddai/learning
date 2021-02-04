@@ -1,0 +1,66 @@
+给定一个放有字符和数字的数组，找到最长的子数组，且包含的字符和数字的个数相同。
+
+返回该子数组，若存在多个最长子数组，返回左端点最小的。若不存在这样的数组，返回一个空数组。
+
+
+示例 1:
+输入: ["A","1","B","C","D","2","3","4","E","5","F","G","6","7","H","I","J","K","L","M"]
+输出: ["A","1","B","C","D","2","3","4","E","5","F","G","6","7"]
+
+示例 2:
+输入: ["A","A"]
+输出: []
+
+
+
+class Solution {
+    public String[] findLongestSubarray(String[] arr) {
+        int n=arr.length;
+        // n为offset
+        int[] idx=new int[n*2+1];
+        Arrays.fill(idx,-2);
+        idx[n]=-1;
+        int sum=0;
+        int l=0,r=0;
+        for(int i=0;i<n;++i){
+            if(Character.isDigit(arr[i].charAt(0))){
+                ++sum;
+            }else{
+                --sum;
+            }
+            if(idx[sum+n]==-2){
+                idx[sum+n]=i;
+            }else if(i-idx[sum+n]>r-l){
+                l=idx[sum+n];
+                r=i;
+            }
+        }
+        return Arrays.copyOfRange(arr,l+1,r+1);
+    }
+}
+
+
+
+func findLongestSubarray(arr []string) []string {
+    n:=len(arr)
+    idx:=make([]int,n<<1+1)
+    for i:=0;i<len(idx);i++ {
+        idx[i]=-2
+    }
+    idx[n]=-1
+    var l,r,sum int
+    for i,s:=range arr {
+        if s[0]>='0' && s[0]<='9' {
+            sum++
+        }else{
+            sum--
+        }
+        if idx[sum+n]==-2 {
+            idx[sum+n]=i
+        }else if i-idx[sum+n]>r-l {
+            l=idx[sum+n]
+            r=i
+        }
+    }
+    return arr[l+1:r+1]
+}
